@@ -1,12 +1,15 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
 
 	"github.com/mangustc/obd/database"
 	"github.com/mangustc/obd/logger"
 	"github.com/mangustc/obd/middleware"
+	"github.com/mangustc/obd/schema/jobschema"
+	"github.com/mangustc/obd/service/jobservice"
 )
 
 var databaseFile = "database.db"
@@ -206,6 +209,59 @@ func main() {
 	database.NewTable(db, skipCT)
 	logger.Info.Println("Database created")
 
+	js := jobservice.NewJobService(db, jobTN)
+
+	job, err := js.InsertJob(&jobschema.JobInsert{
+		JobName: "aue",
+	})
+	if err != nil {
+		logger.Info.Println(err.Error())
+	}
+	logger.Info.Print("aue job: " + prettyPrint(job))
+
+	job, err = js.InsertJob(&jobschema.JobInsert{
+		JobName: "amogus",
+	})
+	if err != nil {
+		logger.Info.Println(err.Error())
+	}
+	logger.Info.Print("amogus job: " + prettyPrint(job))
+
+	allJob, err := js.GetJobs(&jobschema.JobsGet{})
+	if err != nil {
+		logger.Info.Println(err.Error())
+	}
+	logger.Info.Print("All job: " + prettyPrint(allJob))
+
+	job, err = js.DeleteJob(&jobschema.JobDelete{
+		JobID: 1,
+	})
+	if err != nil {
+		logger.Info.Println(err.Error())
+	}
+	logger.Info.Print("deleted job: " + prettyPrint(job))
+
+	allJob, err = js.GetJobs(&jobschema.JobsGet{})
+	if err != nil {
+		logger.Info.Println(err.Error())
+	}
+	logger.Info.Print("All job: " + prettyPrint(allJob))
+
+	job, err = js.UpdateJob(&jobschema.JobUpdate{
+		JobID:   2,
+		JobName: "androxus",
+	})
+	if err != nil {
+		logger.Info.Println(err.Error())
+	}
+	logger.Info.Print("Updated job: " + prettyPrint(job))
+
+	allJob, err = js.GetJobs(&jobschema.JobsGet{})
+	if err != nil {
+		logger.Info.Println(err.Error())
+	}
+	logger.Info.Print("All job: " + prettyPrint(allJob))
+
 	port := ":1323"
 	middlewareStack := middleware.CreateStack(
 		middleware.Logging,
@@ -218,4 +274,9 @@ func main() {
 
 	logger.Info.Println("Server is listening on port " + port)
 	server.ListenAndServe()
+}
+
+func prettyPrint(i interface{}) string {
+	s, _ := json.MarshalIndent(i, "", "\t")
+	return string(s)
 }

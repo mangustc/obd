@@ -8,35 +8,35 @@ import (
 )
 
 type UserDB struct {
-	UserID         int
-	UserLastname   string
-	UserFirstname  string
-	UserMiddlename string
-	UserPassword   string
-	UserCreatedAt  time.Time
-	UserIsHidden   bool
-	JobID          int
+	UserID         int       `json:"UserID"`
+	UserLastname   string    `json:"UserLastname"`
+	UserFirstname  string    `json:"UserFirstname"`
+	UserMiddlename string    `json:"UserMiddlename"`
+	UserPassword   string    `json:"UserPassword"`
+	UserCreatedAt  time.Time `json:"UserCreatedAt"`
+	UserIsHidden   bool      `json:"UserIsHidden"`
+	JobID          int       `json:"JobID"`
 }
 
 type UserInsert struct {
-	UserLastname   string
-	UserFirstname  string
-	UserMiddlename string
-	UserPassword   string
-	JobID          int
+	UserLastname   string `json:"UserLastname"`
+	UserFirstname  string `json:"UserFirstname"`
+	UserMiddlename string `json:"UserMiddlename"`
+	UserPassword   string `json:"UserPassword"`
+	JobID          int    `json:"JobID"`
 }
 
 type UserUpdate struct {
-	UserID         int
-	UserLastname   string
-	UserFirstname  string
-	UserMiddlename string
-	UserPassword   string
-	JobID          int
+	UserID         int    `json:"UserID"`
+	UserLastname   string `json:"UserLastname"`
+	UserFirstname  string `json:"UserFirstname"`
+	UserMiddlename string `json:"UserMiddlename"`
+	UserPassword   string `json:"UserPassword"`
+	JobID          int    `json:"JobID"`
 }
 
 type UserDelete struct {
-	UserID int
+	UserID int `json:"UserID"`
 }
 
 func ValidateUserDB(userDB *UserDB) (err error) {

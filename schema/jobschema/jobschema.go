@@ -5,25 +5,25 @@ import (
 )
 
 type JobDB struct {
-	JobID   int
-	JobName string
+	JobID   int    `json:"JobID"`
+	JobName string `json:"JobName"`
 }
 
 type JobInsert struct {
-	JobName string
+	JobName string `json:"JobName"`
 }
 
 type JobUpdate struct {
-	JobID   int
-	JobName string
+	JobID   int    `json:"JobID"`
+	JobName string `json:"JobName"`
 }
 
 type JobDelete struct {
-	JobID int
+	JobID int `json:"JobID"`
 }
 
 type JobGet struct {
-	JobID int
+	JobID int `json:"JobID"`
 }
 
 type JobsGet struct{}
