@@ -197,7 +197,8 @@ func (js *JobService) GetJobs(data *jobschema.JobsGet) (jobsDB []*jobschema.JobD
 SELECT
 	%[1]sID,
 	%[1]sName
-FROM %[1]s`,
+FROM %[1]s
+ORDER BY %[1]sID DESC`,
 		js.jobTN,
 	)
 

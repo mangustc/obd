@@ -2,6 +2,7 @@ package util
 
 import (
 	"bytes"
+	"encoding/json"
 	"errors"
 	"net/http"
 	"reflect"
@@ -13,6 +14,11 @@ import (
 	"github.com/mattn/go-sqlite3"
 )
 
+func PrettyPrint(i interface{}) string {
+	s, _ := json.MarshalIndent(i, "", "\t")
+	return string(s)
+}
+
 func ComponentBytes(component templ.Component, r *http.Request) ([]byte, error) {
 	buf := new(bytes.Buffer)
 	err := component.Render(r.Context(), buf)
@@ -22,7 +28,7 @@ func ComponentBytes(component templ.Component, r *http.Request) ([]byte, error) 
 	return buf.Bytes(), nil
 }
 
-func RenderComponent(writeBytes *[]byte, component templ.Component, r *http.Request) error {
+func RenderComponent(r *http.Request, writeBytes *[]byte, component templ.Component) error {
 	if writeBytes == nil {
 		writeBytes = &[]byte{}
 	}
@@ -38,6 +44,7 @@ func RespondHTTP(w http.ResponseWriter, code *int, out *[]byte) {
 	if code == nil {
 		panic("Code should not be nil")
 	}
+	// http.StatusOK is written to header by default
 	if *code != http.StatusOK {
 		w.WriteHeader(*code)
 	}
@@ -46,6 +53,7 @@ func RespondHTTP(w http.ResponseWriter, code *int, out *[]byte) {
 
 func InitHTMLHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "text/html")
+	r.ParseForm()
 }
 
 func SetUserSessionCookie(w http.ResponseWriter, sessionUUID uuid.UUID) {

@@ -1,0 +1,160 @@
+package view
+
+import (
+	"strconv"
+	"github.com/mangustc/obd/schema"
+	"fmt"
+	"net/http"
+)
+
+templ Layout(title string) {
+	<!DOCTYPE html>
+	<head>
+		<title>{ title }</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<meta charset="utf-8"/>
+		<script src="https://unpkg.com/htmx.org@1.9.12" integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2" crossorigin="anonymous"></script>
+		<meta name="htmx-config" content='{"useTemplateFragments":"true"}'/>
+	</head>
+	<body>
+		<script>
+document.addEventListener("DOMContentLoaded", (event) => {
+	document.body.addEventListener('htmx:beforeSwap', function(evt) {
+		if (evt.detail.xhr.status == 422 || evt.detail.xhr.status == 404) {
+			evt.detail.shouldSwap = true;
+			evt.detail.isError = false;
+		} else if (evt.detail.xhr.status == 200) {
+			// document.getElementById("user-output-error").innerHTML = ""
+		}
+	});
+});
+		</script>
+		<div id="main">
+			{ children... }
+		</div>
+	</body>
+}
+
+templ ErrorIndex(code int) {
+	<div id="main" hx-swap-oob="innerHTML">
+		<h2>{ strconv.Itoa(code) + " - " + http.StatusText(code) }</h2>
+	</div>
+}
+
+css widthCSS(str string) {
+	width: { str };
+}
+
+templ tableHeader(header *schema.TableHeaderColumn) {
+	<th class={ widthCSS(fmt.Sprint(header.Percent, "%")) }>{ header.Name }</th>
+}
+
+templ input(input *schema.Input) {
+	<div style="display: flex; flex-direction: row;">
+		if input.InputTitle != "" {
+			<span>{ input.InputTitle }: </span>
+		}
+		if input.InputOptions != nil {
+			<select name={ input.InputName }>
+				for _, inputOption := range input.InputOptions {
+					<option
+						label={ inputOption.InputOptionLabel }
+						value={ inputOption.InputOptionValue }
+						selected?={ inputOption.InputOptionValue == input.InputOptionValueSelected }
+					>{ inputOption.InputOptionLabel }</option>
+				}
+			</select>
+		} else {
+			<input name={ input.InputName } value={ input.InputValue } type={ input.InputType }/>
+		}
+	</div>
+}
+
+templ TableRowEdit(inputs []*schema.Input, bodyVals string, updatePOSTURL string, deletePOSTURL string) {
+	<tr>
+		for _, i := range inputs {
+			<th>
+				@input(i)
+			</th>
+		}
+		<th>
+			<button
+				hx-post={ updatePOSTURL }
+				hx-target="closest tr"
+				hx-include="closest tr"
+				hx-swap="outerHTML"
+				hx-vals={ bodyVals }
+			>Save</button>
+			<button
+				hx-post={ deletePOSTURL }
+				hx-target="closest tr"
+				hx-swap="outerHTML"
+				hx-vals={ bodyVals }
+			>Delete</button>
+		</th>
+	</tr>
+}
+
+templ TableRow(alist []any, bodyVals string, editPOSTURL string, deletePOSTURL string) {
+	<tr>
+		for _, a := range alist {
+			<th>{ fmt.Sprint(a) }</th>
+		}
+		<th>
+			<button
+				hx-post={ editPOSTURL }
+				hx-target="closest tr"
+				hx-swap="outerHTML"
+				hx-vals={ bodyVals }
+			>Edit</button>
+			<button
+				hx-post={ deletePOSTURL }
+				hx-target="closest tr"
+				hx-swap="outerHTML"
+				hx-vals={ bodyVals }
+			>Delete</button>
+		</th>
+	</tr>
+}
+
+//templ TableRowOOB(alist []any, bodyVals string, editPOSTURL string, deletePOSTURL string) {
+//	<tbody hx-swap-oob="afterbegin:#table">
+//		@TableRow(alist, bodyVals, editPOSTURL, deletePOSTURL)
+//	</tbody>
+//}
+templ Table(title string, getPOSTURL string, headers []*schema.TableHeaderColumn) {
+	<div style="width: 100%; display: flex; flex-direction: column;">
+		<h2>{ title } Entries:</h2>
+		<table>
+			<thead>
+				<tr>
+					for _, header := range headers {
+						@tableHeader(header)
+					}
+					@tableHeader(schema.NewTableHeaderColumn("Actions", 20))
+				</tr>
+			</thead>
+			<tbody id="table" hx-target="closest tr" hx-swap="outerHTML">
+				<tr hx-swap="outerHTML" hx-trigger="load" hx-post={ getPOSTURL }></tr>
+			</tbody>
+		</table>
+	</div>
+}
+
+templ InsertForm(title string, insertPOSTURL string, inputs []*schema.Input) {
+	<div id="insertForm" style="width: 100%; display: flex; flex-direction: column;">
+		<h2>Insert { title } form:</h2>
+		<div>
+			for _, i := range inputs {
+				@input(i)
+			}
+			<th></th>
+		</div>
+		<button
+			hx-post={ insertPOSTURL }
+			hx-target="#table"
+			hx-include="closest div"
+			hx-swap="afterbegin"
+		>Insert</button>
+	</div>
+}

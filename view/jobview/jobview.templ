@@ -1,0 +1,77 @@
+package jobview
+
+import (
+	"github.com/mangustc/obd/view"
+	"github.com/mangustc/obd/schema"
+	"github.com/mangustc/obd/schema/jobschema"
+	"fmt"
+)
+
+const (
+	pageTitle       = "Job"
+	tableTitle      = pageTitle
+	insertFormTitle = tableTitle
+	getPOSTURL      = "/api/job/getjobs"
+	insertPOSTURL   = "/api/job/insertjob"
+	editPOSTURL     = "/api/job/editjob"
+	updatePOSTURL   = "/api/job/updatejob"
+	deletePOSTURL   = "/api/job/deletejob"
+	tn              = "Job"
+	bodyVals        = `{"` + tn + `ID": %d}`
+)
+
+func getTableHeaders() []*schema.TableHeaderColumn {
+	return []*schema.TableHeaderColumn{
+		schema.NewTableHeaderColumn("Job Name", 30),
+	}
+}
+
+func getArrayFromJobDB(jobDB *jobschema.JobDB) []any {
+	return []any{
+		jobDB.JobName,
+	}
+}
+
+func getInsertFormInputs() []*schema.Input {
+	return []*schema.Input{
+		schema.NewInput("Name", tn+"Name", schema.StringInput, "", nil, nil, ""),
+	}
+}
+
+func getInputsFromJobDB(jobDB *jobschema.JobDB) []*schema.Input {
+	return []*schema.Input{
+		schema.NewInput("", tn+"Name", schema.StringInput, jobDB.JobName, nil, nil, ""),
+	}
+}
+
+templ JobTableRowEdit(jobDB *jobschema.JobDB) {
+	@view.TableRowEdit(getInputsFromJobDB(jobDB), fmt.Sprintf(bodyVals, jobDB.JobID), updatePOSTURL, deletePOSTURL)
+}
+
+templ JobTableRow(jobDB *jobschema.JobDB) {
+	@view.TableRow(getArrayFromJobDB(jobDB), fmt.Sprintf(bodyVals, jobDB.JobID), editPOSTURL, deletePOSTURL)
+}
+
+//templ JobTableRowOOB(jobDB *jobschema.JobDB) {
+//	@view.TableRowOOB(getArrayFromJobDB(jobDB), fmt.Sprintf(bodyVals, jobDB.JobID), editPOSTURL, deletePOSTURL)
+//}
+templ JobTableRows(jobsDB []*jobschema.JobDB) {
+	for _, jobDB := range jobsDB {
+		@JobTableRow(jobDB)
+	}
+}
+
+templ JobAddForm() {
+	@view.InsertForm(insertFormTitle, insertPOSTURL, getInsertFormInputs())
+}
+
+templ JobTable() {
+	@view.Table(tableTitle, getPOSTURL, getTableHeaders())
+}
+
+templ JobPage() {
+	@view.Layout(pageTitle) {
+		@JobAddForm()
+		@JobTable()
+	}
+}
