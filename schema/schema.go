@@ -9,6 +9,7 @@ const (
 	StringInput
 	DateInput
 	OptionInput
+	BooleanInput
 )
 
 type TableHeaderColumn struct {
@@ -25,10 +26,11 @@ type Input struct {
 	InputTitle               string // Optional
 	InputName                string
 	InputType                string
-	InputValue               string
+	InputValue               any
 	InputErr                 error
 	InputOptions             []*InputOption // Optional
 	InputOptionValueSelected string         // Optional
+	InputEditable            bool           // Optional
 }
 
 func NewTableHeaderColumn(name string, percent int) *TableHeaderColumn {
@@ -41,11 +43,34 @@ func NewTableHeaderColumn(name string, percent int) *TableHeaderColumn {
 	}
 }
 
+func setNotEditableInput(input *Input) {
+	input.InputEditable = false
+}
+
+func NewInputNotEditable(inputValue any) *Input {
+	switch inputValue.(type) {
+	case int:
+		input := NewInput("", ".", NumberInput, inputValue, nil, nil, "")
+		setNotEditableInput(input)
+		return input
+	case string:
+		input := NewInput("", ".", StringInput, inputValue, nil, nil, "")
+		setNotEditableInput(input)
+		return input
+	case bool:
+		input := NewInput("", ".", BooleanInput, inputValue, nil, nil, "")
+		setNotEditableInput(input)
+		return input
+	default:
+		panic("InputValue is not set to a supported value type")
+	}
+}
+
 func NewInput(
 	inputTitle string,
 	inputName string,
 	inputType inputType,
-	inputValue string,
+	inputValue any,
 	inputErr error,
 	inputOptions []*InputOption,
 	inputOptionValueSelected string,
@@ -62,6 +87,8 @@ func NewInput(
 		inputTypeStr = "string"
 	case DateInput:
 		inputTypeStr = "date"
+	case BooleanInput:
+		inputTypeStr = "checkbox"
 	case OptionInput:
 		if inputOptions == nil {
 			panic("Options arrray can not be nil")
@@ -84,5 +111,6 @@ func NewInput(
 		InputErr:                 inputErr,
 		InputOptions:             inputOptions,
 		InputOptionValueSelected: inputOptionValueSelected,
+		InputEditable:            true,
 	}
 }

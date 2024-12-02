@@ -49,6 +49,16 @@ templ tableHeader(header *schema.TableHeaderColumn) {
 	<th class={ widthCSS(fmt.Sprint(header.Percent, "%")) }>{ header.Name }</th>
 }
 
+func getBool(v any) bool {
+	value, _ := v.(bool)
+	return value
+}
+
+func getString(v any) string {
+	value, _ := v.(string)
+	return value
+}
+
 templ input(input *schema.Input) {
 	<div style="display: flex; flex-direction: row;">
 		if input.InputTitle != "" {
@@ -64,12 +74,19 @@ templ input(input *schema.Input) {
 					>{ inputOption.InputOptionLabel }</option>
 				}
 			</select>
+		} else if input.InputType == "checkbox" {
+			if !input.InputEditable {
+				<input name={ input.InputName } type={ input.InputType } checked?={ getBool(input.InputValue) } onclick="return false;"/>
+			} else {
+				<input name={ input.InputName } type={ input.InputType } checked?={ getBool(input.InputValue) }/>
+			}
 		} else {
-			<input name={ input.InputName } value={ input.InputValue } type={ input.InputType }/>
+			<input name={ input.InputName } value={ getString(input.InputValue) } type={ input.InputType } readonly?={ !input.InputEditable }/>
 		}
 	</div>
 }
 
+// templ Navigation(
 templ TableRowEdit(inputs []*schema.Input, bodyVals string, updatePOSTURL string, deletePOSTURL string) {
 	<tr>
 		for _, i := range inputs {
@@ -98,7 +115,9 @@ templ TableRowEdit(inputs []*schema.Input, bodyVals string, updatePOSTURL string
 templ TableRow(alist []any, bodyVals string, editPOSTURL string, deletePOSTURL string) {
 	<tr>
 		for _, a := range alist {
-			<th>{ fmt.Sprint(a) }</th>
+			<th>
+				@input(schema.NewInputNotEditable(a))
+			</th>
 		}
 		<th>
 			<button

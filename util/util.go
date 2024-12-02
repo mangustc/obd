@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"net/http"
 	"reflect"
 	"strconv"
@@ -13,6 +14,25 @@ import (
 	E "github.com/mangustc/obd/errs"
 	"github.com/mattn/go-sqlite3"
 )
+
+func GetStringFromForm(r *http.Request, name string) string {
+	return r.Form.Get(name)
+}
+
+func GetIntFromForm(r *http.Request, name string) (int, error) {
+	i, err := strconv.Atoi(r.Form.Get(name))
+	return i, err
+}
+
+func GetBoolFromForm(r *http.Request, name string) (bool, error) {
+	str := r.Form.Get(name)
+	if str == "on" {
+		return true, nil
+	} else if str == "off" {
+		return false, nil
+	}
+	return false, fmt.Errorf("Value is not bool. Value: %s.", str)
+}
 
 func PrettyPrint(i interface{}) string {
 	s, _ := json.MarshalIndent(i, "", "\t")

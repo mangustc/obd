@@ -23,24 +23,96 @@ const (
 func getTableHeaders() []*schema.TableHeaderColumn {
 	return []*schema.TableHeaderColumn{
 		schema.NewTableHeaderColumn("Job Name", 30),
+		schema.NewTableHeaderColumn("User", 4),
+		schema.NewTableHeaderColumn("Job", 4),
+		schema.NewTableHeaderColumn("Student", 4),
+		schema.NewTableHeaderColumn("UniGroup", 4),
+		schema.NewTableHeaderColumn("FinhelpCtg", 4),
+		schema.NewTableHeaderColumn("FinhelpStage", 4),
+		schema.NewTableHeaderColumn("FinhelpProc", 4),
+		schema.NewTableHeaderColumn("Building", 4),
+		schema.NewTableHeaderColumn("CabinetType", 4),
+		schema.NewTableHeaderColumn("Cabinet", 4),
+		schema.NewTableHeaderColumn("ClassType", 4),
+		schema.NewTableHeaderColumn("Prof", 4),
+		schema.NewTableHeaderColumn("CourseType", 4),
+		schema.NewTableHeaderColumn("Course", 4),
+		schema.NewTableHeaderColumn("Perf", 4),
+		schema.NewTableHeaderColumn("Skip", 4),
+		schema.NewTableHeaderColumn("Class", 4),
+		schema.NewTableHeaderColumn("Session", 4),
 	}
 }
 
 func getArrayFromJobDB(jobDB *jobschema.JobDB) []any {
 	return []any{
 		jobDB.JobName,
+		jobDB.JobAccessUser,
+		jobDB.JobAccessJob,
+		jobDB.JobAccessStudent,
+		jobDB.JobAccessUniGroup,
+		jobDB.JobAccessFinhelpCtg,
+		jobDB.JobAccessFinhelpStage,
+		jobDB.JobAccessFinhelpProc,
+		jobDB.JobAccessBuilding,
+		jobDB.JobAccessCabinetType,
+		jobDB.JobAccessCabinet,
+		jobDB.JobAccessClassType,
+		jobDB.JobAccessProf,
+		jobDB.JobAccessCourseType,
+		jobDB.JobAccessCourse,
+		jobDB.JobAccessPerf,
+		jobDB.JobAccessSkip,
+		jobDB.JobAccessClass,
+		jobDB.JobAccessSession,
 	}
 }
 
 func getInsertFormInputs() []*schema.Input {
 	return []*schema.Input{
 		schema.NewInput("Name", tn+"Name", schema.StringInput, "", nil, nil, ""),
+		schema.NewInput("User", tn+"AccessUser", schema.BooleanInput, "", nil, nil, ""),
+		schema.NewInput("Job", tn+"AccessJob", schema.BooleanInput, "", nil, nil, ""),
+		schema.NewInput("Student", tn+"AccessStudent", schema.BooleanInput, "", nil, nil, ""),
+		schema.NewInput("UniGroup", tn+"AccessUniGroup", schema.BooleanInput, "", nil, nil, ""),
+		schema.NewInput("FinhelpCtg", tn+"AccessFinhelpCtg", schema.BooleanInput, "", nil, nil, ""),
+		schema.NewInput("FinhelpStage", tn+"AccessFinhelpStage", schema.BooleanInput, "", nil, nil, ""),
+		schema.NewInput("FinhelpProc", tn+"AccessFinhelpProc", schema.BooleanInput, "", nil, nil, ""),
+		schema.NewInput("Building", tn+"AccessBuilding", schema.BooleanInput, "", nil, nil, ""),
+		schema.NewInput("CabinetType", tn+"AccessCabinetType", schema.BooleanInput, "", nil, nil, ""),
+		schema.NewInput("Cabinet", tn+"AccessCabinet", schema.BooleanInput, "", nil, nil, ""),
+		schema.NewInput("ClassType", tn+"AccessClassType", schema.BooleanInput, "", nil, nil, ""),
+		schema.NewInput("Prof", tn+"AccessProf", schema.BooleanInput, "", nil, nil, ""),
+		schema.NewInput("CourseType", tn+"AccessCourseType", schema.BooleanInput, "", nil, nil, ""),
+		schema.NewInput("Course", tn+"AccessCourse", schema.BooleanInput, "", nil, nil, ""),
+		schema.NewInput("Perf", tn+"AccessPerf", schema.BooleanInput, "", nil, nil, ""),
+		schema.NewInput("Skip", tn+"AccessSkip", schema.BooleanInput, "", nil, nil, ""),
+		schema.NewInput("Class", tn+"AccessClass", schema.BooleanInput, "", nil, nil, ""),
+		schema.NewInput("Session", tn+"AccessSession", schema.BooleanInput, "", nil, nil, ""),
 	}
 }
 
 func getInputsFromJobDB(jobDB *jobschema.JobDB) []*schema.Input {
 	return []*schema.Input{
 		schema.NewInput("", tn+"Name", schema.StringInput, jobDB.JobName, nil, nil, ""),
+		schema.NewInput("", tn+"AccessUser", schema.BooleanInput, jobDB.JobAccessUser, nil, nil, ""),
+		schema.NewInput("", tn+"AccessJob", schema.BooleanInput, jobDB.JobAccessJob, nil, nil, ""),
+		schema.NewInput("", tn+"AccessStudent", schema.BooleanInput, jobDB.JobAccessStudent, nil, nil, ""),
+		schema.NewInput("", tn+"AccessUniGroup", schema.BooleanInput, jobDB.JobAccessUniGroup, nil, nil, ""),
+		schema.NewInput("", tn+"AccessFinhelpCtg", schema.BooleanInput, jobDB.JobAccessFinhelpCtg, nil, nil, ""),
+		schema.NewInput("", tn+"AccessFinhelpStage", schema.BooleanInput, jobDB.JobAccessFinhelpStage, nil, nil, ""),
+		schema.NewInput("", tn+"AccessFinhelpProc", schema.BooleanInput, jobDB.JobAccessFinhelpProc, nil, nil, ""),
+		schema.NewInput("", tn+"AccessBuilding", schema.BooleanInput, jobDB.JobAccessBuilding, nil, nil, ""),
+		schema.NewInput("", tn+"AccessCabinetType", schema.BooleanInput, jobDB.JobAccessCabinetType, nil, nil, ""),
+		schema.NewInput("", tn+"AccessCabinet", schema.BooleanInput, jobDB.JobAccessCabinet, nil, nil, ""),
+		schema.NewInput("", tn+"AccessClassType", schema.BooleanInput, jobDB.JobAccessClassType, nil, nil, ""),
+		schema.NewInput("", tn+"AccessProf", schema.BooleanInput, jobDB.JobAccessProf, nil, nil, ""),
+		schema.NewInput("", tn+"AccessCourseType", schema.BooleanInput, jobDB.JobAccessCourseType, nil, nil, ""),
+		schema.NewInput("", tn+"AccessCourse", schema.BooleanInput, jobDB.JobAccessCourse, nil, nil, ""),
+		schema.NewInput("", tn+"AccessPerf", schema.BooleanInput, jobDB.JobAccessPerf, nil, nil, ""),
+		schema.NewInput("", tn+"AccessSkip", schema.BooleanInput, jobDB.JobAccessSkip, nil, nil, ""),
+		schema.NewInput("", tn+"AccessClass", schema.BooleanInput, jobDB.JobAccessClass, nil, nil, ""),
+		schema.NewInput("", tn+"AccessSession", schema.BooleanInput, jobDB.JobAccessSession, nil, nil, ""),
 	}
 }
 

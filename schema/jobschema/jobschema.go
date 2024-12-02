@@ -5,17 +5,71 @@ import (
 )
 
 type JobDB struct {
-	JobID   int    `json:"JobID"`
-	JobName string `json:"JobName"`
+	JobID                 int    `json:"JobID"`
+	JobName               string `json:"JobName"`
+	JobAccessUser         bool   `json:"JobAccessUser"`
+	JobAccessJob          bool   `json:"JobAccessJob"`
+	JobAccessStudent      bool   `json:"JobAccessStudent"`
+	JobAccessUniGroup     bool   `json:"JobAccessUniGroup"`
+	JobAccessFinhelpCtg   bool   `json:"JobAccessFinhelpCtg"`
+	JobAccessFinhelpStage bool   `json:"JobAccessFinhelpStage"`
+	JobAccessFinhelpProc  bool   `json:"JobAccessProc"`
+	JobAccessBuilding     bool   `json:"JobAccessBuilding"`
+	JobAccessCabinetType  bool   `json:"JobAccessCabinetType"`
+	JobAccessCabinet      bool   `json:"JobAccessCabinet"`
+	JobAccessClassType    bool   `json:"JobAccessClassType"`
+	JobAccessProf         bool   `json:"JobAccessProf"`
+	JobAccessCourseType   bool   `json:"JobAccessCourseType"`
+	JobAccessCourse       bool   `json:"JobAccessCourse"`
+	JobAccessPerf         bool   `json:"JobAccessPerf"`
+	JobAccessSkip         bool   `json:"JobAccessSkip"`
+	JobAccessClass        bool   `json:"JobAccessClass"`
+	JobAccessSession      bool   `json:"JobAccessSession"`
 }
 
 type JobInsert struct {
-	JobName string `json:"JobName"`
+	JobName               string `json:"JobName"`
+	JobAccessUser         bool   `json:"JobAccessUser"`
+	JobAccessJob          bool   `json:"JobAccessJob"`
+	JobAccessStudent      bool   `json:"JobAccessStudent"`
+	JobAccessUniGroup     bool   `json:"JobAccessUniGroup"`
+	JobAccessFinhelpCtg   bool   `json:"JobAccessFinhelpCtg"`
+	JobAccessFinhelpStage bool   `json:"JobAccessFinhelpStage"`
+	JobAccessFinhelpProc  bool   `json:"JobAccessProc"`
+	JobAccessBuilding     bool   `json:"JobAccessBuilding"`
+	JobAccessCabinetType  bool   `json:"JobAccessCabinetType"`
+	JobAccessCabinet      bool   `json:"JobAccessCabinet"`
+	JobAccessClassType    bool   `json:"JobAccessClassType"`
+	JobAccessProf         bool   `json:"JobAccessProf"`
+	JobAccessCourseType   bool   `json:"JobAccessCourseType"`
+	JobAccessCourse       bool   `json:"JobAccessCourse"`
+	JobAccessPerf         bool   `json:"JobAccessPerf"`
+	JobAccessSkip         bool   `json:"JobAccessSkip"`
+	JobAccessClass        bool   `json:"JobAccessClass"`
+	JobAccessSession      bool   `json:"JobAccessSession"`
 }
 
 type JobUpdate struct {
-	JobID   int    `json:"JobID"`
-	JobName string `json:"JobName"`
+	JobID                 int    `json:"JobID"`
+	JobName               string `json:"JobName"`
+	JobAccessUser         bool   `json:"JobAccessUser"`
+	JobAccessJob          bool   `json:"JobAccessJob"`
+	JobAccessStudent      bool   `json:"JobAccessStudent"`
+	JobAccessUniGroup     bool   `json:"JobAccessUniGroup"`
+	JobAccessFinhelpCtg   bool   `json:"JobAccessFinhelpCtg"`
+	JobAccessFinhelpStage bool   `json:"JobAccessFinhelpStage"`
+	JobAccessFinhelpProc  bool   `json:"JobAccessProc"`
+	JobAccessBuilding     bool   `json:"JobAccessBuilding"`
+	JobAccessCabinetType  bool   `json:"JobAccessCabinetType"`
+	JobAccessCabinet      bool   `json:"JobAccessCabinet"`
+	JobAccessClassType    bool   `json:"JobAccessClassType"`
+	JobAccessProf         bool   `json:"JobAccessProf"`
+	JobAccessCourseType   bool   `json:"JobAccessCourseType"`
+	JobAccessCourse       bool   `json:"JobAccessCourse"`
+	JobAccessPerf         bool   `json:"JobAccessPerf"`
+	JobAccessSkip         bool   `json:"JobAccessSkip"`
+	JobAccessClass        bool   `json:"JobAccessClass"`
+	JobAccessSession      bool   `json:"JobAccessSession"`
 }
 
 type JobDelete struct {
