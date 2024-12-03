@@ -12,6 +12,13 @@ const (
 	BooleanInput
 )
 
+// TA - Table Attribute
+type TA struct {
+	TAName      string
+	TATitle     string
+	TAInputType inputType
+}
+
 type TableHeaderColumn struct {
 	Name    string
 	Percent int
@@ -33,6 +40,23 @@ type Input struct {
 	InputEditable            bool           // Optional
 }
 
+func GetSelectedInputOptionLabel(input *Input) string {
+	for _, io := range input.InputOptions {
+		if io.InputOptionValue == input.InputOptionValueSelected {
+			return io.InputOptionLabel
+		}
+	}
+	return input.InputOptionValueSelected
+}
+
+func NewTA(tableAttrName string, tableAttrTitle string, tableAttrInputType inputType) *TA {
+	return &TA{
+		TAName:      tableAttrName,
+		TATitle:     tableAttrTitle,
+		TAInputType: tableAttrInputType,
+	}
+}
+
 func NewTableHeaderColumn(name string, percent int) *TableHeaderColumn {
 	if name == "" {
 		panic("Header name can't be zero")
@@ -47,23 +71,9 @@ func setNotEditableInput(input *Input) {
 	input.InputEditable = false
 }
 
-func NewInputNotEditable(inputValue any) *Input {
-	switch inputValue.(type) {
-	case int:
-		input := NewInput("", ".", NumberInput, inputValue, nil, nil, "")
-		setNotEditableInput(input)
-		return input
-	case string:
-		input := NewInput("", ".", StringInput, inputValue, nil, nil, "")
-		setNotEditableInput(input)
-		return input
-	case bool:
-		input := NewInput("", ".", BooleanInput, inputValue, nil, nil, "")
-		setNotEditableInput(input)
-		return input
-	default:
-		panic("InputValue is not set to a supported value type")
-	}
+func NewInputNotEditable(input *Input) *Input {
+	setNotEditableInput(input)
+	return input
 }
 
 func NewInput(

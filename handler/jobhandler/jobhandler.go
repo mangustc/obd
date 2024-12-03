@@ -29,6 +29,17 @@ func (jh *JobHandler) Job(w http.ResponseWriter, r *http.Request) {
 	var out []byte
 	defer util.RespondHTTP(w, &code, &out)
 
+	util.RenderComponent(r, &out, jobview.Job())
+}
+
+func (jh *JobHandler) JobPage(w http.ResponseWriter, r *http.Request) {
+	// var err error
+
+	util.InitHTMLHandler(w, r)
+	var code int = http.StatusOK
+	var out []byte
+	defer util.RespondHTTP(w, &code, &out)
+
 	util.RenderComponent(r, &out, jobview.JobPage())
 }
 

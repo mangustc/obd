@@ -24,103 +24,102 @@ const (
 	editPOSTURL     = "/api/job/editjob"
 	updatePOSTURL   = "/api/job/updatejob"
 	deletePOSTURL   = "/api/job/deletejob"
-	tn              = "Job"
-	bodyVals        = `{"` + tn + `ID": %d}`
+	jobTN           = "Job"
+	bodyVals        = `{"` + jobTN + `ID": %d}`
+	getjobPOSTURL   = "/api/job"
+)
+
+var (
+	taJobName               = schema.NewTA(jobTN+"Name", "Job Name", schema.StringInput)
+	taJobAccessUser         = schema.NewTA(jobTN+"AccessUser", "User", schema.BooleanInput)
+	taJobAccessJob          = schema.NewTA(jobTN+"AccessJob", "Job", schema.BooleanInput)
+	taJobAccessStudent      = schema.NewTA(jobTN+"AccessStudent", "Student", schema.BooleanInput)
+	taJobAccessUniGroup     = schema.NewTA(jobTN+"AccessUniGroup", "UniGroup", schema.BooleanInput)
+	taJobAccessFinhelpCtg   = schema.NewTA(jobTN+"AccessFinhelpCtg", "FinhelpCtg", schema.BooleanInput)
+	taJobAccessFinhelpStage = schema.NewTA(jobTN+"AccessFinhelpStage", "FinhelpStage", schema.BooleanInput)
+	taJobAccessFinhelpProc  = schema.NewTA(jobTN+"AccessFinhelpProc", "FinhelpProc", schema.BooleanInput)
+	taJobAccessBuilding     = schema.NewTA(jobTN+"AccessBuilding", "Building", schema.BooleanInput)
+	taJobAccessCabinetType  = schema.NewTA(jobTN+"AccessCabinetType", "CabinetType", schema.BooleanInput)
+	taJobAccessCabinet      = schema.NewTA(jobTN+"AccessCabinet", "Cabinet", schema.BooleanInput)
+	taJobAccessClassType    = schema.NewTA(jobTN+"AccessClassType", "ClassType", schema.BooleanInput)
+	taJobAccessProf         = schema.NewTA(jobTN+"AccessProf", "Prof", schema.BooleanInput)
+	taJobAccessCourseType   = schema.NewTA(jobTN+"AccessCourseType", "CourseType", schema.BooleanInput)
+	taJobAccessCourse       = schema.NewTA(jobTN+"AccessCourse", "Course", schema.BooleanInput)
+	taJobAccessPerf         = schema.NewTA(jobTN+"AccessPerf", "Perf", schema.BooleanInput)
+	taJobAccessSkip         = schema.NewTA(jobTN+"AccessSkip", "Skip", schema.BooleanInput)
+	taJobAccessClass        = schema.NewTA(jobTN+"AccessClass", "Class", schema.BooleanInput)
+	taJobAccessSession      = schema.NewTA(jobTN+"AccessSession", "Session", schema.BooleanInput)
 )
 
 func getTableHeaders() []*schema.TableHeaderColumn {
 	return []*schema.TableHeaderColumn{
-		schema.NewTableHeaderColumn("Job Name", 30),
-		schema.NewTableHeaderColumn("User", 4),
-		schema.NewTableHeaderColumn("Job", 4),
-		schema.NewTableHeaderColumn("Student", 4),
-		schema.NewTableHeaderColumn("UniGroup", 4),
-		schema.NewTableHeaderColumn("FinhelpCtg", 4),
-		schema.NewTableHeaderColumn("FinhelpStage", 4),
-		schema.NewTableHeaderColumn("FinhelpProc", 4),
-		schema.NewTableHeaderColumn("Building", 4),
-		schema.NewTableHeaderColumn("CabinetType", 4),
-		schema.NewTableHeaderColumn("Cabinet", 4),
-		schema.NewTableHeaderColumn("ClassType", 4),
-		schema.NewTableHeaderColumn("Prof", 4),
-		schema.NewTableHeaderColumn("CourseType", 4),
-		schema.NewTableHeaderColumn("Course", 4),
-		schema.NewTableHeaderColumn("Perf", 4),
-		schema.NewTableHeaderColumn("Skip", 4),
-		schema.NewTableHeaderColumn("Class", 4),
-		schema.NewTableHeaderColumn("Session", 4),
-	}
-}
-
-func getArrayFromJobDB(jobDB *jobschema.JobDB) []any {
-	return []any{
-		jobDB.JobName,
-		jobDB.JobAccessUser,
-		jobDB.JobAccessJob,
-		jobDB.JobAccessStudent,
-		jobDB.JobAccessUniGroup,
-		jobDB.JobAccessFinhelpCtg,
-		jobDB.JobAccessFinhelpStage,
-		jobDB.JobAccessFinhelpProc,
-		jobDB.JobAccessBuilding,
-		jobDB.JobAccessCabinetType,
-		jobDB.JobAccessCabinet,
-		jobDB.JobAccessClassType,
-		jobDB.JobAccessProf,
-		jobDB.JobAccessCourseType,
-		jobDB.JobAccessCourse,
-		jobDB.JobAccessPerf,
-		jobDB.JobAccessSkip,
-		jobDB.JobAccessClass,
-		jobDB.JobAccessSession,
+		schema.NewTableHeaderColumn(taJobName.TATitle, 30),
+		schema.NewTableHeaderColumn(taJobAccessUser.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessJob.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessStudent.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessUniGroup.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessFinhelpCtg.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessFinhelpStage.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessFinhelpProc.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessBuilding.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessCabinetType.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessCabinet.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessClassType.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessProf.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessCourseType.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessCourse.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessPerf.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessSkip.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessClass.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessSession.TATitle, 4),
 	}
 }
 
 func getInsertFormInputs() []*schema.Input {
 	return []*schema.Input{
-		schema.NewInput("Name", tn+"Name", schema.StringInput, "", nil, nil, ""),
-		schema.NewInput("User", tn+"AccessUser", schema.BooleanInput, "", nil, nil, ""),
-		schema.NewInput("Job", tn+"AccessJob", schema.BooleanInput, "", nil, nil, ""),
-		schema.NewInput("Student", tn+"AccessStudent", schema.BooleanInput, "", nil, nil, ""),
-		schema.NewInput("UniGroup", tn+"AccessUniGroup", schema.BooleanInput, "", nil, nil, ""),
-		schema.NewInput("FinhelpCtg", tn+"AccessFinhelpCtg", schema.BooleanInput, "", nil, nil, ""),
-		schema.NewInput("FinhelpStage", tn+"AccessFinhelpStage", schema.BooleanInput, "", nil, nil, ""),
-		schema.NewInput("FinhelpProc", tn+"AccessFinhelpProc", schema.BooleanInput, "", nil, nil, ""),
-		schema.NewInput("Building", tn+"AccessBuilding", schema.BooleanInput, "", nil, nil, ""),
-		schema.NewInput("CabinetType", tn+"AccessCabinetType", schema.BooleanInput, "", nil, nil, ""),
-		schema.NewInput("Cabinet", tn+"AccessCabinet", schema.BooleanInput, "", nil, nil, ""),
-		schema.NewInput("ClassType", tn+"AccessClassType", schema.BooleanInput, "", nil, nil, ""),
-		schema.NewInput("Prof", tn+"AccessProf", schema.BooleanInput, "", nil, nil, ""),
-		schema.NewInput("CourseType", tn+"AccessCourseType", schema.BooleanInput, "", nil, nil, ""),
-		schema.NewInput("Course", tn+"AccessCourse", schema.BooleanInput, "", nil, nil, ""),
-		schema.NewInput("Perf", tn+"AccessPerf", schema.BooleanInput, "", nil, nil, ""),
-		schema.NewInput("Skip", tn+"AccessSkip", schema.BooleanInput, "", nil, nil, ""),
-		schema.NewInput("Class", tn+"AccessClass", schema.BooleanInput, "", nil, nil, ""),
-		schema.NewInput("Session", tn+"AccessSession", schema.BooleanInput, "", nil, nil, ""),
+		schema.NewInput(taJobName.TATitle, taJobName.TAName, taJobName.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessUser.TATitle, taJobAccessUser.TAName, taJobAccessUser.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessJob.TATitle, taJobAccessJob.TAName, taJobAccessJob.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessStudent.TATitle, taJobAccessStudent.TAName, taJobAccessStudent.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessUniGroup.TATitle, taJobAccessUniGroup.TAName, taJobAccessUniGroup.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessFinhelpCtg.TATitle, taJobAccessFinhelpCtg.TAName, taJobAccessFinhelpCtg.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessFinhelpStage.TATitle, taJobAccessFinhelpStage.TAName, taJobAccessFinhelpStage.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessFinhelpProc.TATitle, taJobAccessFinhelpProc.TAName, taJobAccessFinhelpProc.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessBuilding.TATitle, taJobAccessBuilding.TAName, taJobAccessBuilding.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessCabinetType.TATitle, taJobAccessCabinetType.TAName, taJobAccessCabinetType.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessCabinet.TATitle, taJobAccessCabinet.TAName, taJobAccessCabinet.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessClassType.TATitle, taJobAccessClassType.TAName, taJobAccessClassType.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessProf.TATitle, taJobAccessProf.TAName, taJobAccessProf.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessCourseType.TATitle, taJobAccessCourseType.TAName, taJobAccessCourseType.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessCourse.TATitle, taJobAccessCourse.TAName, taJobAccessCourse.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessPerf.TATitle, taJobAccessPerf.TAName, taJobAccessPerf.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessSkip.TATitle, taJobAccessSkip.TAName, taJobAccessSkip.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessClass.TATitle, taJobAccessClass.TAName, taJobAccessClass.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessSession.TATitle, taJobAccessSession.TAName, taJobAccessSession.TAInputType, "", nil, nil, ""),
 	}
 }
 
 func getInputsFromJobDB(jobDB *jobschema.JobDB) []*schema.Input {
 	return []*schema.Input{
-		schema.NewInput("", tn+"Name", schema.StringInput, jobDB.JobName, nil, nil, ""),
-		schema.NewInput("", tn+"AccessUser", schema.BooleanInput, jobDB.JobAccessUser, nil, nil, ""),
-		schema.NewInput("", tn+"AccessJob", schema.BooleanInput, jobDB.JobAccessJob, nil, nil, ""),
-		schema.NewInput("", tn+"AccessStudent", schema.BooleanInput, jobDB.JobAccessStudent, nil, nil, ""),
-		schema.NewInput("", tn+"AccessUniGroup", schema.BooleanInput, jobDB.JobAccessUniGroup, nil, nil, ""),
-		schema.NewInput("", tn+"AccessFinhelpCtg", schema.BooleanInput, jobDB.JobAccessFinhelpCtg, nil, nil, ""),
-		schema.NewInput("", tn+"AccessFinhelpStage", schema.BooleanInput, jobDB.JobAccessFinhelpStage, nil, nil, ""),
-		schema.NewInput("", tn+"AccessFinhelpProc", schema.BooleanInput, jobDB.JobAccessFinhelpProc, nil, nil, ""),
-		schema.NewInput("", tn+"AccessBuilding", schema.BooleanInput, jobDB.JobAccessBuilding, nil, nil, ""),
-		schema.NewInput("", tn+"AccessCabinetType", schema.BooleanInput, jobDB.JobAccessCabinetType, nil, nil, ""),
-		schema.NewInput("", tn+"AccessCabinet", schema.BooleanInput, jobDB.JobAccessCabinet, nil, nil, ""),
-		schema.NewInput("", tn+"AccessClassType", schema.BooleanInput, jobDB.JobAccessClassType, nil, nil, ""),
-		schema.NewInput("", tn+"AccessProf", schema.BooleanInput, jobDB.JobAccessProf, nil, nil, ""),
-		schema.NewInput("", tn+"AccessCourseType", schema.BooleanInput, jobDB.JobAccessCourseType, nil, nil, ""),
-		schema.NewInput("", tn+"AccessCourse", schema.BooleanInput, jobDB.JobAccessCourse, nil, nil, ""),
-		schema.NewInput("", tn+"AccessPerf", schema.BooleanInput, jobDB.JobAccessPerf, nil, nil, ""),
-		schema.NewInput("", tn+"AccessSkip", schema.BooleanInput, jobDB.JobAccessSkip, nil, nil, ""),
-		schema.NewInput("", tn+"AccessClass", schema.BooleanInput, jobDB.JobAccessClass, nil, nil, ""),
-		schema.NewInput("", tn+"AccessSession", schema.BooleanInput, jobDB.JobAccessSession, nil, nil, ""),
+		schema.NewInput("", taJobName.TAName, taJobName.TAInputType, jobDB.JobName, nil, nil, ""),
+		schema.NewInput("", taJobAccessUser.TAName, taJobAccessUser.TAInputType, jobDB.JobAccessUser, nil, nil, ""),
+		schema.NewInput("", taJobAccessJob.TAName, taJobAccessJob.TAInputType, jobDB.JobAccessJob, nil, nil, ""),
+		schema.NewInput("", taJobAccessStudent.TAName, taJobAccessStudent.TAInputType, jobDB.JobAccessStudent, nil, nil, ""),
+		schema.NewInput("", taJobAccessUniGroup.TAName, taJobAccessUniGroup.TAInputType, jobDB.JobAccessUniGroup, nil, nil, ""),
+		schema.NewInput("", taJobAccessFinhelpCtg.TAName, taJobAccessFinhelpCtg.TAInputType, jobDB.JobAccessFinhelpCtg, nil, nil, ""),
+		schema.NewInput("", taJobAccessFinhelpStage.TAName, taJobAccessFinhelpStage.TAInputType, jobDB.JobAccessFinhelpStage, nil, nil, ""),
+		schema.NewInput("", taJobAccessFinhelpProc.TAName, taJobAccessFinhelpProc.TAInputType, jobDB.JobAccessFinhelpProc, nil, nil, ""),
+		schema.NewInput("", taJobAccessBuilding.TAName, taJobAccessBuilding.TAInputType, jobDB.JobAccessBuilding, nil, nil, ""),
+		schema.NewInput("", taJobAccessCabinetType.TAName, taJobAccessCabinetType.TAInputType, jobDB.JobAccessCabinetType, nil, nil, ""),
+		schema.NewInput("", taJobAccessCabinet.TAName, taJobAccessCabinet.TAInputType, jobDB.JobAccessCabinet, nil, nil, ""),
+		schema.NewInput("", taJobAccessClassType.TAName, taJobAccessClassType.TAInputType, jobDB.JobAccessClassType, nil, nil, ""),
+		schema.NewInput("", taJobAccessProf.TAName, taJobAccessProf.TAInputType, jobDB.JobAccessProf, nil, nil, ""),
+		schema.NewInput("", taJobAccessCourseType.TAName, taJobAccessCourseType.TAInputType, jobDB.JobAccessCourseType, nil, nil, ""),
+		schema.NewInput("", taJobAccessCourse.TAName, taJobAccessCourse.TAInputType, jobDB.JobAccessCourse, nil, nil, ""),
+		schema.NewInput("", taJobAccessPerf.TAName, taJobAccessPerf.TAInputType, jobDB.JobAccessPerf, nil, nil, ""),
+		schema.NewInput("", taJobAccessSkip.TAName, taJobAccessSkip.TAInputType, jobDB.JobAccessSkip, nil, nil, ""),
+		schema.NewInput("", taJobAccessClass.TAName, taJobAccessClass.TAInputType, jobDB.JobAccessClass, nil, nil, ""),
+		schema.NewInput("", taJobAccessSession.TAName, taJobAccessSession.TAInputType, jobDB.JobAccessSession, nil, nil, ""),
 	}
 }
 
@@ -174,7 +173,7 @@ func JobTableRow(jobDB *jobschema.JobDB) templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = view.TableRow(getArrayFromJobDB(jobDB), fmt.Sprintf(bodyVals, jobDB.JobID), editPOSTURL, deletePOSTURL).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = view.TableRow(getInputsFromJobDB(jobDB), fmt.Sprintf(bodyVals, jobDB.JobID), editPOSTURL, deletePOSTURL).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -182,9 +181,6 @@ func JobTableRow(jobDB *jobschema.JobDB) templ.Component {
 	})
 }
 
-//	templ JobTableRowOOB(jobDB *jobschema.JobDB) {
-//		@view.TableRowOOB(getArrayFromJobDB(jobDB), fmt.Sprintf(bodyVals, jobDB.JobID), editPOSTURL, deletePOSTURL)
-//	}
 func JobTableRows(jobsDB []*jobschema.JobDB) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
@@ -274,7 +270,7 @@ func JobTable() templ.Component {
 	})
 }
 
-func JobPage() templ.Component {
+func Job() templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
@@ -295,7 +291,40 @@ func JobPage() templ.Component {
 			templ_7745c5c3_Var6 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Var7 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_Err = JobAddForm().Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		templ_7745c5c3_Err = JobTable().Render(ctx, templ_7745c5c3_Buffer)
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		return templ_7745c5c3_Err
+	})
+}
+
+func JobPage() templ.Component {
+	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
+		if templ_7745c5c3_CtxErr := ctx.Err(); templ_7745c5c3_CtxErr != nil {
+			return templ_7745c5c3_CtxErr
+		}
+		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
+		if !templ_7745c5c3_IsBuffer {
+			defer func() {
+				templ_7745c5c3_BufErr := templruntime.ReleaseBuffer(templ_7745c5c3_Buffer)
+				if templ_7745c5c3_Err == nil {
+					templ_7745c5c3_Err = templ_7745c5c3_BufErr
+				}
+			}()
+		}
+		ctx = templ.InitializeContext(ctx)
+		templ_7745c5c3_Var7 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var7 == nil {
+			templ_7745c5c3_Var7 = templ.NopComponent
+		}
+		ctx = templ.ClearChildren(ctx)
+		templ_7745c5c3_Var8 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 			templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 			templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
 			if !templ_7745c5c3_IsBuffer {
@@ -307,21 +336,26 @@ func JobPage() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			templ_7745c5c3_Err = JobAddForm().Render(ctx, templ_7745c5c3_Buffer)
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div hx-post=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" ")
+			var templ_7745c5c3_Var9 string
+			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(getjobPOSTURL)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/jobview/jobview.templ`, Line: 148, Col: 26}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = JobTable().Render(ctx, templ_7745c5c3_Buffer)
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"this\" hx-swap=\"outerHTML\" hx-trigger=\"load\"></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			return templ_7745c5c3_Err
 		})
-		templ_7745c5c3_Err = view.Layout(pageTitle).Render(templ.WithChildren(ctx, templ_7745c5c3_Var7), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = view.Layout(pageTitle).Render(templ.WithChildren(ctx, templ_7745c5c3_Var8), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

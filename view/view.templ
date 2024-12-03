@@ -5,6 +5,7 @@ import (
 	"github.com/mangustc/obd/schema"
 	"fmt"
 	"net/http"
+	"github.com/mangustc/obd/schema/jobschema"
 )
 
 templ Layout(title string) {
@@ -15,6 +16,7 @@ templ Layout(title string) {
 		<meta charset="utf-8"/>
 		<script src="https://unpkg.com/htmx.org@1.9.12" integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2" crossorigin="anonymous"></script>
 		<meta name="htmx-config" content='{"useTemplateFragments":"true"}'/>
+		<link rel="stylesheet" href="/css/index.css" media="screen"/>
 	</head>
 	<body>
 		<script>
@@ -29,8 +31,11 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	});
 });
 		</script>
-		<div id="main">
-			{ children... }
+		<div class="root-container">
+			@Navigation(nil)
+			<div id="main" class="outlet-container">
+				{ children... }
+			</div>
 		</div>
 	</body>
 }
@@ -59,21 +64,25 @@ func getString(v any) string {
 	return value
 }
 
-templ input(input *schema.Input) {
+templ Input(input *schema.Input) {
 	<div style="display: flex; flex-direction: row;">
 		if input.InputTitle != "" {
 			<span>{ input.InputTitle }: </span>
 		}
 		if input.InputOptions != nil {
-			<select name={ input.InputName }>
-				for _, inputOption := range input.InputOptions {
-					<option
-						label={ inputOption.InputOptionLabel }
-						value={ inputOption.InputOptionValue }
-						selected?={ inputOption.InputOptionValue == input.InputOptionValueSelected }
-					>{ inputOption.InputOptionLabel }</option>
-				}
-			</select>
+			if !input.InputEditable {
+				<input name={ input.InputName } value={ schema.GetSelectedInputOptionLabel(input) } type={ input.InputType } readonly?={ !input.InputEditable }/>
+			} else {
+				<select name={ input.InputName }>
+					for _, inputOption := range input.InputOptions {
+						<option
+							label={ inputOption.InputOptionLabel }
+							value={ inputOption.InputOptionValue }
+							selected?={ inputOption.InputOptionValue == input.InputOptionValueSelected }
+						>{ inputOption.InputOptionLabel }</option>
+					}
+				</select>
+			}
 		} else if input.InputType == "checkbox" {
 			if !input.InputEditable {
 				<input name={ input.InputName } type={ input.InputType } checked?={ getBool(input.InputValue) } onclick="return false;"/>
@@ -86,12 +95,81 @@ templ input(input *schema.Input) {
 	</div>
 }
 
-// templ Navigation(
+templ Navigation(jobDB *jobschema.JobDB) {
+	<div class="navigation-container">
+		<div class="link-container">
+			if jobDB == nil {
+				<button
+					class="link-button"
+					hx-post="/api/auth"
+					hx-target="#main"
+					hx-swap="innerHTML"
+				>Au</button>
+			} else {
+				if jobDB.JobAccessUser {
+					<button class="link-button">Us</button>
+				}
+				if jobDB.JobAccessJob {
+					<button class="link-button">J</button>
+				}
+				if jobDB.JobAccessStudent {
+					<button class="link-button">St</button>
+				}
+				if jobDB.JobAccessUniGroup {
+					<button class="link-button">UnG</button>
+				}
+				if jobDB.JobAccessFinhelpCtg {
+					<button class="link-button">FC</button>
+				}
+				if jobDB.JobAccessFinhelpStage {
+					<button class="link-button">FS</button>
+				}
+				if jobDB.JobAccessFinhelpProc {
+					<button class="link-button">FP</button>
+				}
+				if jobDB.JobAccessBuilding {
+					<button class="link-button">B</button>
+				}
+				if jobDB.JobAccessCabinetType {
+					<button class="link-button">CT</button>
+				}
+				if jobDB.JobAccessCabinet {
+					<button class="link-button">C</button>
+				}
+				if jobDB.JobAccessClassType {
+					<button class="link-button">ClT</button>
+				}
+				if jobDB.JobAccessProf {
+					<button class="link-button">Pr</button>
+				}
+				if jobDB.JobAccessCourseType {
+					<button class="link-button">CT</button>
+				}
+				if jobDB.JobAccessCourse {
+					<button class="link-button">C</button>
+				}
+				if jobDB.JobAccessPerf {
+					<button class="link-button">P</button>
+				}
+				if jobDB.JobAccessSkip {
+					<button class="link-button">Sk</button>
+				}
+				if jobDB.JobAccessClass {
+					<button class="link-button">Cl</button>
+				}
+				if jobDB.JobAccessSession {
+					<button class="link-button">S</button>
+				}
+			}
+		</div>
+	</div>
+}
+
 templ TableRowEdit(inputs []*schema.Input, bodyVals string, updatePOSTURL string, deletePOSTURL string) {
 	<tr>
 		for _, i := range inputs {
 			<th>
-				@input(i)
+				@Input(i)
 			</th>
 		}
 		<th>
@@ -112,11 +190,11 @@ templ TableRowEdit(inputs []*schema.Input, bodyVals string, updatePOSTURL string
 	</tr>
 }
 
-templ TableRow(alist []any, bodyVals string, editPOSTURL string, deletePOSTURL string) {
+templ TableRow(inputs []*schema.Input, bodyVals string, editPOSTURL string, deletePOSTURL string) {
 	<tr>
-		for _, a := range alist {
+		for _, i := range inputs {
 			<th>
-				@input(schema.NewInputNotEditable(a))
+				@Input(schema.NewInputNotEditable(i))
 			</th>
 		}
 		<th>
@@ -165,7 +243,7 @@ templ InsertForm(title string, insertPOSTURL string, inputs []*schema.Input) {
 		<h2>Insert { title } form:</h2>
 		<div>
 			for _, i := range inputs {
-				@input(i)
+				@Input(i)
 			}
 			<th></th>
 		</div>

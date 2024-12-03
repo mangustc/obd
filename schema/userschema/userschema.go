@@ -2,20 +2,16 @@ package userschema
 
 import (
 	"fmt"
-	"time"
-
-	"github.com/mangustc/obd/util"
 )
 
 type UserDB struct {
-	UserID         int       `json:"UserID"`
-	UserLastname   string    `json:"UserLastname"`
-	UserFirstname  string    `json:"UserFirstname"`
-	UserMiddlename string    `json:"UserMiddlename"`
-	UserPassword   string    `json:"UserPassword"`
-	UserCreatedAt  time.Time `json:"UserCreatedAt"`
-	UserIsHidden   bool      `json:"UserIsHidden"`
-	JobID          int       `json:"JobID"`
+	UserID         int    `json:"UserID"`
+	UserLastname   string `json:"UserLastname"`
+	UserFirstname  string `json:"UserFirstname"`
+	UserMiddlename string `json:"UserMiddlename"`
+	UserPassword   string `json:"UserPassword"`
+	UserIsHidden   bool   `json:"UserIsHidden"`
+	JobID          int    `json:"JobID"`
 }
 
 type UserInsert struct {
@@ -39,12 +35,18 @@ type UserDelete struct {
 	UserID int `json:"UserID"`
 }
 
+type UserGet struct {
+	UserID int `json:"UserID"`
+}
+
+type UsersGet struct{}
+
 func ValidateUserDB(userDB *UserDB) (err error) {
 	if userDB == nil {
 		return fmt.Errorf("Object is nil")
 	}
-	if userDB.UserID <= 0 || userDB.UserLastname == "" || userDB.UserFirstname == "" || userDB.UserPassword == "" ||
-		util.IsZero(userDB.UserCreatedAt) || userDB.JobID <= 0 {
+	if userDB.UserID <= 0 || userDB.UserLastname == "" || userDB.UserFirstname == "" ||
+		userDB.UserPassword == "" || userDB.JobID <= 0 {
 		return fmt.Errorf("One or more neccesary arguments are zero")
 	}
 	return nil
@@ -78,6 +80,23 @@ func ValidateUserDelete(userDelete *UserDelete) (err error) {
 	}
 	if userDelete.UserID <= 0 {
 		return fmt.Errorf("One or more neccesary arguments are zero")
+	}
+	return nil
+}
+
+func ValidateUserGet(userGet *UserGet) (err error) {
+	if userGet == nil {
+		return fmt.Errorf("Object is nil")
+	}
+	if userGet.UserID <= 0 {
+		return fmt.Errorf("One or more neccesary arguments are zero")
+	}
+	return nil
+}
+
+func ValidateUsersGet(userGets *UsersGet) (err error) {
+	if userGets == nil {
+		return fmt.Errorf("Object is nil")
 	}
 	return nil
 }

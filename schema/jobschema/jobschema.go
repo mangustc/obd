@@ -2,6 +2,8 @@ package jobschema
 
 import (
 	"fmt"
+
+	"github.com/mangustc/obd/schema"
 )
 
 type JobDB struct {
@@ -81,6 +83,17 @@ type JobGet struct {
 }
 
 type JobsGet struct{}
+
+func GetJobInputOptionsFromJobsDB(jobsDB []*JobDB) []*schema.InputOption {
+	inputOptions := []*schema.InputOption{}
+	for _, jobDB := range jobsDB {
+		inputOptions = append(inputOptions, &schema.InputOption{
+			InputOptionLabel: fmt.Sprintf("%s", jobDB.JobName),
+			InputOptionValue: fmt.Sprintf("%d", jobDB.JobID),
+		})
+	}
+	return inputOptions
+}
 
 func ValidateJobDB(jobDB *JobDB) (err error) {
 	if jobDB == nil {

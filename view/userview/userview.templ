@@ -1,0 +1,94 @@
+package userview
+
+import (
+	"github.com/mangustc/obd/view"
+	"github.com/mangustc/obd/schema"
+	"github.com/mangustc/obd/schema/userschema"
+	"fmt"
+)
+
+const (
+	pageTitle       = "User"
+	tableTitle      = pageTitle
+	insertFormTitle = tableTitle
+	getPOSTURL      = "/api/user/getusers"
+	insertPOSTURL   = "/api/user/insertuser"
+	editPOSTURL     = "/api/user/edituser"
+	updatePOSTURL   = "/api/user/updateuser"
+	deletePOSTURL   = "/api/user/deleteuser"
+	userTN          = "User"
+	jobTN           = "Job"
+	bodyVals        = `{"` + userTN + `ID": %d}`
+	getuserPOSTURL  = "/api/user"
+)
+
+var (
+	taUserLastname   = schema.NewTA(userTN+"Lastname", "Last Name", schema.StringInput)
+	taUserFirstname  = schema.NewTA(userTN+"Firstname", "First Name", schema.StringInput)
+	taUserMiddlename = schema.NewTA(userTN+"Middlename", "Middle Name", schema.StringInput)
+	taUserPassword   = schema.NewTA(userTN+"Password", "Password", schema.StringInput)
+	taJobID          = schema.NewTA(jobTN+"ID", "Job", schema.OptionInput)
+	taUserIsHidden   = schema.NewTA(userTN+"IsHidden", "Is Hidden", schema.BooleanInput)
+)
+
+func getTableHeaders() []*schema.TableHeaderColumn {
+	return []*schema.TableHeaderColumn{
+		schema.NewTableHeaderColumn(taUserLastname.TATitle, 15),
+		schema.NewTableHeaderColumn(taUserFirstname.TATitle, 15),
+		schema.NewTableHeaderColumn(taUserMiddlename.TATitle, 15),
+		schema.NewTableHeaderColumn(taUserPassword.TATitle, 20),
+		schema.NewTableHeaderColumn(taJobID.TATitle, 20),
+		schema.NewTableHeaderColumn(taUserIsHidden.TATitle, 10),
+	}
+}
+
+func getInsertFormInputs(jobInputOptions []*schema.InputOption) []*schema.Input {
+	return []*schema.Input{
+		schema.NewInput(taUserLastname.TATitle, taUserLastname.TAName, taUserLastname.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taUserFirstname.TATitle, taUserFirstname.TAName, taUserFirstname.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taUserMiddlename.TATitle, taUserMiddlename.TAName, taUserMiddlename.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taUserPassword.TATitle, taUserPassword.TAName, taUserPassword.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobID.TATitle, taJobID.TAName, taJobID.TAInputType, "", nil, jobInputOptions, ""),
+	}
+}
+
+func getInputsFromUserDB(userDB *userschema.UserDB, jobInputOptions []*schema.InputOption) []*schema.Input {
+	return []*schema.Input{
+		schema.NewInput("", taUserLastname.TAName, taUserLastname.TAInputType, userDB.UserLastname, nil, nil, ""),
+		schema.NewInput("", taUserFirstname.TAName, taUserFirstname.TAInputType, userDB.UserFirstname, nil, nil, ""),
+		schema.NewInput("", taUserMiddlename.TAName, taUserMiddlename.TAInputType, userDB.UserMiddlename, nil, nil, ""),
+		schema.NewInput("", taUserPassword.TAName, taUserPassword.TAInputType, userDB.UserPassword, nil, nil, ""),
+		schema.NewInput("", taJobID.TAName, taJobID.TAInputType, nil, nil, jobInputOptions, fmt.Sprint(userDB.JobID)),
+		schema.NewInput("", taUserIsHidden.TAName, taUserIsHidden.TAInputType, userDB.UserIsHidden, nil, nil, ""),
+	}
+}
+
+templ UserTableRowEdit(userDB *userschema.UserDB, jobInputOptions []*schema.InputOption) {
+	@view.TableRowEdit(getInputsFromUserDB(userDB, jobInputOptions), fmt.Sprintf(bodyVals, userDB.UserID), updatePOSTURL, deletePOSTURL)
+}
+
+templ UserTableRow(userDB *userschema.UserDB, jobInputOptions []*schema.InputOption) {
+	@view.TableRow(getInputsFromUserDB(userDB, jobInputOptions), fmt.Sprintf(bodyVals, userDB.UserID), editPOSTURL, deletePOSTURL)
+}
+
+templ UserTableRows(usersDB []*userschema.UserDB, jobInputOptions []*schema.InputOption) {
+	for _, userDB := range usersDB {
+		@UserTableRow(userDB, jobInputOptions)
+	}
+}
+
+templ User(jobInputOptions []*schema.InputOption) {
+	@view.InsertForm(insertFormTitle, insertPOSTURL, getInsertFormInputs(jobInputOptions))
+	@view.Table(tableTitle, getPOSTURL, getTableHeaders())
+}
+
+templ UserPage() {
+	@view.Layout(pageTitle) {
+		<div
+			hx-post={ getuserPOSTURL }
+			hx-target="this"
+			hx-swap="outerHTML"
+			hx-trigger="load"
+		></div>
+	}
+}

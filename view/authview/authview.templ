@@ -1,4 +1,60 @@
 package authview
 
-templ TemplateName() {
+import "github.com/mangustc/obd/view"
+import "github.com/mangustc/obd/schema"
+
+const (
+	pageTitle              = "Auth"
+	userTN                 = "User"
+	loginPOSTURL           = "/api/auth/login"
+	getusersoptionsPOSTURL = "/api/auth/getusersoptions"
+	getauthPOSTURL         = "/api/auth"
+	// insertPOSTURL = "/api/job/insertjob"
+	// editPOSTURL   = "/api/job/editjob"
+	// updatePOSTURL = "/api/job/updatejob"
+	// deletePOSTURL = "/api/job/deletejob"
+)
+
+templ StudentInput(inputOptions []*schema.InputOption) {
+	@view.Input(schema.NewInput("", userTN+"ID", schema.OptionInput, nil, nil, inputOptions, ""))
+}
+
+templ Auth() {
+	<div>
+		<h3>Login</h3>
+		<div style="display: flex; flex-direction: column;">
+			<label>Choose User:</label>
+			<span
+				hx-post={ getusersoptionsPOSTURL }
+				hx-target="this"
+				hx-swap="outerHTML"
+				hx-trigger="load"
+			>Loading...</span>
+			<label>Password:</label>
+			<input
+				type="password"
+				id="password"
+				name="password"
+				placeholder="Enter your Password"
+				required
+				value=""
+			/>
+		</div>
+		<div>
+			<button type="submit">
+				Login
+			</button>
+		</div>
+	</div>
+}
+
+templ AuthPage() {
+	@view.Layout(pageTitle) {
+		<div
+			hx-post={ getauthPOSTURL }
+			hx-target="this"
+			hx-swap="outerHTML"
+			hx-trigger="load"
+		></div>
+	}
 }

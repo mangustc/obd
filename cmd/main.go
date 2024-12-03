@@ -5,10 +5,14 @@ import (
 	"net/http"
 
 	"github.com/mangustc/obd/database"
+	"github.com/mangustc/obd/handler"
+	"github.com/mangustc/obd/handler/authhandler"
 	"github.com/mangustc/obd/handler/jobhandler"
+	"github.com/mangustc/obd/handler/userhandler"
 	"github.com/mangustc/obd/logger"
 	"github.com/mangustc/obd/middleware"
 	"github.com/mangustc/obd/service/jobservice"
+	"github.com/mangustc/obd/service/userservice"
 )
 
 var databaseFile = "database.db"
@@ -51,7 +55,6 @@ CREATE TABLE IF NOT EXISTS %[1]s (
 	%[1]sMiddlename VARCHAR(35) NOT NULL,
 	%[1]sPassword VARCHAR(30) NOT NULL,
 	%[2]sID INTEGER NOT NULL,
-	%[1]sCreatedAt DATETIME DEFAULT (datetime('now')),
 	%[1]sIsHidden INTEGER NOT NULL DEFAULT FALSE,
 	FOREIGN KEY (%[2]sID) REFERENCES %[2]s (%[2]sID) ON DELETE RESTRICT
 );`, userTN, jobTN)
@@ -86,7 +89,6 @@ CREATE TABLE IF NOT EXISTS %[1]s (
 	%[1]sMiddlename VARCHAR(35) NOT NULL,
 	%[1]sPhoneNumber VARCHAR(15) NOT NULL,
 	%[2]sID INTEGER NOT NULL,
-	%[1]sCreatedAt DATETIME DEFAULT (datetime('now')),
 	%[1]sIsHidden INTEGER NOT NULL DEFAULT FALSE,
 	FOREIGN KEY (%[2]sID) REFERENCES %[2]s (%[2]sID) ON DELETE RESTRICT
 );`, studentTN, groupTN)
@@ -150,7 +152,6 @@ CREATE TABLE IF NOT EXISTS %[1]s (
 	%[1]sMiddlename VARCHAR(35) NOT NULL,
 	%[1]sPhoneNumber VARCHAR(15) NOT NULL,
 	%[1]sEmail VARCHAR(100) NOT NULL,
-	%[1]sCreatedAt DATETIME DEFAULT (datetime('now')),
 	%[1]sIsHidden INTEGER NOT NULL DEFAULT FALSE
 );`, profTN)
 	courseTypeCT = fmt.Sprintf(`
@@ -173,7 +174,8 @@ CREATE TABLE IF NOT EXISTS %[1]s (
 	classCT = fmt.Sprintf(`
 CREATE TABLE IF NOT EXISTS %[1]s (
 	%[1]sID INTEGER PRIMARY KEY AUTOINCREMENT,
-	%[1]sStart DATETIME NOT NULL,
+	%[1]sStart DATE NOT NULL,
+	%[1]sNumber INTEGER NOT NULL,
 	%[2]sID INTEGER NOT NULL,
 	%[3]sID INTEGER NOT NULL,
 	%[4]sID INTEGER NOT NULL,
@@ -229,13 +231,34 @@ func main() {
 	js := jobservice.NewJobService(db, jobTN)
 	jh := jobhandler.NewJobHandler(js)
 
-	router.HandleFunc("GET /job", jh.Job)
+	router.HandleFunc("GET /job", jh.JobPage)
+	router.HandleFunc("POST /api/job", jh.Job)
 	router.HandleFunc("POST /api/job/getjobs", jh.GetJobs)
 	router.HandleFunc("POST /api/job/insertjob", jh.InsertJob)
 	router.HandleFunc("POST /api/job/updatejob", jh.UpdateJob)
 	router.HandleFunc("POST /api/job/deletejob", jh.DeleteJob)
 	router.HandleFunc("POST /api/job/editjob", jh.EditJob)
 
+	us := userservice.NewUserService(db, userTN, jobTN)
+	uh := userhandler.NewUserHandler(us, js)
+
+	router.HandleFunc("GET /user", uh.UserPage)
+	router.HandleFunc("POST /api/user", uh.User)
+	router.HandleFunc("POST /api/user/getusers", uh.GetUsers)
+	router.HandleFunc("POST /api/user/insertuser", uh.InsertUser)
+	router.HandleFunc("POST /api/user/updateuser", uh.UpdateUser)
+	router.HandleFunc("POST /api/user/deleteuser", uh.DeleteUser)
+	router.HandleFunc("POST /api/user/edituser", uh.EditUser)
+
+	// aus := authservice.NewAuthService(db, jobTN)
+	auh := authhandler.NewAuthHandler(js)
+
+	router.HandleFunc("GET /auth", auh.AuthPage)
+	router.HandleFunc("POST /api/auth", auh.Auth)
+
+	router.HandleFunc("GET /", handler.Default)
+	fs := http.FileServer(http.Dir("./css"))
+	router.Handle("GET /css/", http.StripPrefix("/css", fs))
 	port := ":1323"
 	middlewareStack := middleware.CreateStack(
 		middleware.Logging,
