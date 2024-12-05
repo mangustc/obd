@@ -5,20 +5,25 @@ import (
 
 	"github.com/mangustc/obd/errs"
 	"github.com/mangustc/obd/handler"
+	"github.com/mangustc/obd/logger"
 	"github.com/mangustc/obd/schema/jobschema"
 	"github.com/mangustc/obd/util"
 	"github.com/mangustc/obd/view"
 	"github.com/mangustc/obd/view/jobview"
 )
 
-func NewJobHandler(js handler.JobService) *JobHandler {
+func NewJobHandler(ss handler.SessionService, us handler.UserService, js handler.JobService) *JobHandler {
 	return &JobHandler{
-		JobService: js,
+		SessionService: ss,
+		UserService:    us,
+		JobService:     js,
 	}
 }
 
 type JobHandler struct {
-	JobService handler.JobService
+	SessionService handler.SessionService
+	UserService    handler.UserService
+	JobService     handler.JobService
 }
 
 func (jh *JobHandler) Job(w http.ResponseWriter, r *http.Request) {
@@ -80,6 +85,20 @@ func (jh *JobHandler) InsertJob(w http.ResponseWriter, r *http.Request) {
 	in := &jobschema.JobInsert{}
 	defer util.RespondHTTP(w, &code, &out)
 
+	sessionJobDB, err := util.GetJobBySessionCookie(
+		w, r,
+		jh.SessionService.GetSession,
+		jh.UserService.GetUser,
+		jh.JobService.GetJob,
+	)
+	if !sessionJobDB.JobAccessJob {
+		code, str := util.GetCodeByErr(errs.ErrUnauthorized)
+		logger.Error.Print(str)
+		// TODO: Handle error somehow (?)
+		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		return
+	}
+
 	in.JobName = util.GetStringFromForm(r, "JobName")
 	in.JobAccessUser, _ = util.GetBoolFromForm(r, "JobAccessUser")
 	in.JobAccessJob, _ = util.GetBoolFromForm(r, "JobAccessJob")
@@ -135,6 +154,20 @@ func (jh *JobHandler) EditJob(w http.ResponseWriter, r *http.Request) {
 	in := &jobschema.JobGet{}
 	defer util.RespondHTTP(w, &code, &out)
 
+	sessionJobDB, err := util.GetJobBySessionCookie(
+		w, r,
+		jh.SessionService.GetSession,
+		jh.UserService.GetUser,
+		jh.JobService.GetJob,
+	)
+	if !sessionJobDB.JobAccessJob {
+		code, str := util.GetCodeByErr(errs.ErrUnauthorized)
+		logger.Error.Print(str)
+		// TODO: Handle error somehow (?)
+		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		return
+	}
+
 	in.JobID, err = util.GetIntFromForm(r, "JobID")
 	err = jobschema.ValidateJobGet(in)
 	if err != nil {
@@ -161,6 +194,20 @@ func (jh *JobHandler) UpdateJob(w http.ResponseWriter, r *http.Request) {
 	var out []byte
 	in := &jobschema.JobUpdate{}
 	defer util.RespondHTTP(w, &code, &out)
+
+	sessionJobDB, err := util.GetJobBySessionCookie(
+		w, r,
+		jh.SessionService.GetSession,
+		jh.UserService.GetUser,
+		jh.JobService.GetJob,
+	)
+	if !sessionJobDB.JobAccessJob {
+		code, str := util.GetCodeByErr(errs.ErrUnauthorized)
+		logger.Error.Print(str)
+		// TODO: Handle error somehow (?)
+		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		return
+	}
 
 	in.JobID, err = util.GetIntFromForm(r, "JobID")
 	if err != nil {
@@ -221,6 +268,20 @@ func (jh *JobHandler) DeleteJob(w http.ResponseWriter, r *http.Request) {
 	var out []byte
 	in := &jobschema.JobDelete{}
 	defer util.RespondHTTP(w, &code, &out)
+
+	sessionJobDB, err := util.GetJobBySessionCookie(
+		w, r,
+		jh.SessionService.GetSession,
+		jh.UserService.GetUser,
+		jh.JobService.GetJob,
+	)
+	if !sessionJobDB.JobAccessJob {
+		code, str := util.GetCodeByErr(errs.ErrUnauthorized)
+		logger.Error.Print(str)
+		// TODO: Handle error somehow (?)
+		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		return
+	}
 
 	in.JobID, err = util.GetIntFromForm(r, "JobID")
 	err = jobschema.ValidateJobDelete(in)

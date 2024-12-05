@@ -13,16 +13,18 @@ import (
 	"github.com/mangustc/obd/view/userview"
 )
 
-func NewUserHandler(us handler.UserService, js handler.JobService) *UserHandler {
+func NewUserHandler(ss handler.SessionService, us handler.UserService, js handler.JobService) *UserHandler {
 	return &UserHandler{
-		UserService: us,
-		JobService:  js,
+		SessionService: ss,
+		UserService:    us,
+		JobService:     js,
 	}
 }
 
 type UserHandler struct {
-	UserService handler.UserService
-	JobService  handler.JobService
+	SessionService handler.SessionService
+	UserService    handler.UserService
+	JobService     handler.JobService
 }
 
 func (uh *UserHandler) User(w http.ResponseWriter, r *http.Request) {
@@ -94,6 +96,20 @@ func (uh *UserHandler) InsertUser(w http.ResponseWriter, r *http.Request) {
 	in := &userschema.UserInsert{}
 	defer util.RespondHTTP(w, &code, &out)
 
+	sessionJobDB, err := util.GetJobBySessionCookie(
+		w, r,
+		uh.SessionService.GetSession,
+		uh.UserService.GetUser,
+		uh.JobService.GetJob,
+	)
+	if !sessionJobDB.JobAccessUser {
+		code, str := util.GetCodeByErr(errs.ErrUnauthorized)
+		logger.Error.Print(str)
+		// TODO: Handle error somehow (?)
+		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		return
+	}
+
 	in.UserLastname = util.GetStringFromForm(r, "UserLastname")
 	in.UserFirstname = util.GetStringFromForm(r, "UserFirstname")
 	in.UserMiddlename = util.GetStringFromForm(r, "UserMiddlename")
@@ -148,6 +164,20 @@ func (uh *UserHandler) EditUser(w http.ResponseWriter, r *http.Request) {
 	in := &userschema.UserGet{}
 	defer util.RespondHTTP(w, &code, &out)
 
+	sessionJobDB, err := util.GetJobBySessionCookie(
+		w, r,
+		uh.SessionService.GetSession,
+		uh.UserService.GetUser,
+		uh.JobService.GetJob,
+	)
+	if !sessionJobDB.JobAccessUser {
+		code, str := util.GetCodeByErr(errs.ErrUnauthorized)
+		logger.Error.Print(str)
+		// TODO: Handle error somehow (?)
+		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		return
+	}
+
 	in.UserID, err = util.GetIntFromForm(r, "UserID")
 	err = userschema.ValidateUserGet(in)
 	if err != nil {
@@ -180,6 +210,20 @@ func (uh *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	var out []byte
 	in := &userschema.UserUpdate{}
 	defer util.RespondHTTP(w, &code, &out)
+
+	sessionJobDB, err := util.GetJobBySessionCookie(
+		w, r,
+		uh.SessionService.GetSession,
+		uh.UserService.GetUser,
+		uh.JobService.GetJob,
+	)
+	if !sessionJobDB.JobAccessUser {
+		code, str := util.GetCodeByErr(errs.ErrUnauthorized)
+		logger.Error.Print(str)
+		// TODO: Handle error somehow (?)
+		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		return
+	}
 
 	in.UserID, err = util.GetIntFromForm(r, "UserID")
 	if err != nil {
@@ -240,6 +284,20 @@ func (uh *UserHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	var out []byte
 	in := &userschema.UserDelete{}
 	defer util.RespondHTTP(w, &code, &out)
+
+	sessionJobDB, err := util.GetJobBySessionCookie(
+		w, r,
+		uh.SessionService.GetSession,
+		uh.UserService.GetUser,
+		uh.JobService.GetJob,
+	)
+	if !sessionJobDB.JobAccessUser {
+		code, str := util.GetCodeByErr(errs.ErrUnauthorized)
+		logger.Error.Print(str)
+		// TODO: Handle error somehow (?)
+		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		return
+	}
 
 	in.UserID, err = util.GetIntFromForm(r, "UserID")
 	err = userschema.ValidateUserDelete(in)

@@ -12,6 +12,9 @@ import (
 	"github.com/a-h/templ"
 	"github.com/google/uuid"
 	E "github.com/mangustc/obd/errs"
+	"github.com/mangustc/obd/schema/jobschema"
+	"github.com/mangustc/obd/schema/sessionschema"
+	"github.com/mangustc/obd/schema/userschema"
 	"github.com/mattn/go-sqlite3"
 )
 
@@ -76,10 +79,49 @@ func InitHTMLHandler(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 }
 
-func SetUserSessionCookie(w http.ResponseWriter, sessionUUID uuid.UUID) {
+func GetJobBySessionCookie(
+	w http.ResponseWriter,
+	r *http.Request,
+	getSession func(*sessionschema.SessionGet) (*sessionschema.SessionDB, error),
+	getUser func(*userschema.UserGet) (*userschema.UserDB, error),
+	getJob func(*jobschema.JobGet) (*jobschema.JobDB, error),
+) (*jobschema.JobDB, error) {
+	sessionUUID, err := GetUserSessionCookieValue(w, r)
+	if err != nil {
+		return &jobschema.JobDB{}, err
+	}
+
+	sessionDB, err := getSession(&sessionschema.SessionGet{
+		SessionUUID: sessionUUID,
+	})
+	if err != nil {
+		DeleteUserSessionCookie(w)
+		return &jobschema.JobDB{}, E.ErrNotFound
+	}
+
+	userDB, err := getUser(&userschema.UserGet{
+		UserID: sessionDB.UserID,
+	})
+	if err != nil {
+		DeleteUserSessionCookie(w)
+		return &jobschema.JobDB{}, E.ErrNotFound
+	}
+
+	jobDB, err := getJob(&jobschema.JobGet{
+		JobID: userDB.JobID,
+	})
+	if err != nil {
+		DeleteUserSessionCookie(w)
+		return &jobschema.JobDB{}, E.ErrNotFound
+	}
+
+	return jobDB, nil
+}
+
+func SetUserSessionCookie(w http.ResponseWriter, sessionUUID string) {
 	cookie := http.Cookie{
 		Name:     "session",
-		Value:    sessionUUID.String(),
+		Value:    sessionUUID,
 		Path:     "/",
 		HttpOnly: true,
 		Secure:   true,
@@ -89,33 +131,20 @@ func SetUserSessionCookie(w http.ResponseWriter, sessionUUID uuid.UUID) {
 	http.SetCookie(w, &cookie)
 }
 
-func GetUserSessionCookieValue(w http.ResponseWriter, r *http.Request) (uuid.UUID, error) {
-	sessionUUID, err := getUserSessionCookieValue(r)
-	if err != nil {
-		switch err {
-		case E.ErrNotFound:
-			return uuid.UUID{}, err
-		case E.ErrUnprocessableEntity:
-			DeleteUserSessionCookie(w)
-			return uuid.UUID{}, E.ErrNotFound
-		default:
-			return uuid.UUID{}, E.ErrInternalServer
-		}
-	}
-	return sessionUUID, nil
-}
-
-func getUserSessionCookieValue(r *http.Request) (uuid.UUID, error) {
+func GetUserSessionCookieValue(w http.ResponseWriter, r *http.Request) (string, error) {
 	cookie, err := r.Cookie("session")
 	if err != nil {
 		if errors.Is(err, http.ErrNoCookie) {
-			return uuid.UUID{}, E.ErrNotFound
+			return "", E.ErrNotFound
 		}
-		return uuid.UUID{}, E.ErrInternalServer
+		DeleteUserSessionCookie(w)
+		return "", E.ErrInternalServer
 	}
-	sessionUUID, err := uuid.Parse(cookie.Value)
+	sessionUUID := cookie.Value
+	err = uuid.Validate(sessionUUID)
 	if err != nil {
-		return uuid.UUID{}, E.ErrUnprocessableEntity
+		DeleteUserSessionCookie(w)
+		return "", E.ErrNotFound
 	}
 	return sessionUUID, nil
 }
@@ -162,4 +191,19 @@ func GetFloatFromString(str string) (float32, error) {
 func IsZero(v any) bool {
 	vr := reflect.ValueOf(v)
 	return vr.IsZero()
+}
+
+func GetCodeByErr(err error) (int, string) {
+	switch err {
+	case E.ErrInternalServer:
+		return http.StatusInternalServerError, fmt.Sprintf("Internal server error (%s)", err.Error())
+	case E.ErrUnprocessableEntity:
+		return http.StatusUnprocessableEntity, fmt.Sprintf("Unprocessable Entity (%s)", err.Error())
+	case E.ErrNotFound:
+		return http.StatusNotFound, fmt.Sprintf("Not Found (%s)", err.Error())
+	case E.ErrUnauthorized:
+		return http.StatusUnauthorized, fmt.Sprintf("Unauthorized (%s)", err.Error())
+	default:
+		panic("Random error?")
+	}
 }

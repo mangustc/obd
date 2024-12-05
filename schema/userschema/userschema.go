@@ -2,6 +2,8 @@ package userschema
 
 import (
 	"fmt"
+
+	"github.com/mangustc/obd/schema"
 )
 
 type UserDB struct {
@@ -40,6 +42,28 @@ type UserGet struct {
 }
 
 type UsersGet struct{}
+
+func GetUserInputOptionsFromUsersDB(usersDB []*UserDB) []*schema.InputOption {
+	notHiddenUsersDB := GetNotHiddenUsersDB(usersDB)
+	inputOptions := []*schema.InputOption{}
+	for _, userDB := range notHiddenUsersDB {
+		inputOptions = append(inputOptions, &schema.InputOption{
+			InputOptionLabel: fmt.Sprintf("%s %s %s", userDB.UserLastname, userDB.UserFirstname, userDB.UserMiddlename),
+			InputOptionValue: fmt.Sprintf("%d", userDB.UserID),
+		})
+	}
+	return inputOptions
+}
+
+func GetNotHiddenUsersDB(usersDB []*UserDB) []*UserDB {
+	notHiddenUsersDB := []*UserDB{}
+	for _, userDB := range usersDB {
+		if !userDB.UserIsHidden {
+			notHiddenUsersDB = append(notHiddenUsersDB, userDB)
+		}
+	}
+	return notHiddenUsersDB
+}
 
 func ValidateUserDB(userDB *UserDB) (err error) {
 	if userDB == nil {

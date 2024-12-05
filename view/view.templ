@@ -8,6 +8,19 @@ import (
 	"github.com/mangustc/obd/schema/jobschema"
 )
 
+templ Navigation() {
+	<span
+		hx-post="/api/navigation"
+		hx-target="this"
+		hx-swap="outerHTML"
+		hx-trigger="load"
+	>Loading...</span>
+}
+
+templ ClearMain() {
+	<div id="main" class="outlet-container" hx-swap-oob="innerHTML"></div>
+}
+
 templ Layout(title string) {
 	<!DOCTYPE html>
 	<head>
@@ -31,8 +44,8 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	});
 });
 		</script>
-		<div class="root-container">
-			@Navigation(nil)
+		<div class="root-container" id="root">
+			@Navigation()
 			<div id="main" class="outlet-container">
 				{ children... }
 			</div>
@@ -95,8 +108,8 @@ templ Input(input *schema.Input) {
 	</div>
 }
 
-templ Navigation(jobDB *jobschema.JobDB) {
-	<div class="navigation-container">
+templ NavigationByJobDB(jobDB *jobschema.JobDB) {
+	<div class="navigation-container" id="navigation">
 		<div class="link-container">
 			if jobDB == nil {
 				<button
@@ -105,61 +118,159 @@ templ Navigation(jobDB *jobschema.JobDB) {
 					hx-target="#main"
 					hx-swap="innerHTML"
 				>Au</button>
+				<p>OBD Project</p>
 			} else {
 				if jobDB.JobAccessUser {
-					<button class="link-button">Us</button>
+					<button
+						class="link-button"
+						hx-post="/api/user"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>Us</button>
 				}
 				if jobDB.JobAccessJob {
-					<button class="link-button">J</button>
+					<button
+						class="link-button"
+						hx-post="/api/job"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>J</button>
 				}
 				if jobDB.JobAccessStudent {
-					<button class="link-button">St</button>
+					<button
+						class="link-button"
+						hx-post="/api/student"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>St</button>
 				}
 				if jobDB.JobAccessUniGroup {
-					<button class="link-button">UnG</button>
+					<button
+						class="link-button"
+						hx-post="/api/unigroup"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>UnG</button>
 				}
 				if jobDB.JobAccessFinhelpCtg {
-					<button class="link-button">FC</button>
+					<button
+						class="link-button"
+						hx-post="/api/unigroup"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>FC</button>
 				}
 				if jobDB.JobAccessFinhelpStage {
-					<button class="link-button">FS</button>
+					<button
+						class="link-button"
+						hx-post="/api/finhelpstage"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>FS</button>
 				}
 				if jobDB.JobAccessFinhelpProc {
-					<button class="link-button">FP</button>
+					<button
+						class="link-button"
+						hx-post="/api/finhelpproc"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>FP</button>
 				}
 				if jobDB.JobAccessBuilding {
-					<button class="link-button">B</button>
+					<button
+						class="link-button"
+						hx-post="/api/building"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>B</button>
 				}
 				if jobDB.JobAccessCabinetType {
-					<button class="link-button">CT</button>
+					<button
+						class="link-button"
+						hx-post="/api/cabinettype"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>CT</button>
 				}
 				if jobDB.JobAccessCabinet {
-					<button class="link-button">C</button>
+					<button
+						class="link-button"
+						hx-post="/api/cabinet"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>C</button>
 				}
 				if jobDB.JobAccessClassType {
-					<button class="link-button">ClT</button>
+					<button
+						class="link-button"
+						hx-post="/api/classtype"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>ClT</button>
 				}
 				if jobDB.JobAccessProf {
-					<button class="link-button">Pr</button>
+					<button
+						class="link-button"
+						hx-post="/api/prof"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>Pr</button>
 				}
 				if jobDB.JobAccessCourseType {
-					<button class="link-button">CT</button>
+					<button
+						class="link-button"
+						hx-post="/api/coursetype"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>CT</button>
 				}
 				if jobDB.JobAccessCourse {
-					<button class="link-button">C</button>
+					<button
+						class="link-button"
+						hx-post="/api/course"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>C</button>
 				}
 				if jobDB.JobAccessPerf {
-					<button class="link-button">P</button>
+					<button
+						class="link-button"
+						hx-post="/api/perf"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>P</button>
 				}
 				if jobDB.JobAccessSkip {
-					<button class="link-button">Sk</button>
+					<button
+						class="link-button"
+						hx-post="/api/skip"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>Sk</button>
 				}
 				if jobDB.JobAccessClass {
-					<button class="link-button">Cl</button>
+					<button
+						class="link-button"
+						hx-post="/api/class"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>Cl</button>
 				}
 				if jobDB.JobAccessSession {
-					<button class="link-button">S</button>
+					<button
+						class="link-button"
+						hx-post="/api/session"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>S</button>
 				}
+				<p>OBD Project</p>
+				<button
+					class="link-button"
+					hx-post="/api/auth/logout"
+					hx-target="#navigation"
+					hx-swap="outerHTML"
+				>L</button>
 			}
 		</div>
 	</div>

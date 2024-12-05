@@ -12,6 +12,7 @@ import (
 	"github.com/mangustc/obd/logger"
 	"github.com/mangustc/obd/middleware"
 	"github.com/mangustc/obd/service/jobservice"
+	"github.com/mangustc/obd/service/sessionservice"
 	"github.com/mangustc/obd/service/userservice"
 )
 
@@ -229,7 +230,10 @@ func main() {
 	logger.Info.Println("Database created")
 
 	js := jobservice.NewJobService(db, jobTN)
-	jh := jobhandler.NewJobHandler(js)
+	us := userservice.NewUserService(db, userTN, jobTN)
+	ss := sessionservice.NewSessionService(db, sessionTN, userTN)
+
+	jh := jobhandler.NewJobHandler(ss, us, js)
 
 	router.HandleFunc("GET /job", jh.JobPage)
 	router.HandleFunc("POST /api/job", jh.Job)
@@ -239,8 +243,7 @@ func main() {
 	router.HandleFunc("POST /api/job/deletejob", jh.DeleteJob)
 	router.HandleFunc("POST /api/job/editjob", jh.EditJob)
 
-	us := userservice.NewUserService(db, userTN, jobTN)
-	uh := userhandler.NewUserHandler(us, js)
+	uh := userhandler.NewUserHandler(ss, us, js)
 
 	router.HandleFunc("GET /user", uh.UserPage)
 	router.HandleFunc("POST /api/user", uh.User)
@@ -250,13 +253,17 @@ func main() {
 	router.HandleFunc("POST /api/user/deleteuser", uh.DeleteUser)
 	router.HandleFunc("POST /api/user/edituser", uh.EditUser)
 
-	// aus := authservice.NewAuthService(db, jobTN)
-	auh := authhandler.NewAuthHandler(js)
+	auh := authhandler.NewAuthHandler(ss, us)
 
 	router.HandleFunc("GET /auth", auh.AuthPage)
 	router.HandleFunc("POST /api/auth", auh.Auth)
+	router.HandleFunc("POST /api/auth/userinput", auh.UserInput)
+	router.HandleFunc("POST /api/auth/login", auh.AuthLogin)
+	router.HandleFunc("POST /api/auth/logout", auh.AuthLogout)
 
-	router.HandleFunc("GET /", handler.Default)
+	dh := handler.NewDefaultHandler(ss, us, js)
+	router.HandleFunc("GET /", dh.Default)
+	router.HandleFunc("POST /api/navigation", dh.Navigation)
 	fs := http.FileServer(http.Dir("./css"))
 	router.Handle("GET /css/", http.StripPrefix("/css", fs))
 	port := ":1323"

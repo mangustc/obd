@@ -4,28 +4,29 @@ import "github.com/mangustc/obd/view"
 import "github.com/mangustc/obd/schema"
 
 const (
-	pageTitle              = "Auth"
-	userTN                 = "User"
-	loginPOSTURL           = "/api/auth/login"
-	getusersoptionsPOSTURL = "/api/auth/getusersoptions"
-	getauthPOSTURL         = "/api/auth"
-	// insertPOSTURL = "/api/job/insertjob"
-	// editPOSTURL   = "/api/job/editjob"
-	// updatePOSTURL = "/api/job/updatejob"
-	// deletePOSTURL = "/api/job/deletejob"
+	pageTitle        = "Auth"
+	userTN           = "User"
+	loginPOSTURL     = "/api/auth/login"
+	userinputPOSTURL = "/api/auth/userinput"
+	getauthPOSTURL   = "/api/auth"
 )
 
-templ StudentInput(inputOptions []*schema.InputOption) {
-	@view.Input(schema.NewInput("", userTN+"ID", schema.OptionInput, nil, nil, inputOptions, ""))
+var (
+	taUserID       = schema.NewTA(userTN+"ID", "User", schema.OptionInput)
+	taUserPassword = schema.NewTA(userTN+"Password", "User Password", schema.StringInput)
+)
+
+templ UserInput(userInputOptions []*schema.InputOption) {
+	@view.Input(schema.NewInput("", taUserID.TAName, taUserID.TAInputType, nil, nil, userInputOptions, ""))
 }
 
 templ Auth() {
 	<div>
 		<h3>Login</h3>
-		<div style="display: flex; flex-direction: column;">
+		<div style="display: flex; flex-direction: column;" id="auth-form">
 			<label>Choose User:</label>
 			<span
-				hx-post={ getusersoptionsPOSTURL }
+				hx-post={ userinputPOSTURL }
 				hx-target="this"
 				hx-swap="outerHTML"
 				hx-trigger="load"
@@ -33,15 +34,19 @@ templ Auth() {
 			<label>Password:</label>
 			<input
 				type="password"
-				id="password"
-				name="password"
+				name={ taUserPassword.TAName }
 				placeholder="Enter your Password"
 				required
 				value=""
 			/>
 		</div>
 		<div>
-			<button type="submit">
+			<button
+				hx-post={ loginPOSTURL }
+				hx-include="#auth-form"
+				hx-swap="outerHTML"
+				hx-target="#navigation"
+			>
 				Login
 			</button>
 		</div>
