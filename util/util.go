@@ -12,9 +12,11 @@ import (
 	"github.com/a-h/templ"
 	"github.com/google/uuid"
 	E "github.com/mangustc/obd/errs"
+	"github.com/mangustc/obd/schema"
 	"github.com/mangustc/obd/schema/jobschema"
 	"github.com/mangustc/obd/schema/sessionschema"
 	"github.com/mangustc/obd/schema/userschema"
+	"github.com/mangustc/obd/view"
 	"github.com/mattn/go-sqlite3"
 )
 
@@ -206,4 +208,14 @@ func GetCodeByErr(err error) (int, string) {
 	default:
 		panic("Random error?")
 	}
+}
+
+func RenderMsg(w http.ResponseWriter, r *http.Request, writeBytes *[]byte, notificationType schema.NotificationType, msg string) {
+	w.Header().Add("HX-Retarget", "#notifications")
+	w.Header().Add("HX-Reswap", "innerHTML")
+	RenderComponent(r, writeBytes, view.ErrorIndex(notificationType, msg))
+}
+
+func RenderErrorByCode(w http.ResponseWriter, r *http.Request, writeBytes *[]byte, code int) {
+	RenderMsg(w, r, writeBytes, schema.ErrorNotification, http.StatusText(code))
 }

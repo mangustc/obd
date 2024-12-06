@@ -8,7 +8,6 @@ import (
 	"github.com/mangustc/obd/logger"
 	"github.com/mangustc/obd/schema/jobschema"
 	"github.com/mangustc/obd/util"
-	"github.com/mangustc/obd/view"
 	"github.com/mangustc/obd/view/jobview"
 )
 
@@ -60,7 +59,7 @@ func (jh *JobHandler) GetJobs(w http.ResponseWriter, r *http.Request) {
 	err = jobschema.ValidateJobsGet(in)
 	if err != nil {
 		code = http.StatusInternalServerError
-		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		util.RenderErrorByCode(w, r, &out, code)
 		return
 	}
 
@@ -68,7 +67,7 @@ func (jh *JobHandler) GetJobs(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		if err == errs.ErrInternalServer {
 			code = http.StatusInternalServerError
-			util.RenderComponent(r, &out, view.ErrorIndex(code))
+			util.RenderErrorByCode(w, r, &out, code)
 			return
 		}
 	}
@@ -95,7 +94,7 @@ func (jh *JobHandler) InsertJob(w http.ResponseWriter, r *http.Request) {
 		code, str := util.GetCodeByErr(errs.ErrUnauthorized)
 		logger.Error.Print(str)
 		// TODO: Handle error somehow (?)
-		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		util.RenderErrorByCode(w, r, &out, code)
 		return
 	}
 
@@ -122,7 +121,7 @@ func (jh *JobHandler) InsertJob(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		code = http.StatusUnprocessableEntity
 		// TODO: Handle error somehow (?)
-		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		util.RenderErrorByCode(w, r, &out, code)
 		return
 	}
 
@@ -130,12 +129,12 @@ func (jh *JobHandler) InsertJob(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		if err != errs.ErrUnprocessableEntity {
 			code = http.StatusInternalServerError
-			util.RenderComponent(r, &out, view.ErrorIndex(code))
+			util.RenderErrorByCode(w, r, &out, code)
 			return
 		} else {
 			code = http.StatusUnprocessableEntity
 			// TODO: Handle error somehow (?)
-			util.RenderComponent(r, &out, view.ErrorIndex(code))
+			util.RenderErrorByCode(w, r, &out, code)
 			return
 
 		}
@@ -164,7 +163,7 @@ func (jh *JobHandler) EditJob(w http.ResponseWriter, r *http.Request) {
 		code, str := util.GetCodeByErr(errs.ErrUnauthorized)
 		logger.Error.Print(str)
 		// TODO: Handle error somehow (?)
-		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		util.RenderErrorByCode(w, r, &out, code)
 		return
 	}
 
@@ -172,14 +171,14 @@ func (jh *JobHandler) EditJob(w http.ResponseWriter, r *http.Request) {
 	err = jobschema.ValidateJobGet(in)
 	if err != nil {
 		code = http.StatusInternalServerError
-		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		util.RenderErrorByCode(w, r, &out, code)
 		return
 	}
 
 	jobDB, err := jh.JobService.GetJob(in)
 	if err != nil {
 		code = http.StatusInternalServerError
-		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		util.RenderErrorByCode(w, r, &out, code)
 		return
 	}
 
@@ -205,14 +204,14 @@ func (jh *JobHandler) UpdateJob(w http.ResponseWriter, r *http.Request) {
 		code, str := util.GetCodeByErr(errs.ErrUnauthorized)
 		logger.Error.Print(str)
 		// TODO: Handle error somehow (?)
-		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		util.RenderErrorByCode(w, r, &out, code)
 		return
 	}
 
 	in.JobID, err = util.GetIntFromForm(r, "JobID")
 	if err != nil {
 		code = http.StatusInternalServerError
-		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		util.RenderErrorByCode(w, r, &out, code)
 		return
 	}
 	in.JobName = util.GetStringFromForm(r, "JobName")
@@ -238,7 +237,7 @@ func (jh *JobHandler) UpdateJob(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		code = http.StatusUnprocessableEntity
 		// TODO: Handle error somehow (?)
-		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		util.RenderErrorByCode(w, r, &out, code)
 		return
 	}
 
@@ -246,12 +245,12 @@ func (jh *JobHandler) UpdateJob(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		if err != errs.ErrUnprocessableEntity {
 			code = http.StatusInternalServerError
-			util.RenderComponent(r, &out, view.ErrorIndex(code))
+			util.RenderErrorByCode(w, r, &out, code)
 			return
 		} else {
 			code = http.StatusUnprocessableEntity
 			// TODO: Handle error somehow (?)
-			util.RenderComponent(r, &out, view.ErrorIndex(code))
+			util.RenderErrorByCode(w, r, &out, code)
 			return
 
 		}
@@ -279,7 +278,7 @@ func (jh *JobHandler) DeleteJob(w http.ResponseWriter, r *http.Request) {
 		code, str := util.GetCodeByErr(errs.ErrUnauthorized)
 		logger.Error.Print(str)
 		// TODO: Handle error somehow (?)
-		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		util.RenderErrorByCode(w, r, &out, code)
 		return
 	}
 
@@ -287,14 +286,14 @@ func (jh *JobHandler) DeleteJob(w http.ResponseWriter, r *http.Request) {
 	err = jobschema.ValidateJobDelete(in)
 	if err != nil {
 		code = http.StatusInternalServerError
-		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		util.RenderErrorByCode(w, r, &out, code)
 		return
 	}
 
 	_, err = jh.JobService.DeleteJob(in)
 	if err != nil {
 		code = http.StatusInternalServerError
-		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		util.RenderErrorByCode(w, r, &out, code)
 		return
 	}
 

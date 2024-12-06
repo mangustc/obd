@@ -9,7 +9,6 @@ import (
 	"github.com/mangustc/obd/schema/jobschema"
 	"github.com/mangustc/obd/schema/userschema"
 	"github.com/mangustc/obd/util"
-	"github.com/mangustc/obd/view"
 	"github.com/mangustc/obd/view/userview"
 )
 
@@ -66,7 +65,7 @@ func (uh *UserHandler) GetUsers(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		logger.Error.Printf("Internal server error (%s)", err)
 		code = http.StatusInternalServerError
-		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		util.RenderErrorByCode(w, r, &out, code)
 		return
 	}
 
@@ -75,7 +74,7 @@ func (uh *UserHandler) GetUsers(w http.ResponseWriter, r *http.Request) {
 		if err == errs.ErrInternalServer {
 			logger.Error.Printf("Internal server error (%s)", err)
 			code = http.StatusInternalServerError
-			util.RenderComponent(r, &out, view.ErrorIndex(code))
+			util.RenderErrorByCode(w, r, &out, code)
 			return
 		}
 	}
@@ -106,7 +105,7 @@ func (uh *UserHandler) InsertUser(w http.ResponseWriter, r *http.Request) {
 		code, str := util.GetCodeByErr(errs.ErrUnauthorized)
 		logger.Error.Print(str)
 		// TODO: Handle error somehow (?)
-		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		util.RenderErrorByCode(w, r, &out, code)
 		return
 	}
 
@@ -118,7 +117,7 @@ func (uh *UserHandler) InsertUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		logger.Error.Printf("Internal server error (%s)", err)
 		code = http.StatusInternalServerError
-		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		util.RenderErrorByCode(w, r, &out, code)
 		return
 	}
 	err = userschema.ValidateUserInsert(in)
@@ -126,7 +125,7 @@ func (uh *UserHandler) InsertUser(w http.ResponseWriter, r *http.Request) {
 		logger.Error.Printf("Unprocessable Entity (%s)", err)
 		code = http.StatusUnprocessableEntity
 		// TODO: Handle error somehow (?)
-		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		util.RenderErrorByCode(w, r, &out, code)
 		return
 	}
 
@@ -135,13 +134,13 @@ func (uh *UserHandler) InsertUser(w http.ResponseWriter, r *http.Request) {
 		if err != errs.ErrUnprocessableEntity {
 			logger.Error.Printf("Internal server error (%s)", err)
 			code = http.StatusInternalServerError
-			util.RenderComponent(r, &out, view.ErrorIndex(code))
+			util.RenderErrorByCode(w, r, &out, code)
 			return
 		} else {
 			logger.Error.Printf("Unprocessable Entity (%s)", err)
 			code = http.StatusUnprocessableEntity
 			// TODO: Handle error somehow (?)
-			util.RenderComponent(r, &out, view.ErrorIndex(code))
+			util.RenderErrorByCode(w, r, &out, code)
 			return
 
 		}
@@ -174,7 +173,7 @@ func (uh *UserHandler) EditUser(w http.ResponseWriter, r *http.Request) {
 		code, str := util.GetCodeByErr(errs.ErrUnauthorized)
 		logger.Error.Print(str)
 		// TODO: Handle error somehow (?)
-		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		util.RenderErrorByCode(w, r, &out, code)
 		return
 	}
 
@@ -183,7 +182,7 @@ func (uh *UserHandler) EditUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		logger.Error.Printf("Internal server error (%s)", err)
 		code = http.StatusInternalServerError
-		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		util.RenderErrorByCode(w, r, &out, code)
 		return
 	}
 
@@ -191,7 +190,7 @@ func (uh *UserHandler) EditUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		logger.Error.Printf("Internal server error (%s)", err)
 		code = http.StatusInternalServerError
-		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		util.RenderErrorByCode(w, r, &out, code)
 		return
 	}
 
@@ -221,7 +220,7 @@ func (uh *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		code, str := util.GetCodeByErr(errs.ErrUnauthorized)
 		logger.Error.Print(str)
 		// TODO: Handle error somehow (?)
-		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		util.RenderErrorByCode(w, r, &out, code)
 		return
 	}
 
@@ -229,7 +228,7 @@ func (uh *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		logger.Error.Printf("Internal server error (%s)", err)
 		code = http.StatusInternalServerError
-		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		util.RenderErrorByCode(w, r, &out, code)
 		return
 	}
 	in.UserLastname = util.GetStringFromForm(r, "UserLastname")
@@ -240,7 +239,7 @@ func (uh *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		logger.Error.Printf("Internal server error (%s)", err)
 		code = http.StatusInternalServerError
-		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		util.RenderErrorByCode(w, r, &out, code)
 		return
 	}
 	err = userschema.ValidateUserUpdate(in)
@@ -248,7 +247,7 @@ func (uh *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		logger.Error.Printf("Unprocessable Entity (%s)", err)
 		code = http.StatusUnprocessableEntity
 		// TODO: Handle error somehow (?)
-		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		util.RenderErrorByCode(w, r, &out, code)
 		return
 	}
 
@@ -257,13 +256,13 @@ func (uh *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		if err != errs.ErrUnprocessableEntity {
 			logger.Error.Printf("Internal server error (%s)", err)
 			code = http.StatusInternalServerError
-			util.RenderComponent(r, &out, view.ErrorIndex(code))
+			util.RenderErrorByCode(w, r, &out, code)
 			return
 		} else {
 			logger.Error.Printf("Unprocessable Entity (%s)", err)
 			code = http.StatusUnprocessableEntity
 			// TODO: Handle error somehow (?)
-			util.RenderComponent(r, &out, view.ErrorIndex(code))
+			util.RenderErrorByCode(w, r, &out, code)
 			return
 
 		}
@@ -295,7 +294,7 @@ func (uh *UserHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 		code, str := util.GetCodeByErr(errs.ErrUnauthorized)
 		logger.Error.Print(str)
 		// TODO: Handle error somehow (?)
-		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		util.RenderErrorByCode(w, r, &out, code)
 		return
 	}
 
@@ -304,7 +303,7 @@ func (uh *UserHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		logger.Error.Printf("Internal server error (%s)", err)
 		code = http.StatusInternalServerError
-		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		util.RenderErrorByCode(w, r, &out, code)
 		return
 	}
 
@@ -312,7 +311,7 @@ func (uh *UserHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		logger.Error.Printf("Internal server error (%s)", err)
 		code = http.StatusInternalServerError
-		util.RenderComponent(r, &out, view.ErrorIndex(code))
+		util.RenderErrorByCode(w, r, &out, code)
 		return
 	}
 

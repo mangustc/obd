@@ -264,8 +264,10 @@ func main() {
 	dh := handler.NewDefaultHandler(ss, us, js)
 	router.HandleFunc("GET /", dh.Default)
 	router.HandleFunc("POST /api/navigation", dh.Navigation)
-	fs := http.FileServer(http.Dir("./css"))
-	router.Handle("GET /css/", http.StripPrefix("/css", fs))
+	cssDir := http.FileServer(http.Dir("./css"))
+	jsDir := http.FileServer(http.Dir("./js"))
+	router.Handle("GET /css/", http.StripPrefix("/css", cssDir))
+	router.Handle("GET /js/", http.StripPrefix("/js", jsDir))
 	port := ":1323"
 	middlewareStack := middleware.CreateStack(
 		middleware.Logging,

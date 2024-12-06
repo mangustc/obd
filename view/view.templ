@@ -1,10 +1,8 @@
 package view
 
 import (
-	"strconv"
 	"github.com/mangustc/obd/schema"
 	"fmt"
-	"net/http"
 	"github.com/mangustc/obd/schema/jobschema"
 )
 
@@ -46,6 +44,7 @@ document.addEventListener("DOMContentLoaded", (event) => {
 		</script>
 		<div class="root-container" id="root">
 			@Navigation()
+			@Notifications()
 			<div id="main" class="outlet-container">
 				{ children... }
 			</div>
@@ -53,10 +52,40 @@ document.addEventListener("DOMContentLoaded", (event) => {
 	</body>
 }
 
-templ ErrorIndex(code int) {
-	<div id="main" hx-swap-oob="innerHTML">
-		<h2>{ strconv.Itoa(code) + " - " + http.StatusText(code) }</h2>
-	</div>
+templ Notifications() {
+	<script src="/js/notifications.js"></script>
+	<div style="display:none;" id="notifications"></div>
+}
+
+templ NewNotification(notificationType schema.NotificationType, msg string) {
+	@templ.JSONScript("notification-data", msg)
+	switch (notificationType) {
+		case schema.AlertNotification:
+			<script>
+				(() => {
+					const msg = JSON.parse(document.getElementById('notification-data').textContent);
+					flatNotify().alert(msg,3000)
+				})()
+			</script>
+		case schema.SuccessNotification:
+			<script>
+				(() => {
+					const msg = JSON.parse(document.getElementById('notification-data').textContent);
+					flatNotify().success(msg,3000)
+				})()
+			</script>
+		case schema.ErrorNotification:
+			<script>
+				(() => {
+					const msg = JSON.parse(document.getElementById('notification-data').textContent);
+					flatNotify().error(msg,3000)
+				})()
+			</script>
+	}
+}
+
+templ ErrorIndex(notificationType schema.NotificationType, msg string) {
+	@NewNotification(notificationType, msg)
 }
 
 css widthCSS(str string) {

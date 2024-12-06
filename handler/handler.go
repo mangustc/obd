@@ -81,7 +81,7 @@ func (dh *DefaultHandler) Navigation(w http.ResponseWriter, r *http.Request) {
 			code, str := util.GetCodeByErr(err)
 			logger.Error.Print(str)
 			// TODO: Handle error somehow (?)
-			util.RenderComponent(r, &out, view.ErrorIndex(code))
+			util.RenderErrorByCode(w, r, &out, code)
 			return
 		}
 	}

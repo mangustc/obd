@@ -100,67 +100,202 @@ body {
 	overflow: auto;
 }
 
-/* RECEIPTS */
+/* NOTIFICATIONS */
 
-.receipt-container {
-	width: 300px;
-	height: 400px;
-	border: 1px solid black;
-	display: flex;
-	flex-direction: column;
-	justify-content: space-between;
+.f-notification {
+	position: fixed;
+	top: 20px;
+	right: 20px;
+	text-align: left;
+	width: 600px;
+	min-height: 20px;
+	padding: 20px 40px 20px 18px;
+	border-radius: 5px;
+	color: black;
 }
 
-.receipt-row {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
+.f-notification:hover {
+	opacity: 0.9;
 }
 
-.receipt-column {
-	display: flex;
-	flex-direction: column;
+.f-notification:hover .f-notification-close {
+	background: rgba(77, 77, 79, 0.1);
 }
 
-.receipt-controls {
-	display: flex;
-	flex-direction: row;
-	justify-content: right;
+.f-notification .f-notification-title {
+	font-weight: 600;
+	color: black;
+	cursor: default;
 }
 
-.receipt-table {
-	display: flex;
-	flex-direction: row;
-	flex-wrap: wrap;
-	gap: 12px;
-	justify-content: center
+.f-notification .f-close {
+	position: absolute;
+	right: 15px;
+	top: 20px;
+	height: 20px;
+	width: 20px;
+	line-height: 18px;
+	vertical-align: middle;
+	text-align: center;
+	border-radius: 20px;
+	color: black;
+	cursor: pointer;
+	background: rgba(255, 255, 255, 0.25);
 }
 
-@media (max-width: 479px) {
-	.receipt-table {
-		flex-direction: column;
-		flex-wrap: nowrap;
-		gap: 12px;
-		justify-content: center;
-		align-items: center;
-		width: 100vw;
+.f-notification .f-close:hover {
+	background: rgba(77, 77, 79, 0.2);
+}
+
+.f-notification-success {
+	background: white;
+	border: 2px solid #2ecc71;
+}
+
+.f-notification-error {
+	background: white;
+	border: 2px solid #e74c3c;
+}
+
+.f-notification-alert {
+	background: white;
+	border: 2px #ebdf00 solid;
+}
+
+.f-show {
+	animation-name: animSlideElastic;
+	animation-duration: 1s;
+	animation-timing-function: linear;
+}
+
+.f-hide {
+	animation-name: animSlideElastic;
+	animation-duration: 0.5s;
+	animation-direction: reverse;
+}
+
+@keyframes animSlideElastic {
+	0% {
+		transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 1000, 0, 0, 1);
 	}
-}
 
-.receipt-table-controls {
-	display: flex;
-	flex-direction: row;
-	gap: 8px;
-}
+	3.333333% {
+		transform: matrix3d(1.96989, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 521.82545, 0, 0, 1);
+	}
 
-.receipt-full-item-container {
-	display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-}
+	6.666667% {
+		transform: matrix3d(1.4235, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 218.3238, 0, 0, 1);
+	}
 
-.receipt-full-items-controls {
-	display: flex;
-	flex-direction: row;
-	justify-content: right;
+	10% {
+		transform: matrix3d(1.08167, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 57.59273, 0, 0, 1);
+	}
+
+	13.333333% {
+		transform: matrix3d(0.99057, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -11.12794, 0, 0, 1);
+	}
+
+	16.666667% {
+		transform: matrix3d(0.98719, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -30.40503, 0, 0, 1);
+	}
+
+	20% {
+		transform: matrix3d(0.99541, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -28.10141, 0, 0, 1);
+	}
+
+	23.333333% {
+		transform: matrix3d(0.99936, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -19.40752, 0, 0, 1);
+	}
+
+	26.666667% {
+		transform: matrix3d(1.00021, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -11.08575, 0, 0, 1);
+	}
+
+	30% {
+		transform: matrix3d(1.00016, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -5.23737, 0, 0, 1);
+	}
+
+	33.333333% {
+		transform: matrix3d(1.00005, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -1.84893, 0, 0, 1);
+	}
+
+	36.666667% {
+		transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -0.22079, 0, 0, 1);
+	}
+
+	40% {
+		transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.37284, 0, 0, 1);
+	}
+
+	43.333333% {
+		transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.46116, 0, 0, 1);
+	}
+
+	46.666667% {
+		transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.35963, 0, 0, 1);
+	}
+
+	50% {
+		transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.22487, 0, 0, 1);
+	}
+
+	53.333333% {
+		transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.11734, 0, 0, 1);
+	}
+
+	56.666667% {
+		transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.04909, 0, 0, 1);
+	}
+
+	60% {
+		transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.01295, 0, 0, 1);
+	}
+
+	63.333333% {
+		transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -0.0025, 0, 0, 1);
+	}
+
+	66.666667% {
+		transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -0.00684, 0, 0, 1);
+	}
+
+	70% {
+		transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -0.00632, 0, 0, 1);
+	}
+
+	73.333333% {
+		transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -0.00436, 0, 0, 1);
+	}
+
+	76.666667% {
+		transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -0.00249, 0, 0, 1);
+	}
+
+	80% {
+		transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -0.00118, 0, 0, 1);
+	}
+
+	83.333333% {
+		transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -0.00042, 0, 0, 1);
+	}
+
+	86.666667% {
+		transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -0.00005, 0, 0, 1);
+	}
+
+	90% {
+		transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.00008, 0, 0, 1);
+	}
+
+	93.333333% {
+		transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.0001, 0, 0, 1);
+	}
+
+	96.666667% {
+		transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0.00008, 0, 0, 1);
+	}
+
+	100% {
+		transform: matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1);
+	}
 }

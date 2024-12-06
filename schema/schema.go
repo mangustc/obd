@@ -1,7 +1,8 @@
 package schema
 
 type (
-	inputType int
+	inputType        int
+	NotificationType int
 )
 
 const (
@@ -10,6 +11,12 @@ const (
 	DateInput
 	OptionInput
 	BooleanInput
+)
+
+const (
+	AlertNotification NotificationType = iota + 1
+	SuccessNotification
+	ErrorNotification
 )
 
 // TA - Table Attribute
