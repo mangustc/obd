@@ -5,6 +5,7 @@ import (
 
 	"github.com/mangustc/obd/errs"
 	"github.com/mangustc/obd/logger"
+	"github.com/mangustc/obd/msg"
 	"github.com/mangustc/obd/schema/jobschema"
 	"github.com/mangustc/obd/schema/sessionschema"
 	"github.com/mangustc/obd/schema/userschema"
@@ -53,9 +54,9 @@ func (dh *DefaultHandler) Default(w http.ResponseWriter, r *http.Request) {
 	// var err error
 
 	util.InitHTMLHandler(w, r)
-	var code int = http.StatusOK
+	var message *msg.Msg = msg.Nothing
 	var out []byte
-	defer util.RespondHTTP(w, &code, &out)
+	defer util.RespondHTTP(w, r, &message, &out)
 
 	util.RenderComponent(r, &out, view.Layout("OBD"))
 }
@@ -64,9 +65,9 @@ func (dh *DefaultHandler) Navigation(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	util.InitHTMLHandler(w, r)
-	var code int = http.StatusOK
+	var message *msg.Msg = msg.Nothing
 	var out []byte
-	defer util.RespondHTTP(w, &code, &out)
+	defer util.RespondHTTP(w, r, &message, &out)
 
 	jobDB, err := util.GetJobBySessionCookie(
 		w, r,
@@ -78,10 +79,9 @@ func (dh *DefaultHandler) Navigation(w http.ResponseWriter, r *http.Request) {
 		if err == errs.ErrNotFound {
 			jobDB = nil
 		} else {
-			code, str := util.GetCodeByErr(err)
-			logger.Error.Print(str)
-			// TODO: Handle error somehow (?)
-			util.RenderErrorByCode(w, r, &out, code)
+			err := errs.ErrUnauthorized
+			message = msg.Unauthorized
+			logger.Error.Print(err.Error())
 			return
 		}
 	}

@@ -14,7 +14,8 @@ const (
 )
 
 const (
-	AlertNotification NotificationType = iota + 1
+	NoNotification    NotificationType = iota + 1
+	AlertNotification                  = iota + 1
 	SuccessNotification
 	ErrorNotification
 )

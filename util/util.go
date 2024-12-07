@@ -12,6 +12,7 @@ import (
 	"github.com/a-h/templ"
 	"github.com/google/uuid"
 	E "github.com/mangustc/obd/errs"
+	"github.com/mangustc/obd/msg"
 	"github.com/mangustc/obd/schema"
 	"github.com/mangustc/obd/schema/jobschema"
 	"github.com/mangustc/obd/schema/sessionschema"
@@ -65,14 +66,15 @@ func RenderComponent(r *http.Request, writeBytes *[]byte, component templ.Compon
 	return nil
 }
 
-func RespondHTTP(w http.ResponseWriter, code *int, out *[]byte) {
-	if code == nil {
+func RespondHTTP(w http.ResponseWriter, r *http.Request, msg **msg.Msg, out *[]byte) {
+	if msg == nil {
 		panic("Code should not be nil")
 	}
 	// http.StatusOK is written to header by default
-	if *code != http.StatusOK {
-		w.WriteHeader(*code)
+	if (*msg).MsgCode != http.StatusOK {
+		w.WriteHeader((*msg).MsgCode)
 	}
+	RenderMsg(w, r, out, *msg)
 	w.Write(*out)
 }
 
@@ -210,12 +212,12 @@ func GetCodeByErr(err error) (int, string) {
 	}
 }
 
-func RenderMsg(w http.ResponseWriter, r *http.Request, writeBytes *[]byte, notificationType schema.NotificationType, msg string) {
-	w.Header().Add("HX-Retarget", "#notifications")
-	w.Header().Add("HX-Reswap", "innerHTML")
-	RenderComponent(r, writeBytes, view.ErrorIndex(notificationType, msg))
-}
-
-func RenderErrorByCode(w http.ResponseWriter, r *http.Request, writeBytes *[]byte, code int) {
-	RenderMsg(w, r, writeBytes, schema.ErrorNotification, http.StatusText(code))
+func RenderMsg(w http.ResponseWriter, r *http.Request, writeBytes *[]byte, msg *msg.Msg) {
+	if msg.MsgNotificationType == schema.SuccessNotification {
+		RenderComponent(r, writeBytes, view.ErrorIndexOOB(msg.MsgNotificationType, msg.MsgStr))
+	} else if msg.MsgNotificationType != schema.NoNotification {
+		w.Header().Add("HX-Retarget", "#notifications")
+		w.Header().Add("HX-Reswap", "innerHTML")
+		RenderComponent(r, writeBytes, view.ErrorIndex(msg.MsgNotificationType, msg.MsgStr))
+	}
 }

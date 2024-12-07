@@ -6,6 +6,7 @@ import (
 	"github.com/mangustc/obd/errs"
 	"github.com/mangustc/obd/handler"
 	"github.com/mangustc/obd/logger"
+	"github.com/mangustc/obd/msg"
 	"github.com/mangustc/obd/schema/jobschema"
 	"github.com/mangustc/obd/schema/userschema"
 	"github.com/mangustc/obd/util"
@@ -30,9 +31,9 @@ func (uh *UserHandler) User(w http.ResponseWriter, r *http.Request) {
 	// var err error
 
 	util.InitHTMLHandler(w, r)
-	var code int = http.StatusOK
+	var message *msg.Msg = msg.Nothing
 	var out []byte
-	defer util.RespondHTTP(w, &code, &out)
+	defer util.RespondHTTP(w, r, &message, &out)
 
 	jobsGet := &jobschema.JobsGet{}
 	jobsDB, _ := uh.JobService.GetJobs(jobsGet)
@@ -45,9 +46,9 @@ func (uh *UserHandler) UserPage(w http.ResponseWriter, r *http.Request) {
 	// var err error
 
 	util.InitHTMLHandler(w, r)
-	var code int = http.StatusOK
+	var message *msg.Msg = msg.Nothing
 	var out []byte
-	defer util.RespondHTTP(w, &code, &out)
+	defer util.RespondHTTP(w, r, &message, &out)
 
 	util.RenderComponent(r, &out, userview.UserPage())
 }
@@ -56,27 +57,23 @@ func (uh *UserHandler) GetUsers(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	util.InitHTMLHandler(w, r)
-	var code int = http.StatusOK
+	var message *msg.Msg = msg.Nothing
 	var out []byte
+	defer util.RespondHTTP(w, r, &message, &out)
 	in := &userschema.UsersGet{}
-	defer util.RespondHTTP(w, &code, &out)
 
 	err = userschema.ValidateUsersGet(in)
 	if err != nil {
-		logger.Error.Printf("Internal server error (%s)", err)
-		code = http.StatusInternalServerError
-		util.RenderErrorByCode(w, r, &out, code)
+		message = msg.InternalServerError
+		logger.Error.Print(err.Error())
 		return
 	}
 
 	usersDB, err := uh.UserService.GetUsers(in)
 	if err != nil {
-		if err == errs.ErrInternalServer {
-			logger.Error.Printf("Internal server error (%s)", err)
-			code = http.StatusInternalServerError
-			util.RenderErrorByCode(w, r, &out, code)
-			return
-		}
+		message = msg.InternalServerError
+		logger.Error.Print(err.Error())
+		return
 	}
 
 	jobsGet := &jobschema.JobsGet{}
@@ -90,10 +87,10 @@ func (uh *UserHandler) InsertUser(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	util.InitHTMLHandler(w, r)
-	var code int = http.StatusOK
+	var message *msg.Msg = msg.Nothing
 	var out []byte
+	defer util.RespondHTTP(w, r, &message, &out)
 	in := &userschema.UserInsert{}
-	defer util.RespondHTTP(w, &code, &out)
 
 	sessionJobDB, err := util.GetJobBySessionCookie(
 		w, r,
@@ -102,10 +99,9 @@ func (uh *UserHandler) InsertUser(w http.ResponseWriter, r *http.Request) {
 		uh.JobService.GetJob,
 	)
 	if !sessionJobDB.JobAccessUser {
-		code, str := util.GetCodeByErr(errs.ErrUnauthorized)
-		logger.Error.Print(str)
-		// TODO: Handle error somehow (?)
-		util.RenderErrorByCode(w, r, &out, code)
+		err := errs.ErrUnauthorized
+		message = msg.Unauthorized
+		logger.Error.Print(err.Error())
 		return
 	}
 
@@ -115,34 +111,27 @@ func (uh *UserHandler) InsertUser(w http.ResponseWriter, r *http.Request) {
 	in.UserPassword = util.GetStringFromForm(r, "UserPassword")
 	in.JobID, err = util.GetIntFromForm(r, "JobID")
 	if err != nil {
-		logger.Error.Printf("Internal server error (%s)", err)
-		code = http.StatusInternalServerError
-		util.RenderErrorByCode(w, r, &out, code)
+		message = msg.InternalServerError
+		logger.Error.Print(err.Error())
 		return
 	}
 	err = userschema.ValidateUserInsert(in)
 	if err != nil {
-		logger.Error.Printf("Unprocessable Entity (%s)", err)
-		code = http.StatusUnprocessableEntity
-		// TODO: Handle error somehow (?)
-		util.RenderErrorByCode(w, r, &out, code)
+		message = msg.UserWrong
+		logger.Error.Print(err.Error())
 		return
 	}
 
 	userDB, err := uh.UserService.InsertUser(in)
 	if err != nil {
 		if err != errs.ErrUnprocessableEntity {
-			logger.Error.Printf("Internal server error (%s)", err)
-			code = http.StatusInternalServerError
-			util.RenderErrorByCode(w, r, &out, code)
+			message = msg.InternalServerError
+			logger.Error.Print(err.Error())
 			return
 		} else {
-			logger.Error.Printf("Unprocessable Entity (%s)", err)
-			code = http.StatusUnprocessableEntity
-			// TODO: Handle error somehow (?)
-			util.RenderErrorByCode(w, r, &out, code)
+			message = msg.UserExists
+			logger.Error.Print(err.Error())
 			return
-
 		}
 	}
 
@@ -150,7 +139,6 @@ func (uh *UserHandler) InsertUser(w http.ResponseWriter, r *http.Request) {
 	jobsDB, _ := uh.JobService.GetJobs(jobsGet)
 	jobInputOptions := jobschema.GetJobInputOptionsFromJobsDB(jobsDB)
 
-	// util.RenderComponent(r, &out, userview.UserAddForm())
 	util.RenderComponent(r, &out, userview.UserTableRow(userDB, jobInputOptions))
 }
 
@@ -158,10 +146,10 @@ func (uh *UserHandler) EditUser(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	util.InitHTMLHandler(w, r)
-	var code int = http.StatusOK
+	var message *msg.Msg = msg.Nothing
 	var out []byte
+	defer util.RespondHTTP(w, r, &message, &out)
 	in := &userschema.UserGet{}
-	defer util.RespondHTTP(w, &code, &out)
 
 	sessionJobDB, err := util.GetJobBySessionCookie(
 		w, r,
@@ -170,27 +158,24 @@ func (uh *UserHandler) EditUser(w http.ResponseWriter, r *http.Request) {
 		uh.JobService.GetJob,
 	)
 	if !sessionJobDB.JobAccessUser {
-		code, str := util.GetCodeByErr(errs.ErrUnauthorized)
-		logger.Error.Print(str)
-		// TODO: Handle error somehow (?)
-		util.RenderErrorByCode(w, r, &out, code)
+		err := errs.ErrUnauthorized
+		message = msg.Unauthorized
+		logger.Error.Print(err.Error())
 		return
 	}
 
 	in.UserID, err = util.GetIntFromForm(r, "UserID")
 	err = userschema.ValidateUserGet(in)
 	if err != nil {
-		logger.Error.Printf("Internal server error (%s)", err)
-		code = http.StatusInternalServerError
-		util.RenderErrorByCode(w, r, &out, code)
+		message = msg.InternalServerError
+		logger.Error.Print(err.Error())
 		return
 	}
 
 	userDB, err := uh.UserService.GetUser(in)
 	if err != nil {
-		logger.Error.Printf("Internal server error (%s)", err)
-		code = http.StatusInternalServerError
-		util.RenderErrorByCode(w, r, &out, code)
+		message = msg.InternalServerError
+		logger.Error.Print(err.Error())
 		return
 	}
 
@@ -205,10 +190,10 @@ func (uh *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	util.InitHTMLHandler(w, r)
-	var code int = http.StatusOK
+	var message *msg.Msg = msg.Nothing
 	var out []byte
+	defer util.RespondHTTP(w, r, &message, &out)
 	in := &userschema.UserUpdate{}
-	defer util.RespondHTTP(w, &code, &out)
 
 	sessionJobDB, err := util.GetJobBySessionCookie(
 		w, r,
@@ -217,18 +202,16 @@ func (uh *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		uh.JobService.GetJob,
 	)
 	if !sessionJobDB.JobAccessUser {
-		code, str := util.GetCodeByErr(errs.ErrUnauthorized)
-		logger.Error.Print(str)
-		// TODO: Handle error somehow (?)
-		util.RenderErrorByCode(w, r, &out, code)
+		err := errs.ErrUnauthorized
+		message = msg.Unauthorized
+		logger.Error.Print(err.Error())
 		return
 	}
 
 	in.UserID, err = util.GetIntFromForm(r, "UserID")
 	if err != nil {
-		logger.Error.Printf("Internal server error (%s)", err)
-		code = http.StatusInternalServerError
-		util.RenderErrorByCode(w, r, &out, code)
+		message = msg.InternalServerError
+		logger.Error.Print(err.Error())
 		return
 	}
 	in.UserLastname = util.GetStringFromForm(r, "UserLastname")
@@ -237,32 +220,26 @@ func (uh *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	in.UserPassword = util.GetStringFromForm(r, "UserPassword")
 	in.JobID, err = util.GetIntFromForm(r, "JobID")
 	if err != nil {
-		logger.Error.Printf("Internal server error (%s)", err)
-		code = http.StatusInternalServerError
-		util.RenderErrorByCode(w, r, &out, code)
+		message = msg.InternalServerError
+		logger.Error.Print(err.Error())
 		return
 	}
 	err = userschema.ValidateUserUpdate(in)
 	if err != nil {
-		logger.Error.Printf("Unprocessable Entity (%s)", err)
-		code = http.StatusUnprocessableEntity
-		// TODO: Handle error somehow (?)
-		util.RenderErrorByCode(w, r, &out, code)
+		message = msg.UserWrong
+		logger.Error.Print(err.Error())
 		return
 	}
 
 	userDB, err := uh.UserService.UpdateUser(in)
 	if err != nil {
-		if err != errs.ErrUnprocessableEntity {
-			logger.Error.Printf("Internal server error (%s)", err)
-			code = http.StatusInternalServerError
-			util.RenderErrorByCode(w, r, &out, code)
+		if err == errs.ErrUnprocessableEntity {
+			message = msg.UserExists
+			logger.Error.Print(err.Error())
 			return
 		} else {
-			logger.Error.Printf("Unprocessable Entity (%s)", err)
-			code = http.StatusUnprocessableEntity
-			// TODO: Handle error somehow (?)
-			util.RenderErrorByCode(w, r, &out, code)
+			message = msg.InternalServerError
+			logger.Error.Print(err.Error())
 			return
 
 		}
@@ -279,10 +256,10 @@ func (uh *UserHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	util.InitHTMLHandler(w, r)
-	var code int = http.StatusOK
+	var message *msg.Msg = msg.Nothing
 	var out []byte
+	defer util.RespondHTTP(w, r, &message, &out)
 	in := &userschema.UserDelete{}
-	defer util.RespondHTTP(w, &code, &out)
 
 	sessionJobDB, err := util.GetJobBySessionCookie(
 		w, r,
@@ -291,27 +268,24 @@ func (uh *UserHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 		uh.JobService.GetJob,
 	)
 	if !sessionJobDB.JobAccessUser {
-		code, str := util.GetCodeByErr(errs.ErrUnauthorized)
-		logger.Error.Print(str)
-		// TODO: Handle error somehow (?)
-		util.RenderErrorByCode(w, r, &out, code)
+		err := errs.ErrUnauthorized
+		message = msg.Unauthorized
+		logger.Error.Print(err.Error())
 		return
 	}
 
 	in.UserID, err = util.GetIntFromForm(r, "UserID")
 	err = userschema.ValidateUserDelete(in)
 	if err != nil {
-		logger.Error.Printf("Internal server error (%s)", err)
-		code = http.StatusInternalServerError
-		util.RenderErrorByCode(w, r, &out, code)
+		message = msg.InternalServerError
+		logger.Error.Print(err.Error())
 		return
 	}
 
 	userDB, err := uh.UserService.DeleteUser(in)
 	if err != nil {
-		logger.Error.Printf("Internal server error (%s)", err)
-		code = http.StatusInternalServerError
-		util.RenderErrorByCode(w, r, &out, code)
+		message = msg.InternalServerError
+		logger.Error.Print(err.Error())
 		return
 	}
 

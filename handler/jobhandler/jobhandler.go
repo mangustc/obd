@@ -6,6 +6,7 @@ import (
 	"github.com/mangustc/obd/errs"
 	"github.com/mangustc/obd/handler"
 	"github.com/mangustc/obd/logger"
+	"github.com/mangustc/obd/msg"
 	"github.com/mangustc/obd/schema/jobschema"
 	"github.com/mangustc/obd/util"
 	"github.com/mangustc/obd/view/jobview"
@@ -29,9 +30,9 @@ func (jh *JobHandler) Job(w http.ResponseWriter, r *http.Request) {
 	// var err error
 
 	util.InitHTMLHandler(w, r)
-	var code int = http.StatusOK
+	var message *msg.Msg = msg.Nothing
 	var out []byte
-	defer util.RespondHTTP(w, &code, &out)
+	defer util.RespondHTTP(w, r, &message, &out)
 
 	util.RenderComponent(r, &out, jobview.Job())
 }
@@ -40,9 +41,9 @@ func (jh *JobHandler) JobPage(w http.ResponseWriter, r *http.Request) {
 	// var err error
 
 	util.InitHTMLHandler(w, r)
-	var code int = http.StatusOK
+	var message *msg.Msg = msg.Nothing
 	var out []byte
-	defer util.RespondHTTP(w, &code, &out)
+	defer util.RespondHTTP(w, r, &message, &out)
 
 	util.RenderComponent(r, &out, jobview.JobPage())
 }
@@ -51,25 +52,23 @@ func (jh *JobHandler) GetJobs(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	util.InitHTMLHandler(w, r)
-	var code int = http.StatusOK
+	var message *msg.Msg = msg.Nothing
 	var out []byte
+	defer util.RespondHTTP(w, r, &message, &out)
 	in := &jobschema.JobsGet{}
-	defer util.RespondHTTP(w, &code, &out)
 
 	err = jobschema.ValidateJobsGet(in)
 	if err != nil {
-		code = http.StatusInternalServerError
-		util.RenderErrorByCode(w, r, &out, code)
+		message = msg.InternalServerError
+		logger.Error.Print(err.Error())
 		return
 	}
 
 	jobsDB, err := jh.JobService.GetJobs(in)
 	if err != nil {
-		if err == errs.ErrInternalServer {
-			code = http.StatusInternalServerError
-			util.RenderErrorByCode(w, r, &out, code)
-			return
-		}
+		message = msg.InternalServerError
+		logger.Error.Print(err.Error())
+		return
 	}
 
 	util.RenderComponent(r, &out, jobview.JobTableRows(jobsDB))
@@ -79,10 +78,10 @@ func (jh *JobHandler) InsertJob(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	util.InitHTMLHandler(w, r)
-	var code int = http.StatusOK
+	var message *msg.Msg = msg.Nothing
 	var out []byte
+	defer util.RespondHTTP(w, r, &message, &out)
 	in := &jobschema.JobInsert{}
-	defer util.RespondHTTP(w, &code, &out)
 
 	sessionJobDB, err := util.GetJobBySessionCookie(
 		w, r,
@@ -91,10 +90,9 @@ func (jh *JobHandler) InsertJob(w http.ResponseWriter, r *http.Request) {
 		jh.JobService.GetJob,
 	)
 	if !sessionJobDB.JobAccessJob {
-		code, str := util.GetCodeByErr(errs.ErrUnauthorized)
-		logger.Error.Print(str)
-		// TODO: Handle error somehow (?)
-		util.RenderErrorByCode(w, r, &out, code)
+		err := errs.ErrUnauthorized
+		message = msg.Unauthorized
+		logger.Error.Print(err.Error())
 		return
 	}
 
@@ -119,28 +117,24 @@ func (jh *JobHandler) InsertJob(w http.ResponseWriter, r *http.Request) {
 	in.JobAccessSession, _ = util.GetBoolFromForm(r, "JobAccessSession")
 	err = jobschema.ValidateJobInsert(in)
 	if err != nil {
-		code = http.StatusUnprocessableEntity
-		// TODO: Handle error somehow (?)
-		util.RenderErrorByCode(w, r, &out, code)
+		message = msg.JobNameEmpty
+		logger.Error.Print(err.Error())
 		return
 	}
 
 	jobDB, err := jh.JobService.InsertJob(in)
 	if err != nil {
-		if err != errs.ErrUnprocessableEntity {
-			code = http.StatusInternalServerError
-			util.RenderErrorByCode(w, r, &out, code)
+		if err == errs.ErrUnprocessableEntity {
+			message = msg.JobExists
+			logger.Error.Print(err.Error())
 			return
 		} else {
-			code = http.StatusUnprocessableEntity
-			// TODO: Handle error somehow (?)
-			util.RenderErrorByCode(w, r, &out, code)
+			message = msg.InternalServerError
+			logger.Error.Print(err.Error())
 			return
-
 		}
 	}
 
-	// util.RenderComponent(r, &out, jobview.JobAddForm())
 	util.RenderComponent(r, &out, jobview.JobTableRow(jobDB))
 }
 
@@ -148,10 +142,10 @@ func (jh *JobHandler) EditJob(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	util.InitHTMLHandler(w, r)
-	var code int = http.StatusOK
+	var message *msg.Msg = msg.Nothing
 	var out []byte
+	defer util.RespondHTTP(w, r, &message, &out)
 	in := &jobschema.JobGet{}
-	defer util.RespondHTTP(w, &code, &out)
 
 	sessionJobDB, err := util.GetJobBySessionCookie(
 		w, r,
@@ -160,25 +154,24 @@ func (jh *JobHandler) EditJob(w http.ResponseWriter, r *http.Request) {
 		jh.JobService.GetJob,
 	)
 	if !sessionJobDB.JobAccessJob {
-		code, str := util.GetCodeByErr(errs.ErrUnauthorized)
-		logger.Error.Print(str)
-		// TODO: Handle error somehow (?)
-		util.RenderErrorByCode(w, r, &out, code)
+		err := errs.ErrUnauthorized
+		message = msg.Unauthorized
+		logger.Error.Print(err.Error())
 		return
 	}
 
 	in.JobID, err = util.GetIntFromForm(r, "JobID")
 	err = jobschema.ValidateJobGet(in)
 	if err != nil {
-		code = http.StatusInternalServerError
-		util.RenderErrorByCode(w, r, &out, code)
+		message = msg.InternalServerError
+		logger.Error.Print(err.Error())
 		return
 	}
 
 	jobDB, err := jh.JobService.GetJob(in)
 	if err != nil {
-		code = http.StatusInternalServerError
-		util.RenderErrorByCode(w, r, &out, code)
+		message = msg.InternalServerError
+		logger.Error.Print(err.Error())
 		return
 	}
 
@@ -189,10 +182,10 @@ func (jh *JobHandler) UpdateJob(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	util.InitHTMLHandler(w, r)
-	var code int = http.StatusOK
+	var message *msg.Msg = msg.Nothing
 	var out []byte
+	defer util.RespondHTTP(w, r, &message, &out)
 	in := &jobschema.JobUpdate{}
-	defer util.RespondHTTP(w, &code, &out)
 
 	sessionJobDB, err := util.GetJobBySessionCookie(
 		w, r,
@@ -201,17 +194,16 @@ func (jh *JobHandler) UpdateJob(w http.ResponseWriter, r *http.Request) {
 		jh.JobService.GetJob,
 	)
 	if !sessionJobDB.JobAccessJob {
-		code, str := util.GetCodeByErr(errs.ErrUnauthorized)
-		logger.Error.Print(str)
-		// TODO: Handle error somehow (?)
-		util.RenderErrorByCode(w, r, &out, code)
+		err := errs.ErrUnauthorized
+		message = msg.Unauthorized
+		logger.Error.Print(err.Error())
 		return
 	}
 
 	in.JobID, err = util.GetIntFromForm(r, "JobID")
 	if err != nil {
-		code = http.StatusInternalServerError
-		util.RenderErrorByCode(w, r, &out, code)
+		message = msg.InternalServerError
+		logger.Error.Print(err.Error())
 		return
 	}
 	in.JobName = util.GetStringFromForm(r, "JobName")
@@ -235,24 +227,21 @@ func (jh *JobHandler) UpdateJob(w http.ResponseWriter, r *http.Request) {
 	in.JobAccessSession, _ = util.GetBoolFromForm(r, "JobAccessSession")
 	err = jobschema.ValidateJobUpdate(in)
 	if err != nil {
-		code = http.StatusUnprocessableEntity
-		// TODO: Handle error somehow (?)
-		util.RenderErrorByCode(w, r, &out, code)
+		message = msg.JobNameEmpty
+		logger.Error.Print(err.Error())
 		return
 	}
 
 	jobDB, err := jh.JobService.UpdateJob(in)
 	if err != nil {
-		if err != errs.ErrUnprocessableEntity {
-			code = http.StatusInternalServerError
-			util.RenderErrorByCode(w, r, &out, code)
+		if err == errs.ErrUnprocessableEntity {
+			message = msg.JobExists
+			logger.Error.Print(err.Error())
 			return
 		} else {
-			code = http.StatusUnprocessableEntity
-			// TODO: Handle error somehow (?)
-			util.RenderErrorByCode(w, r, &out, code)
+			message = msg.InternalServerError
+			logger.Error.Print(err.Error())
 			return
-
 		}
 	}
 
@@ -263,10 +252,10 @@ func (jh *JobHandler) DeleteJob(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	util.InitHTMLHandler(w, r)
-	var code int = http.StatusOK
+	var message *msg.Msg = msg.Nothing
 	var out []byte
+	defer util.RespondHTTP(w, r, &message, &out)
 	in := &jobschema.JobDelete{}
-	defer util.RespondHTTP(w, &code, &out)
 
 	sessionJobDB, err := util.GetJobBySessionCookie(
 		w, r,
@@ -275,27 +264,24 @@ func (jh *JobHandler) DeleteJob(w http.ResponseWriter, r *http.Request) {
 		jh.JobService.GetJob,
 	)
 	if !sessionJobDB.JobAccessJob {
-		code, str := util.GetCodeByErr(errs.ErrUnauthorized)
-		logger.Error.Print(str)
-		// TODO: Handle error somehow (?)
-		util.RenderErrorByCode(w, r, &out, code)
+		err := errs.ErrUnauthorized
+		message = msg.Unauthorized
+		logger.Error.Print(err.Error())
 		return
 	}
 
 	in.JobID, err = util.GetIntFromForm(r, "JobID")
 	err = jobschema.ValidateJobDelete(in)
 	if err != nil {
-		code = http.StatusInternalServerError
-		util.RenderErrorByCode(w, r, &out, code)
+		message = msg.InternalServerError
+		logger.Error.Print(err.Error())
 		return
 	}
 
 	_, err = jh.JobService.DeleteJob(in)
 	if err != nil {
-		code = http.StatusInternalServerError
-		util.RenderErrorByCode(w, r, &out, code)
+		message = msg.InternalServerError
+		logger.Error.Print(err.Error())
 		return
 	}
-
-	// util.RenderComponent(r, &out, jobview.JobTableRowEdit(jobDB))
 }

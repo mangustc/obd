@@ -6,6 +6,7 @@ import (
 	"github.com/mangustc/obd/errs"
 	"github.com/mangustc/obd/handler"
 	"github.com/mangustc/obd/logger"
+	"github.com/mangustc/obd/msg"
 	"github.com/mangustc/obd/schema/sessionschema"
 	"github.com/mangustc/obd/schema/userschema"
 	"github.com/mangustc/obd/util"
@@ -29,9 +30,9 @@ func (auh *AuthHandler) Auth(w http.ResponseWriter, r *http.Request) {
 	// var err error
 
 	util.InitHTMLHandler(w, r)
-	var code int = http.StatusOK
+	var message *msg.Msg = msg.Nothing
 	var out []byte
-	defer util.RespondHTTP(w, &code, &out)
+	defer util.RespondHTTP(w, r, &message, &out)
 
 	util.RenderComponent(r, &out, authview.Auth())
 }
@@ -40,9 +41,9 @@ func (auh *AuthHandler) AuthPage(w http.ResponseWriter, r *http.Request) {
 	// var err error
 
 	util.InitHTMLHandler(w, r)
-	var code int = http.StatusOK
+	var message *msg.Msg = msg.Nothing
 	var out []byte
-	defer util.RespondHTTP(w, &code, &out)
+	defer util.RespondHTTP(w, r, &message, &out)
 
 	util.RenderComponent(r, &out, authview.AuthPage())
 }
@@ -51,9 +52,9 @@ func (auh *AuthHandler) UserInput(w http.ResponseWriter, r *http.Request) {
 	// var err error
 
 	util.InitHTMLHandler(w, r)
-	var code int = http.StatusOK
+	var message *msg.Msg = msg.Nothing
 	var out []byte
-	defer util.RespondHTTP(w, &code, &out)
+	defer util.RespondHTTP(w, r, &message, &out)
 
 	usersGet := &userschema.UsersGet{}
 	usersDB, _ := auh.UserService.GetUsers(usersGet)
@@ -66,25 +67,21 @@ func (auh *AuthHandler) AuthLogin(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	util.InitHTMLHandler(w, r)
-	var code int = http.StatusOK
+	var message *msg.Msg = msg.Nothing
 	var out []byte
+	defer util.RespondHTTP(w, r, &message, &out)
 	in := &userschema.UserGet{}
-	defer util.RespondHTTP(w, &code, &out)
 
 	in.UserID, err = util.GetIntFromForm(r, "UserID")
 	if err != nil {
-		code, str := util.GetCodeByErr(err)
-		logger.Error.Print(str)
-		// TODO: Handle error somehow (?)
-		util.RenderErrorByCode(w, r, &out, code)
+		message = msg.InternalServerError
+		logger.Error.Print(err.Error())
 		return
 	}
 	err = userschema.ValidateUserGet(in)
 	if err != nil {
-		code, str := util.GetCodeByErr(err)
-		logger.Error.Print(str)
-		// TODO: Handle error somehow (?)
-		util.RenderErrorByCode(w, r, &out, code)
+		message = msg.InternalServerError
+		logger.Error.Print(err.Error())
 		return
 	}
 	userDB, err := auh.UserService.GetUser(in)
@@ -92,19 +89,15 @@ func (auh *AuthHandler) AuthLogin(w http.ResponseWriter, r *http.Request) {
 		if err == errs.ErrNotFound {
 			err = errs.ErrInternalServer
 		}
-		code, str := util.GetCodeByErr(err)
-		logger.Error.Print(str)
-		// TODO: Handle error somehow (?)
-		util.RenderErrorByCode(w, r, &out, code)
+		message = msg.InternalServerError
+		logger.Error.Print(err.Error())
 		return
 	}
 	userPassword := util.GetStringFromForm(r, "UserPassword")
 	if userDB.UserPassword != userPassword {
-		err = errs.ErrNotFound
-		code, str := util.GetCodeByErr(err)
-		logger.Error.Print(str)
-		// TODO: Handle error somehow (?)
-		util.RenderErrorByCode(w, r, &out, code)
+		err := errs.ErrUnprocessableEntity
+		message = msg.AuthWrongPassword
+		logger.Error.Print(err.Error())
 		return
 	}
 
@@ -113,28 +106,28 @@ func (auh *AuthHandler) AuthLogin(w http.ResponseWriter, r *http.Request) {
 	}
 	sessionDB, err := auh.SessionService.InsertSession(sessionInsert)
 	if err != nil {
-		code, str := util.GetCodeByErr(err)
-		logger.Error.Print(str)
-		// TODO: Handle error somehow (?)
-		util.RenderErrorByCode(w, r, &out, code)
+		message = msg.InternalServerError
+		logger.Error.Print(err.Error())
 		return
 	}
 	util.SetUserSessionCookie(w, sessionDB.SessionUUID)
 
 	util.RenderComponent(r, &out, view.ClearMain())
 	util.RenderComponent(r, &out, view.Navigation())
+	message = msg.AuthSuccessLogin
 }
 
 func (auh *AuthHandler) AuthLogout(w http.ResponseWriter, r *http.Request) {
 	// var err error
 
 	util.InitHTMLHandler(w, r)
-	var code int = http.StatusOK
+	var message *msg.Msg = msg.Nothing
 	var out []byte
-	defer util.RespondHTTP(w, &code, &out)
+	defer util.RespondHTTP(w, r, &message, &out)
 
 	util.DeleteUserSessionCookie(w)
 
 	util.RenderComponent(r, &out, view.ClearMain())
 	util.RenderComponent(r, &out, view.Navigation())
+	message = msg.AuthSuccessLogout
 }

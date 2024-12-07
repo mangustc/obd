@@ -33,11 +33,9 @@ templ Layout(title string) {
 		<script>
 document.addEventListener("DOMContentLoaded", (event) => {
 	document.body.addEventListener('htmx:beforeSwap', function(evt) {
-		if (evt.detail.xhr.status == 422 || evt.detail.xhr.status == 404) {
+		if (evt.detail.xhr.status == 422 || evt.detail.xhr.status == 404 || evt.detail.xhr.status == 401 || evt.detail.xhr.status == 500) {
 			evt.detail.shouldSwap = true;
 			evt.detail.isError = false;
-		} else if (evt.detail.xhr.status == 200) {
-			// document.getElementById("user-output-error").innerHTML = ""
 		}
 	});
 });
@@ -86,6 +84,12 @@ templ NewNotification(notificationType schema.NotificationType, msg string) {
 
 templ ErrorIndex(notificationType schema.NotificationType, msg string) {
 	@NewNotification(notificationType, msg)
+}
+
+templ ErrorIndexOOB(notificationType schema.NotificationType, msg string) {
+	<div id="notifications" hx-swap-oob="innerHTML">
+		@NewNotification(notificationType, msg)
+	</div>
 }
 
 css widthCSS(str string) {
