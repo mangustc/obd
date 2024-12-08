@@ -7,7 +7,7 @@ import (
 )
 
 type GroupDB struct {
-	GroupID         int    `json:"GroupID"`
+	GroupID         int    `json:"GroupID" server:"y"`
 	GroupNumber     string `json:"GroupNumber"`
 	GroupYear       int    `json:"GroupYear"`
 	GroupCourseName string `json:"GroupCourseName"`
@@ -21,18 +21,18 @@ type GroupInsert struct {
 }
 
 type GroupUpdate struct {
-	GroupID         int    `json:"GroupID"`
+	GroupID         int    `json:"GroupID" server:"y"`
 	GroupNumber     string `json:"GroupNumber"`
 	GroupYear       int    `json:"GroupYear"`
 	GroupCourseName string `json:"GroupCourseName"`
 }
 
 type GroupDelete struct {
-	GroupID int `json:"GroupID"`
+	GroupID int `json:"GroupID" server:"y"`
 }
 
 type GroupGet struct {
-	GroupID int `json:"GroupID"`
+	GroupID int `json:"GroupID" server:"y"`
 }
 
 type GroupsGet struct{}

@@ -7,13 +7,13 @@ import (
 )
 
 type UserDB struct {
-	UserID         int    `json:"UserID"`
+	UserID         int    `json:"UserID" server:"y"`
 	UserLastname   string `json:"UserLastname"`
 	UserFirstname  string `json:"UserFirstname"`
 	UserMiddlename string `json:"UserMiddlename"`
 	UserPassword   string `json:"UserPassword"`
 	UserIsHidden   bool   `json:"UserIsHidden"`
-	JobID          int    `json:"JobID"`
+	JobID          int    `json:"JobID" server:"y"`
 }
 
 type UserInsert struct {
@@ -21,24 +21,24 @@ type UserInsert struct {
 	UserFirstname  string `json:"UserFirstname"`
 	UserMiddlename string `json:"UserMiddlename"`
 	UserPassword   string `json:"UserPassword"`
-	JobID          int    `json:"JobID"`
+	JobID          int    `json:"JobID" server:"y"`
 }
 
 type UserUpdate struct {
-	UserID         int    `json:"UserID"`
+	UserID         int    `json:"UserID" server:"y"`
 	UserLastname   string `json:"UserLastname"`
 	UserFirstname  string `json:"UserFirstname"`
 	UserMiddlename string `json:"UserMiddlename"`
 	UserPassword   string `json:"UserPassword"`
-	JobID          int    `json:"JobID"`
+	JobID          int    `json:"JobID" server:"y"`
 }
 
 type UserDelete struct {
-	UserID int `json:"UserID"`
+	UserID int `json:"UserID" server:"y"`
 }
 
 type UserGet struct {
-	UserID int `json:"UserID"`
+	UserID int `json:"UserID" server:"y"`
 }
 
 type UsersGet struct{}

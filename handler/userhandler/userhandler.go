@@ -118,11 +118,7 @@ func (uh *UserHandler) InsertUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	in.UserLastname = util.GetStringFromForm(r, "UserLastname")
-	in.UserFirstname = util.GetStringFromForm(r, "UserFirstname")
-	in.UserMiddlename = util.GetStringFromForm(r, "UserMiddlename")
-	in.UserPassword = util.GetStringFromForm(r, "UserPassword")
-	in.JobID, err = util.GetIntFromForm(r, "JobID")
+	err = util.ParseStructFromForm(r, in)
 	if err != nil {
 		message = msg.InternalServerError
 		logger.Error.Print(err.Error())
@@ -177,7 +173,7 @@ func (uh *UserHandler) EditUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	in.UserID, err = util.GetIntFromForm(r, "UserID")
+	err = util.ParseStructFromForm(r, in)
 	err = userschema.ValidateUserGet(in)
 	if err != nil {
 		message = msg.InternalServerError
@@ -221,17 +217,7 @@ func (uh *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	in.UserID, err = util.GetIntFromForm(r, "UserID")
-	if err != nil {
-		message = msg.InternalServerError
-		logger.Error.Print(err.Error())
-		return
-	}
-	in.UserLastname = util.GetStringFromForm(r, "UserLastname")
-	in.UserFirstname = util.GetStringFromForm(r, "UserFirstname")
-	in.UserMiddlename = util.GetStringFromForm(r, "UserMiddlename")
-	in.UserPassword = util.GetStringFromForm(r, "UserPassword")
-	in.JobID, err = util.GetIntFromForm(r, "JobID")
+	err = util.ParseStructFromForm(r, in)
 	if err != nil {
 		message = msg.InternalServerError
 		logger.Error.Print(err.Error())
@@ -287,7 +273,7 @@ func (uh *UserHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	in.UserID, err = util.GetIntFromForm(r, "UserID")
+	err = util.ParseStructFromForm(r, in)
 	err = userschema.ValidateUserDelete(in)
 	if err != nil {
 		message = msg.InternalServerError

@@ -111,14 +111,18 @@ func (grh *GroupHandler) InsertGroup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	in.GroupYear, err = util.GetIntFromForm(r, "GroupYear")
+	err = util.ParseStructFromForm(r, in)
 	if err != nil {
-		message = msg.InternalServerError
-		logger.Error.Print(err.Error())
-		return
+		if err == errs.ErrInternalServer {
+			message = msg.InternalServerError
+			logger.Error.Print(err.Error())
+			return
+		} else {
+			message = msg.GroupWrong
+			logger.Error.Print(err.Error())
+			return
+		}
 	}
-	in.GroupNumber = util.GetStringFromForm(r, "GroupNumber")
-	in.GroupCourseName = util.GetStringFromForm(r, "GroupCourseName")
 	err = groupschema.ValidateGroupInsert(in)
 	if err != nil {
 		message = msg.GroupWrong
@@ -164,7 +168,7 @@ func (grh *GroupHandler) EditGroup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	in.GroupID, err = util.GetIntFromForm(r, "GroupID")
+	err = util.ParseStructFromForm(r, in)
 	err = groupschema.ValidateGroupGet(in)
 	if err != nil {
 		message = msg.InternalServerError
@@ -204,20 +208,18 @@ func (grh *GroupHandler) UpdateGroup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	in.GroupID, err = util.GetIntFromForm(r, "GroupID")
+	err = util.ParseStructFromForm(r, in)
 	if err != nil {
-		message = msg.InternalServerError
-		logger.Error.Print(err.Error())
-		return
+		if err == errs.ErrInternalServer {
+			message = msg.InternalServerError
+			logger.Error.Print(err.Error())
+			return
+		} else {
+			message = msg.GroupWrong
+			logger.Error.Print(err.Error())
+			return
+		}
 	}
-	in.GroupYear, err = util.GetIntFromForm(r, "GroupYear")
-	if err != nil {
-		message = msg.InternalServerError
-		logger.Error.Print(err.Error())
-		return
-	}
-	in.GroupNumber = util.GetStringFromForm(r, "GroupNumber")
-	in.GroupCourseName = util.GetStringFromForm(r, "GroupCourseName")
 	err = groupschema.ValidateGroupUpdate(in)
 	if err != nil {
 		message = msg.GroupWrong
@@ -264,7 +266,7 @@ func (grh *GroupHandler) DeleteGroup(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	in.GroupID, err = util.GetIntFromForm(r, "GroupID")
+	err = util.ParseStructFromForm(r, in)
 	err = groupschema.ValidateGroupDelete(in)
 	if err != nil {
 		message = msg.InternalServerError

@@ -7,7 +7,7 @@ import (
 )
 
 type JobDB struct {
-	JobID                 int    `json:"JobID"`
+	JobID                 int    `json:"JobID" server:"y"`
 	JobName               string `json:"JobName"`
 	JobAccessUser         bool   `json:"JobAccessUser"`
 	JobAccessJob          bool   `json:"JobAccessJob"`
@@ -50,7 +50,7 @@ type JobInsert struct {
 }
 
 type JobUpdate struct {
-	JobID                 int    `json:"JobID"`
+	JobID                 int    `json:"JobID" server:"y"`
 	JobName               string `json:"JobName"`
 	JobAccessUser         bool   `json:"JobAccessUser"`
 	JobAccessJob          bool   `json:"JobAccessJob"`
@@ -72,11 +72,11 @@ type JobUpdate struct {
 }
 
 type JobDelete struct {
-	JobID int `json:"JobID"`
+	JobID int `json:"JobID" server:"y"`
 }
 
 type JobGet struct {
-	JobID int `json:"JobID"`
+	JobID int `json:"JobID" server:"y"`
 }
 
 type JobsGet struct{}

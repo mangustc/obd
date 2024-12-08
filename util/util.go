@@ -21,6 +21,52 @@ import (
 	"github.com/mattn/go-sqlite3"
 )
 
+func ParseStructFromForm(r *http.Request, structPtr interface{}) error {
+	ps := reflect.ValueOf(structPtr)
+	s := ps.Elem()
+
+	if s.Kind() != reflect.Struct {
+		panic("This is not supported")
+	}
+
+	for i := 0; i < s.NumField(); i++ {
+		field := s.Field(i)
+		if !field.IsValid() {
+			panic("This is not supported")
+		}
+		if !field.CanSet() {
+			panic("This is not supported")
+		}
+
+		fieldTag := s.Type().Field(i).Tag.Get("json")
+		server := s.Type().Field(i).Tag.Get("server")
+		switch field.Kind() {
+		case reflect.Int:
+			value, err := GetIntFromForm(r, fieldTag)
+			if err != nil {
+				if server == "y" {
+					return E.ErrInternalServer
+				}
+				return E.ErrUnprocessableEntity
+			}
+			field.SetInt(int64(value))
+		case reflect.String:
+			value := GetStringFromForm(r, fieldTag)
+			field.SetString(value)
+		case reflect.Bool:
+			value, err := GetBoolFromForm(r, fieldTag)
+			if err != nil {
+				return E.ErrInternalServer
+			}
+			field.SetBool(value)
+		default:
+			panic("This is not supported")
+		}
+	}
+
+	return nil
+}
+
 func GetStringFromForm(r *http.Request, name string) string {
 	return r.Form.Get(name)
 }

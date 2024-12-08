@@ -7,7 +7,7 @@ import (
 )
 
 type SessionDB struct {
-	SessionID        int    `json:"SessionID"`
+	SessionID        int    `json:"SessionID" server:"y"`
 	SessionUUID      string `json:"SessionUUID"`
 	UserID           int    `json:"UserID"`
 	SessionCreatedAt string `json:"SessionCreatedAt"`
