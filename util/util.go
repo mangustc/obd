@@ -70,11 +70,12 @@ func RespondHTTP(w http.ResponseWriter, r *http.Request, msg **msg.Msg, out *[]b
 	if msg == nil {
 		panic("Code should not be nil")
 	}
+	RenderMsg(w, r, out, *msg)
+
 	// http.StatusOK is written to header by default
 	if (*msg).MsgCode != http.StatusOK {
 		w.WriteHeader((*msg).MsgCode)
 	}
-	RenderMsg(w, r, out, *msg)
 	w.Write(*out)
 }
 
