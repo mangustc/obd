@@ -110,6 +110,11 @@ func getString(v any) string {
 	return value
 }
 
+func getInt(v any) int {
+	value, _ := v.(int)
+	return value
+}
+
 templ Input(input *schema.Input) {
 	<div style="display: flex; flex-direction: row;">
 		if input.InputTitle != "" {
@@ -135,6 +140,8 @@ templ Input(input *schema.Input) {
 			} else {
 				<input name={ input.InputName } type={ input.InputType } checked?={ getBool(input.InputValue) }/>
 			}
+		} else if input.InputType == "number" {
+			<input name={ input.InputName } value={ fmt.Sprint(getInt(input.InputValue)) } type={ input.InputType } readonly?={ !input.InputEditable }/>
 		} else {
 			<input name={ input.InputName } value={ getString(input.InputValue) } type={ input.InputType } readonly?={ !input.InputEditable }/>
 		}
@@ -177,18 +184,18 @@ templ NavigationByJobDB(jobDB *jobschema.JobDB) {
 						hx-swap="innerHTML"
 					>St</button>
 				}
-				if jobDB.JobAccessUniGroup {
+				if jobDB.JobAccessGroup {
 					<button
 						class="link-button"
-						hx-post="/api/unigroup"
+						hx-post="/api/group"
 						hx-target="#main"
 						hx-swap="innerHTML"
-					>UnG</button>
+					>Gr</button>
 				}
 				if jobDB.JobAccessFinhelpCtg {
 					<button
 						class="link-button"
-						hx-post="/api/unigroup"
+						hx-post="/api/finhelpctg"
 						hx-target="#main"
 						hx-swap="innerHTML"
 					>FC</button>
@@ -288,14 +295,6 @@ templ NavigationByJobDB(jobDB *jobschema.JobDB) {
 						hx-target="#main"
 						hx-swap="innerHTML"
 					>Cl</button>
-				}
-				if jobDB.JobAccessSession {
-					<button
-						class="link-button"
-						hx-post="/api/session"
-						hx-target="#main"
-						hx-swap="innerHTML"
-					>S</button>
 				}
 				<p>OBD Project</p>
 				<button

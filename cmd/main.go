@@ -7,10 +7,12 @@ import (
 	"github.com/mangustc/obd/database"
 	"github.com/mangustc/obd/handler"
 	"github.com/mangustc/obd/handler/authhandler"
+	"github.com/mangustc/obd/handler/grouphandler"
 	"github.com/mangustc/obd/handler/jobhandler"
 	"github.com/mangustc/obd/handler/userhandler"
 	"github.com/mangustc/obd/logger"
 	"github.com/mangustc/obd/middleware"
+	"github.com/mangustc/obd/service/groupservice"
 	"github.com/mangustc/obd/service/jobservice"
 	"github.com/mangustc/obd/service/sessionservice"
 	"github.com/mangustc/obd/service/userservice"
@@ -66,7 +68,7 @@ CREATE TABLE IF NOT EXISTS %[1]s (
 	%[1]sAccessUser INTEGER NOT NULL DEFAULT FALSE,
 	%[1]sAccessJob INTEGER NOT NULL DEFAULT FALSE,
 	%[1]sAccessStudent INTEGER NOT NULL DEFAULT FALSE,
-	%[1]sAccessUniGroup INTEGER NOT NULL DEFAULT FALSE,
+	%[1]sAccessGroup INTEGER NOT NULL DEFAULT FALSE,
 	%[1]sAccessFinhelpCtg INTEGER NOT NULL DEFAULT FALSE,
 	%[1]sAccessFinhelpStage INTEGER NOT NULL DEFAULT FALSE,
 	%[1]sAccessFinhelpProc INTEGER NOT NULL DEFAULT FALSE,
@@ -79,8 +81,7 @@ CREATE TABLE IF NOT EXISTS %[1]s (
 	%[1]sAccessCourse INTEGER NOT NULL DEFAULT FALSE,
 	%[1]sAccessPerf INTEGER NOT NULL DEFAULT FALSE,
 	%[1]sAccessSkip INTEGER NOT NULL DEFAULT FALSE,
-	%[1]sAccessClass INTEGER NOT NULL DEFAULT FALSE,
-	%[1]sAccessSession
+	%[1]sAccessClass INTEGER NOT NULL DEFAULT FALSE
 );`, jobTN)
 	studentCT = fmt.Sprintf(`
 CREATE TABLE IF NOT EXISTS %[1]s (
@@ -89,8 +90,8 @@ CREATE TABLE IF NOT EXISTS %[1]s (
 	%[1]sFirstname VARCHAR(35) NOT NULL,
 	%[1]sMiddlename VARCHAR(35) NOT NULL,
 	%[1]sPhoneNumber VARCHAR(15) NOT NULL,
-	%[2]sID INTEGER NOT NULL,
 	%[1]sIsHidden INTEGER NOT NULL DEFAULT FALSE,
+	%[2]sID INTEGER NOT NULL,
 	FOREIGN KEY (%[2]sID) REFERENCES %[2]s (%[2]sID) ON DELETE RESTRICT
 );`, studentTN, groupTN)
 	groupCT = fmt.Sprintf(`
@@ -99,17 +100,20 @@ CREATE TABLE IF NOT EXISTS %[1]s (
 	%[1]sNumber VARCHAR(10) NOT NULL,
 	%[1]sYear INTEGER NOT NULL,
 	%[1]sCourseName VARCHAR(50) NOT NULL,
+	%[1]sIsHidden INTEGER NOT NULL DEFAULT FALSE,
 	UNIQUE(%[1]sNumber, %[1]sYear)
 );`, groupTN)
 	finhelpCtgCT = fmt.Sprintf(`
 CREATE TABLE IF NOT EXISTS %[1]s (
 	%[1]sID INTEGER PRIMARY KEY AUTOINCREMENT,
 	%[1]sDescription VARCHAR(250) NOT NULL,
+	%[1]sIsHidden INTEGER NOT NULL DEFAULT FALSE,
 	%[1]sPayment INTEGER NOT NULL
 );`, finhelpCtgTN)
 	finhelpStageCT = fmt.Sprintf(`
 CREATE TABLE IF NOT EXISTS %[1]s (
 	%[1]sID INTEGER PRIMARY KEY AUTOINCREMENT,
+	%[1]sIsHidden INTEGER NOT NULL DEFAULT FALSE,
 	%[1]sDescription VARCHAR(150) NOT NULL
 );`, finhelpStageTN)
 	finhelpProcCT = fmt.Sprintf(`
@@ -129,17 +133,20 @@ CREATE TABLE IF NOT EXISTS %[1]s (
 CREATE TABLE IF NOT EXISTS %[1]s (
 	%[1]sID INTEGER PRIMARY KEY AUTOINCREMENT,
 	%[1]sName VARCHAR(50) NOT NULL,
+	%[1]sIsHidden INTEGER NOT NULL DEFAULT FALSE,
 	%[1]sAddress VARCHAR(100) NOT NULL
 );`, buildingTN)
 	cabinetTypeCT = fmt.Sprintf(`
 CREATE TABLE IF NOT EXISTS %[1]s (
 	%[1]sID INTEGER PRIMARY KEY AUTOINCREMENT,
+	%[1]sIsHidden INTEGER NOT NULL DEFAULT FALSE,
 	%[1]sName VARCHAR(50) NOT NULL
 );`, cabinetTypeTN)
 	cabinetCT = fmt.Sprintf(`
 CREATE TABLE IF NOT EXISTS %[1]s (
 	%[1]sID INTEGER PRIMARY KEY AUTOINCREMENT,
 	%[1]sNumber VARCHAR(10) NOT NULL,
+	%[1]sIsHidden INTEGER NOT NULL DEFAULT FALSE,
 	%[2]sID INTEGER NOT NULL,
 	%[3]sID INTEGER NOT NULL,
 	FOREIGN KEY (%[2]sID) REFERENCES %[2]s (%[2]sID) ON DELETE RESTRICT,
@@ -158,6 +165,7 @@ CREATE TABLE IF NOT EXISTS %[1]s (
 	courseTypeCT = fmt.Sprintf(`
 CREATE TABLE IF NOT EXISTS %[1]s (
 	%[1]sID INTEGER PRIMARY KEY AUTOINCREMENT,
+	%[1]sIsHidden INTEGER NOT NULL DEFAULT FALSE,
 	%[1]sName VARCHAR(50) NOT NULL
 );`, courseTypeTN)
 	courseCT = fmt.Sprintf(`
@@ -165,11 +173,13 @@ CREATE TABLE IF NOT EXISTS %[1]s (
 	%[1]sID INTEGER PRIMARY KEY AUTOINCREMENT,
 	%[1]sName VARCHAR(50) NOT NULL,
 	%[2]sID INTEGER NOT NULL,
+	%[1]sIsHidden INTEGER NOT NULL DEFAULT FALSE,
 	FOREIGN KEY (%[2]sID) REFERENCES %[2]s (%[2]sID) ON DELETE RESTRICT
 );`, courseTN, courseTypeTN)
 	classTypeCT = fmt.Sprintf(`
 CREATE TABLE IF NOT EXISTS %[1]s (
 	%[1]sID INTEGER PRIMARY KEY AUTOINCREMENT,
+	%[1]sIsHidden INTEGER NOT NULL DEFAULT FALSE,
 	%[1]sName VARCHAR(50) NOT NULL
 );`, classTypeTN)
 	classCT = fmt.Sprintf(`
@@ -177,6 +187,7 @@ CREATE TABLE IF NOT EXISTS %[1]s (
 	%[1]sID INTEGER PRIMARY KEY AUTOINCREMENT,
 	%[1]sStart DATE NOT NULL,
 	%[1]sNumber INTEGER NOT NULL,
+	%[1]sIsHidden INTEGER NOT NULL DEFAULT FALSE,
 	%[2]sID INTEGER NOT NULL,
 	%[3]sID INTEGER NOT NULL,
 	%[4]sID INTEGER NOT NULL,
@@ -232,9 +243,9 @@ func main() {
 	js := jobservice.NewJobService(db, jobTN)
 	us := userservice.NewUserService(db, userTN, jobTN)
 	ss := sessionservice.NewSessionService(db, sessionTN, userTN)
+	grs := groupservice.NewGroupService(db, groupTN)
 
 	jh := jobhandler.NewJobHandler(ss, us, js)
-
 	router.HandleFunc("GET /job", jh.JobPage)
 	router.HandleFunc("POST /api/job", jh.Job)
 	router.HandleFunc("POST /api/job/getjobs", jh.GetJobs)
@@ -244,7 +255,6 @@ func main() {
 	router.HandleFunc("POST /api/job/editjob", jh.EditJob)
 
 	uh := userhandler.NewUserHandler(ss, us, js)
-
 	router.HandleFunc("GET /user", uh.UserPage)
 	router.HandleFunc("POST /api/user", uh.User)
 	router.HandleFunc("POST /api/user/getusers", uh.GetUsers)
@@ -253,8 +263,16 @@ func main() {
 	router.HandleFunc("POST /api/user/deleteuser", uh.DeleteUser)
 	router.HandleFunc("POST /api/user/edituser", uh.EditUser)
 
-	auh := authhandler.NewAuthHandler(ss, us)
+	grh := grouphandler.NewGroupHandler(ss, us, js, grs)
+	router.HandleFunc("GET /group", grh.GroupPage)
+	router.HandleFunc("POST /api/group", grh.Group)
+	router.HandleFunc("POST /api/group/getgroups", grh.GetGroups)
+	router.HandleFunc("POST /api/group/insertgroup", grh.InsertGroup)
+	router.HandleFunc("POST /api/group/updategroup", grh.UpdateGroup)
+	router.HandleFunc("POST /api/group/deletegroup", grh.DeleteGroup)
+	router.HandleFunc("POST /api/group/editgroup", grh.EditGroup)
 
+	auh := authhandler.NewAuthHandler(ss, us)
 	router.HandleFunc("GET /auth", auh.AuthPage)
 	router.HandleFunc("POST /api/auth", auh.Auth)
 	router.HandleFunc("POST /api/auth/userinput", auh.UserInput)

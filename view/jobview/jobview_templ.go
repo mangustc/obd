@@ -34,7 +34,7 @@ var (
 	taJobAccessUser         = schema.NewTA(jobTN+"AccessUser", "User", schema.BooleanInput)
 	taJobAccessJob          = schema.NewTA(jobTN+"AccessJob", "Job", schema.BooleanInput)
 	taJobAccessStudent      = schema.NewTA(jobTN+"AccessStudent", "Student", schema.BooleanInput)
-	taJobAccessUniGroup     = schema.NewTA(jobTN+"AccessUniGroup", "UniGroup", schema.BooleanInput)
+	taJobAccessGroup        = schema.NewTA(jobTN+"AccessGroup", "Group", schema.BooleanInput)
 	taJobAccessFinhelpCtg   = schema.NewTA(jobTN+"AccessFinhelpCtg", "FinhelpCtg", schema.BooleanInput)
 	taJobAccessFinhelpStage = schema.NewTA(jobTN+"AccessFinhelpStage", "FinhelpStage", schema.BooleanInput)
 	taJobAccessFinhelpProc  = schema.NewTA(jobTN+"AccessFinhelpProc", "FinhelpProc", schema.BooleanInput)
@@ -48,7 +48,6 @@ var (
 	taJobAccessPerf         = schema.NewTA(jobTN+"AccessPerf", "Perf", schema.BooleanInput)
 	taJobAccessSkip         = schema.NewTA(jobTN+"AccessSkip", "Skip", schema.BooleanInput)
 	taJobAccessClass        = schema.NewTA(jobTN+"AccessClass", "Class", schema.BooleanInput)
-	taJobAccessSession      = schema.NewTA(jobTN+"AccessSession", "Session", schema.BooleanInput)
 )
 
 func getTableHeaders() []*schema.TableHeaderColumn {
@@ -57,7 +56,7 @@ func getTableHeaders() []*schema.TableHeaderColumn {
 		schema.NewTableHeaderColumn(taJobAccessUser.TATitle, 4),
 		schema.NewTableHeaderColumn(taJobAccessJob.TATitle, 4),
 		schema.NewTableHeaderColumn(taJobAccessStudent.TATitle, 4),
-		schema.NewTableHeaderColumn(taJobAccessUniGroup.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessGroup.TATitle, 4),
 		schema.NewTableHeaderColumn(taJobAccessFinhelpCtg.TATitle, 4),
 		schema.NewTableHeaderColumn(taJobAccessFinhelpStage.TATitle, 4),
 		schema.NewTableHeaderColumn(taJobAccessFinhelpProc.TATitle, 4),
@@ -71,7 +70,6 @@ func getTableHeaders() []*schema.TableHeaderColumn {
 		schema.NewTableHeaderColumn(taJobAccessPerf.TATitle, 4),
 		schema.NewTableHeaderColumn(taJobAccessSkip.TATitle, 4),
 		schema.NewTableHeaderColumn(taJobAccessClass.TATitle, 4),
-		schema.NewTableHeaderColumn(taJobAccessSession.TATitle, 4),
 	}
 }
 
@@ -81,7 +79,7 @@ func getInsertFormInputs() []*schema.Input {
 		schema.NewInput(taJobAccessUser.TATitle, taJobAccessUser.TAName, taJobAccessUser.TAInputType, "", nil, nil, ""),
 		schema.NewInput(taJobAccessJob.TATitle, taJobAccessJob.TAName, taJobAccessJob.TAInputType, "", nil, nil, ""),
 		schema.NewInput(taJobAccessStudent.TATitle, taJobAccessStudent.TAName, taJobAccessStudent.TAInputType, "", nil, nil, ""),
-		schema.NewInput(taJobAccessUniGroup.TATitle, taJobAccessUniGroup.TAName, taJobAccessUniGroup.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessGroup.TATitle, taJobAccessGroup.TAName, taJobAccessGroup.TAInputType, "", nil, nil, ""),
 		schema.NewInput(taJobAccessFinhelpCtg.TATitle, taJobAccessFinhelpCtg.TAName, taJobAccessFinhelpCtg.TAInputType, "", nil, nil, ""),
 		schema.NewInput(taJobAccessFinhelpStage.TATitle, taJobAccessFinhelpStage.TAName, taJobAccessFinhelpStage.TAInputType, "", nil, nil, ""),
 		schema.NewInput(taJobAccessFinhelpProc.TATitle, taJobAccessFinhelpProc.TAName, taJobAccessFinhelpProc.TAInputType, "", nil, nil, ""),
@@ -95,7 +93,6 @@ func getInsertFormInputs() []*schema.Input {
 		schema.NewInput(taJobAccessPerf.TATitle, taJobAccessPerf.TAName, taJobAccessPerf.TAInputType, "", nil, nil, ""),
 		schema.NewInput(taJobAccessSkip.TATitle, taJobAccessSkip.TAName, taJobAccessSkip.TAInputType, "", nil, nil, ""),
 		schema.NewInput(taJobAccessClass.TATitle, taJobAccessClass.TAName, taJobAccessClass.TAInputType, "", nil, nil, ""),
-		schema.NewInput(taJobAccessSession.TATitle, taJobAccessSession.TAName, taJobAccessSession.TAInputType, "", nil, nil, ""),
 	}
 }
 
@@ -105,7 +102,7 @@ func getInputsFromJobDB(jobDB *jobschema.JobDB) []*schema.Input {
 		schema.NewInput("", taJobAccessUser.TAName, taJobAccessUser.TAInputType, jobDB.JobAccessUser, nil, nil, ""),
 		schema.NewInput("", taJobAccessJob.TAName, taJobAccessJob.TAInputType, jobDB.JobAccessJob, nil, nil, ""),
 		schema.NewInput("", taJobAccessStudent.TAName, taJobAccessStudent.TAInputType, jobDB.JobAccessStudent, nil, nil, ""),
-		schema.NewInput("", taJobAccessUniGroup.TAName, taJobAccessUniGroup.TAInputType, jobDB.JobAccessUniGroup, nil, nil, ""),
+		schema.NewInput("", taJobAccessGroup.TAName, taJobAccessGroup.TAInputType, jobDB.JobAccessGroup, nil, nil, ""),
 		schema.NewInput("", taJobAccessFinhelpCtg.TAName, taJobAccessFinhelpCtg.TAInputType, jobDB.JobAccessFinhelpCtg, nil, nil, ""),
 		schema.NewInput("", taJobAccessFinhelpStage.TAName, taJobAccessFinhelpStage.TAInputType, jobDB.JobAccessFinhelpStage, nil, nil, ""),
 		schema.NewInput("", taJobAccessFinhelpProc.TAName, taJobAccessFinhelpProc.TAInputType, jobDB.JobAccessFinhelpProc, nil, nil, ""),
@@ -119,7 +116,6 @@ func getInputsFromJobDB(jobDB *jobschema.JobDB) []*schema.Input {
 		schema.NewInput("", taJobAccessPerf.TAName, taJobAccessPerf.TAInputType, jobDB.JobAccessPerf, nil, nil, ""),
 		schema.NewInput("", taJobAccessSkip.TAName, taJobAccessSkip.TAInputType, jobDB.JobAccessSkip, nil, nil, ""),
 		schema.NewInput("", taJobAccessClass.TAName, taJobAccessClass.TAInputType, jobDB.JobAccessClass, nil, nil, ""),
-		schema.NewInput("", taJobAccessSession.TAName, taJobAccessSession.TAInputType, jobDB.JobAccessSession, nil, nil, ""),
 	}
 }
 
@@ -343,7 +339,7 @@ func JobPage() templ.Component {
 			var templ_7745c5c3_Var9 string
 			templ_7745c5c3_Var9, templ_7745c5c3_Err = templ.JoinStringErrs(getjobPOSTURL)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/jobview/jobview.templ`, Line: 148, Col: 26}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/jobview/jobview.templ`, Line: 144, Col: 26}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 			if templ_7745c5c3_Err != nil {

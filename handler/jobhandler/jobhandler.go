@@ -100,7 +100,7 @@ func (jh *JobHandler) InsertJob(w http.ResponseWriter, r *http.Request) {
 	in.JobAccessUser, _ = util.GetBoolFromForm(r, "JobAccessUser")
 	in.JobAccessJob, _ = util.GetBoolFromForm(r, "JobAccessJob")
 	in.JobAccessStudent, _ = util.GetBoolFromForm(r, "JobAccessStudent")
-	in.JobAccessUniGroup, _ = util.GetBoolFromForm(r, "JobAccessUniGroup")
+	in.JobAccessGroup, _ = util.GetBoolFromForm(r, "JobAccessGroup")
 	in.JobAccessFinhelpCtg, _ = util.GetBoolFromForm(r, "JobAccessFinhelpCtg")
 	in.JobAccessFinhelpStage, _ = util.GetBoolFromForm(r, "JobAccessFinhelpStage")
 	in.JobAccessFinhelpProc, _ = util.GetBoolFromForm(r, "JobAccessFinhelpProc")
@@ -114,7 +114,6 @@ func (jh *JobHandler) InsertJob(w http.ResponseWriter, r *http.Request) {
 	in.JobAccessPerf, _ = util.GetBoolFromForm(r, "JobAccessPerf")
 	in.JobAccessSkip, _ = util.GetBoolFromForm(r, "JobAccessSkip")
 	in.JobAccessClass, _ = util.GetBoolFromForm(r, "JobAccessClass")
-	in.JobAccessSession, _ = util.GetBoolFromForm(r, "JobAccessSession")
 	err = jobschema.ValidateJobInsert(in)
 	if err != nil {
 		message = msg.JobNameEmpty
@@ -210,7 +209,7 @@ func (jh *JobHandler) UpdateJob(w http.ResponseWriter, r *http.Request) {
 	in.JobAccessUser, _ = util.GetBoolFromForm(r, "JobAccessUser")
 	in.JobAccessJob, _ = util.GetBoolFromForm(r, "JobAccessJob")
 	in.JobAccessStudent, _ = util.GetBoolFromForm(r, "JobAccessStudent")
-	in.JobAccessUniGroup, _ = util.GetBoolFromForm(r, "JobAccessUniGroup")
+	in.JobAccessGroup, _ = util.GetBoolFromForm(r, "JobAccessGroup")
 	in.JobAccessFinhelpCtg, _ = util.GetBoolFromForm(r, "JobAccessFinhelpCtg")
 	in.JobAccessFinhelpStage, _ = util.GetBoolFromForm(r, "JobAccessFinhelpStage")
 	in.JobAccessFinhelpProc, _ = util.GetBoolFromForm(r, "JobAccessFinhelpProc")
@@ -224,7 +223,6 @@ func (jh *JobHandler) UpdateJob(w http.ResponseWriter, r *http.Request) {
 	in.JobAccessPerf, _ = util.GetBoolFromForm(r, "JobAccessPerf")
 	in.JobAccessSkip, _ = util.GetBoolFromForm(r, "JobAccessSkip")
 	in.JobAccessClass, _ = util.GetBoolFromForm(r, "JobAccessClass")
-	in.JobAccessSession, _ = util.GetBoolFromForm(r, "JobAccessSession")
 	err = jobschema.ValidateJobUpdate(in)
 	if err != nil {
 		message = msg.JobNameEmpty

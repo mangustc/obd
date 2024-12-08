@@ -79,4 +79,14 @@ var (
 		schema.AlertNotification,
 		"This user already exists",
 	)
+	GroupWrong = NewMsg(
+		http.StatusUnprocessableEntity,
+		schema.AlertNotification,
+		"Group number, course name and year can't be empty",
+	)
+	GroupExists = NewMsg(
+		http.StatusUnprocessableEntity,
+		schema.AlertNotification,
+		"This group already exists",
+	)
 )

@@ -34,7 +34,7 @@ INSERT INTO %[1]s (
 		%[1]sAccessUser,
 		%[1]sAccessJob,
 		%[1]sAccessStudent,
-		%[1]sAccessUniGroup,
+		%[1]sAccessGroup,
 		%[1]sAccessFinhelpCtg,
 		%[1]sAccessFinhelpStage,
 		%[1]sAccessFinhelpProc,
@@ -47,8 +47,7 @@ INSERT INTO %[1]s (
 		%[1]sAccessCourse,
 		%[1]sAccessPerf,
 		%[1]sAccessSkip,
-		%[1]sAccessClass,
-		%[1]sAccessSession
+		%[1]sAccessClass
 	)
 	VALUES (
 		"%[2]s",
@@ -68,8 +67,7 @@ INSERT INTO %[1]s (
 		"%[16]t",
 		"%[17]t",
 		"%[18]t",
-		"%[19]t",
-		"%[20]t"
+		"%[19]t"
 	)
 RETURNING *`,
 		js.jobTN,
@@ -77,7 +75,7 @@ RETURNING *`,
 		data.JobAccessUser,
 		data.JobAccessJob,
 		data.JobAccessStudent,
-		data.JobAccessUniGroup,
+		data.JobAccessGroup,
 		data.JobAccessFinhelpCtg,
 		data.JobAccessFinhelpStage,
 		data.JobAccessFinhelpProc,
@@ -91,7 +89,6 @@ RETURNING *`,
 		data.JobAccessPerf,
 		data.JobAccessSkip,
 		data.JobAccessClass,
-		data.JobAccessSession,
 	)
 
 	stmt, err := js.db.Prepare(query)
@@ -108,7 +105,7 @@ RETURNING *`,
 		&jobDB.JobAccessUser,
 		&jobDB.JobAccessJob,
 		&jobDB.JobAccessStudent,
-		&jobDB.JobAccessUniGroup,
+		&jobDB.JobAccessGroup,
 		&jobDB.JobAccessFinhelpCtg,
 		&jobDB.JobAccessFinhelpStage,
 		&jobDB.JobAccessFinhelpProc,
@@ -122,7 +119,6 @@ RETURNING *`,
 		&jobDB.JobAccessPerf,
 		&jobDB.JobAccessSkip,
 		&jobDB.JobAccessClass,
-		&jobDB.JobAccessSession,
 	)
 	if err != nil {
 		if util.IsErrorSQL(err, sqlite3.ErrConstraint) {
@@ -148,7 +144,7 @@ UPDATE %[1]s SET
 	%[1]sAccessUser = "%[4]t",
 	%[1]sAccessJob = "%[5]t",
 	%[1]sAccessStudent = "%[6]t",
-	%[1]sAccessUniGroup = "%[7]t",
+	%[1]sAccessGroup = "%[7]t",
 	%[1]sAccessFinhelpCtg = "%[8]t",
 	%[1]sAccessFinhelpStage = "%[9]t",
 	%[1]sAccessFinhelpProc = "%[10]t",
@@ -161,8 +157,7 @@ UPDATE %[1]s SET
 	%[1]sAccessCourse = "%[17]t",
 	%[1]sAccessPerf = "%[18]t",
 	%[1]sAccessSkip = "%[19]t",
-	%[1]sAccessClass = "%[20]t",
-	%[1]sAccessSession = "%[21]t"
+	%[1]sAccessClass = "%[20]t"
 WHERE %[1]sID = %[2]d
 RETURNING *`,
 		js.jobTN,
@@ -171,7 +166,7 @@ RETURNING *`,
 		data.JobAccessUser,
 		data.JobAccessJob,
 		data.JobAccessStudent,
-		data.JobAccessUniGroup,
+		data.JobAccessGroup,
 		data.JobAccessFinhelpCtg,
 		data.JobAccessFinhelpStage,
 		data.JobAccessFinhelpProc,
@@ -185,7 +180,6 @@ RETURNING *`,
 		data.JobAccessPerf,
 		data.JobAccessSkip,
 		data.JobAccessClass,
-		data.JobAccessSession,
 	)
 
 	stmt, err := js.db.Prepare(query)
@@ -202,7 +196,7 @@ RETURNING *`,
 		&jobDB.JobAccessUser,
 		&jobDB.JobAccessJob,
 		&jobDB.JobAccessStudent,
-		&jobDB.JobAccessUniGroup,
+		&jobDB.JobAccessGroup,
 		&jobDB.JobAccessFinhelpCtg,
 		&jobDB.JobAccessFinhelpStage,
 		&jobDB.JobAccessFinhelpProc,
@@ -216,7 +210,6 @@ RETURNING *`,
 		&jobDB.JobAccessPerf,
 		&jobDB.JobAccessSkip,
 		&jobDB.JobAccessClass,
-		&jobDB.JobAccessSession,
 	)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -260,7 +253,7 @@ RETURNING *`,
 		&jobDB.JobAccessUser,
 		&jobDB.JobAccessJob,
 		&jobDB.JobAccessStudent,
-		&jobDB.JobAccessUniGroup,
+		&jobDB.JobAccessGroup,
 		&jobDB.JobAccessFinhelpCtg,
 		&jobDB.JobAccessFinhelpStage,
 		&jobDB.JobAccessFinhelpProc,
@@ -274,7 +267,6 @@ RETURNING *`,
 		&jobDB.JobAccessPerf,
 		&jobDB.JobAccessSkip,
 		&jobDB.JobAccessClass,
-		&jobDB.JobAccessSession,
 	)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -304,7 +296,7 @@ SELECT
 	%[1]sAccessUser,
 	%[1]sAccessJob,
 	%[1]sAccessStudent,
-	%[1]sAccessUniGroup,
+	%[1]sAccessGroup,
 	%[1]sAccessFinhelpCtg,
 	%[1]sAccessFinhelpStage,
 	%[1]sAccessFinhelpProc,
@@ -317,8 +309,7 @@ SELECT
 	%[1]sAccessCourse,
 	%[1]sAccessPerf,
 	%[1]sAccessSkip,
-	%[1]sAccessClass,
-	%[1]sAccessSession
+	%[1]sAccessClass
 FROM %[1]s
 WHERE %[1]sID = %[2]d`,
 		js.jobTN,
@@ -339,7 +330,7 @@ WHERE %[1]sID = %[2]d`,
 		&jobDB.JobAccessUser,
 		&jobDB.JobAccessJob,
 		&jobDB.JobAccessStudent,
-		&jobDB.JobAccessUniGroup,
+		&jobDB.JobAccessGroup,
 		&jobDB.JobAccessFinhelpCtg,
 		&jobDB.JobAccessFinhelpStage,
 		&jobDB.JobAccessFinhelpProc,
@@ -353,7 +344,6 @@ WHERE %[1]sID = %[2]d`,
 		&jobDB.JobAccessPerf,
 		&jobDB.JobAccessSkip,
 		&jobDB.JobAccessClass,
-		&jobDB.JobAccessSession,
 	)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -383,7 +373,7 @@ SELECT
 	%[1]sAccessUser,
 	%[1]sAccessJob,
 	%[1]sAccessStudent,
-	%[1]sAccessUniGroup,
+	%[1]sAccessGroup,
 	%[1]sAccessFinhelpCtg,
 	%[1]sAccessFinhelpStage,
 	%[1]sAccessFinhelpProc,
@@ -396,8 +386,7 @@ SELECT
 	%[1]sAccessCourse,
 	%[1]sAccessPerf,
 	%[1]sAccessSkip,
-	%[1]sAccessClass,
-	%[1]sAccessSession
+	%[1]sAccessClass
 FROM %[1]s
 ORDER BY %[1]sID DESC`,
 		js.jobTN,
@@ -425,7 +414,7 @@ ORDER BY %[1]sID DESC`,
 			&jobDB.JobAccessUser,
 			&jobDB.JobAccessJob,
 			&jobDB.JobAccessStudent,
-			&jobDB.JobAccessUniGroup,
+			&jobDB.JobAccessGroup,
 			&jobDB.JobAccessFinhelpCtg,
 			&jobDB.JobAccessFinhelpStage,
 			&jobDB.JobAccessFinhelpProc,
@@ -439,7 +428,6 @@ ORDER BY %[1]sID DESC`,
 			&jobDB.JobAccessPerf,
 			&jobDB.JobAccessSkip,
 			&jobDB.JobAccessClass,
-			&jobDB.JobAccessSession,
 		)
 		if err != nil {
 			logger.Error.Printf("Internal server error (%s)", err)

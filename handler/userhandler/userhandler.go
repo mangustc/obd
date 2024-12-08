@@ -62,6 +62,19 @@ func (uh *UserHandler) GetUsers(w http.ResponseWriter, r *http.Request) {
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &userschema.UsersGet{}
 
+	sessionJobDB, err := util.GetJobBySessionCookie(
+		w, r,
+		uh.SessionService.GetSession,
+		uh.UserService.GetUser,
+		uh.JobService.GetJob,
+	)
+	if !sessionJobDB.JobAccessUser {
+		err := errs.ErrUnauthorized
+		message = msg.Unauthorized
+		logger.Error.Print(err.Error())
+		return
+	}
+
 	err = userschema.ValidateUsersGet(in)
 	if err != nil {
 		message = msg.InternalServerError

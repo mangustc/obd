@@ -12,7 +12,7 @@ type JobDB struct {
 	JobAccessUser         bool   `json:"JobAccessUser"`
 	JobAccessJob          bool   `json:"JobAccessJob"`
 	JobAccessStudent      bool   `json:"JobAccessStudent"`
-	JobAccessUniGroup     bool   `json:"JobAccessUniGroup"`
+	JobAccessGroup        bool   `json:"JobAccessGroup"`
 	JobAccessFinhelpCtg   bool   `json:"JobAccessFinhelpCtg"`
 	JobAccessFinhelpStage bool   `json:"JobAccessFinhelpStage"`
 	JobAccessFinhelpProc  bool   `json:"JobAccessProc"`
@@ -26,7 +26,6 @@ type JobDB struct {
 	JobAccessPerf         bool   `json:"JobAccessPerf"`
 	JobAccessSkip         bool   `json:"JobAccessSkip"`
 	JobAccessClass        bool   `json:"JobAccessClass"`
-	JobAccessSession      bool   `json:"JobAccessSession"`
 }
 
 type JobInsert struct {
@@ -34,7 +33,7 @@ type JobInsert struct {
 	JobAccessUser         bool   `json:"JobAccessUser"`
 	JobAccessJob          bool   `json:"JobAccessJob"`
 	JobAccessStudent      bool   `json:"JobAccessStudent"`
-	JobAccessUniGroup     bool   `json:"JobAccessUniGroup"`
+	JobAccessGroup        bool   `json:"JobAccessGroup"`
 	JobAccessFinhelpCtg   bool   `json:"JobAccessFinhelpCtg"`
 	JobAccessFinhelpStage bool   `json:"JobAccessFinhelpStage"`
 	JobAccessFinhelpProc  bool   `json:"JobAccessProc"`
@@ -48,7 +47,6 @@ type JobInsert struct {
 	JobAccessPerf         bool   `json:"JobAccessPerf"`
 	JobAccessSkip         bool   `json:"JobAccessSkip"`
 	JobAccessClass        bool   `json:"JobAccessClass"`
-	JobAccessSession      bool   `json:"JobAccessSession"`
 }
 
 type JobUpdate struct {
@@ -57,7 +55,7 @@ type JobUpdate struct {
 	JobAccessUser         bool   `json:"JobAccessUser"`
 	JobAccessJob          bool   `json:"JobAccessJob"`
 	JobAccessStudent      bool   `json:"JobAccessStudent"`
-	JobAccessUniGroup     bool   `json:"JobAccessUniGroup"`
+	JobAccessGroup        bool   `json:"JobAccessGroup"`
 	JobAccessFinhelpCtg   bool   `json:"JobAccessFinhelpCtg"`
 	JobAccessFinhelpStage bool   `json:"JobAccessFinhelpStage"`
 	JobAccessFinhelpProc  bool   `json:"JobAccessProc"`
@@ -71,7 +69,6 @@ type JobUpdate struct {
 	JobAccessPerf         bool   `json:"JobAccessPerf"`
 	JobAccessSkip         bool   `json:"JobAccessSkip"`
 	JobAccessClass        bool   `json:"JobAccessClass"`
-	JobAccessSession      bool   `json:"JobAccessSession"`
 }
 
 type JobDelete struct {

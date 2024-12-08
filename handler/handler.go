@@ -6,6 +6,7 @@ import (
 	"github.com/mangustc/obd/errs"
 	"github.com/mangustc/obd/logger"
 	"github.com/mangustc/obd/msg"
+	"github.com/mangustc/obd/schema/groupschema"
 	"github.com/mangustc/obd/schema/jobschema"
 	"github.com/mangustc/obd/schema/sessionschema"
 	"github.com/mangustc/obd/schema/userschema"
@@ -27,6 +28,13 @@ type (
 		DeleteUser(data *userschema.UserDelete) (userDB *userschema.UserDB, err error)
 		GetUser(data *userschema.UserGet) (userDB *userschema.UserDB, err error)
 		GetUsers(data *userschema.UsersGet) (usersDB []*userschema.UserDB, err error)
+	}
+	GroupService interface {
+		InsertGroup(data *groupschema.GroupInsert) (groupDB *groupschema.GroupDB, err error)
+		UpdateGroup(data *groupschema.GroupUpdate) (groupDB *groupschema.GroupDB, err error)
+		DeleteGroup(data *groupschema.GroupDelete) (groupDB *groupschema.GroupDB, err error)
+		GetGroup(data *groupschema.GroupGet) (groupDB *groupschema.GroupDB, err error)
+		GetGroups(data *groupschema.GroupsGet) (groupsDB []*groupschema.GroupDB, err error)
 	}
 	SessionService interface {
 		InsertSession(data *sessionschema.SessionInsert) (sessionDB *sessionschema.SessionDB, err error)
