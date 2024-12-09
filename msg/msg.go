@@ -119,4 +119,14 @@ var (
 		schema.AlertNotification,
 		"This student already exists",
 	)
+	FinhelpProcWrong = NewMsg(
+		http.StatusUnprocessableEntity,
+		schema.AlertNotification,
+		"Financial Help Process student, category and stage can't be empty",
+	)
+	FinhelpProcExists = NewMsg(
+		http.StatusUnprocessableEntity,
+		schema.AlertNotification,
+		"This Financial Help Process already exists",
+	)
 )

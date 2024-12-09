@@ -19,11 +19,11 @@ const (
 	pageTitle             = "FinhelpProc"
 	tableTitle            = pageTitle
 	insertFormTitle       = tableTitle
-	getPOSTURL            = "/api/finhelpProc/getfinhelpprocs"
-	insertPOSTURL         = "/api/finhelpProc/insertfinhelpproc"
-	editPOSTURL           = "/api/finhelpProc/editfinhelpproc"
-	updatePOSTURL         = "/api/finhelpProc/updatefinhelpproc"
-	deletePOSTURL         = "/api/finhelpProc/deletefinhelpproc"
+	getPOSTURL            = "/api/finhelpproc/getfinhelpprocs"
+	insertPOSTURL         = "/api/finhelpproc/insertfinhelpproc"
+	editPOSTURL           = "/api/finhelpproc/editfinhelpproc"
+	updatePOSTURL         = "/api/finhelpproc/updatefinhelpproc"
+	deletePOSTURL         = "/api/finhelpproc/deletefinhelpproc"
 	finhelpProcTN         = "FinhelpProc"
 	userTN                = "User"
 	studentTN             = "Student"
@@ -70,10 +70,10 @@ func getInputsFromFinhelpProcDB(finhelpProcDB *finhelpprocschema.FinhelpProcDB,
 	finhelpStageInputOptions []*schema.InputOption,
 ) []*schema.Input {
 	return []*schema.Input{
-		schema.NewInput("", taUserID.TAName, taUserID.TAInputType, nil, nil, userInputOptions, ""),
-		schema.NewInput("", taStudentID.TAName, taStudentID.TAInputType, nil, nil, studentInputOptions, ""),
-		schema.NewInput("", taFinhelpCtgID.TAName, taFinhelpCtgID.TAInputType, nil, nil, finhelpCtgInputOptions, ""),
-		schema.NewInput("", taFinhelpStageID.TAName, taFinhelpStageID.TAInputType, nil, nil, finhelpStageInputOptions, ""),
+		schema.NewInput("", taUserID.TAName, taUserID.TAInputType, nil, nil, userInputOptions, fmt.Sprint(finhelpProcDB.UserID)),
+		schema.NewInput("", taStudentID.TAName, taStudentID.TAInputType, nil, nil, studentInputOptions, fmt.Sprint(finhelpProcDB.StudentID)),
+		schema.NewInput("", taFinhelpCtgID.TAName, taFinhelpCtgID.TAInputType, nil, nil, finhelpCtgInputOptions, fmt.Sprint(finhelpProcDB.FinhelpCtgID)),
+		schema.NewInput("", taFinhelpStageID.TAName, taFinhelpStageID.TAInputType, nil, nil, finhelpStageInputOptions, fmt.Sprint(finhelpProcDB.FinhelpStageID)),
 		schema.NewInput("", taFinhelpProcCreatedAt.TAName, taFinhelpProcCreatedAt.TAInputType, finhelpProcDB.FinhelpProcCreatedAt, nil, nil, ""),
 	}
 }
@@ -104,7 +104,12 @@ func FinhelpProcTableRowEdit(finhelpProcDB *finhelpprocschema.FinhelpProcDB,
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = view.TableRowEdit(getInputsFromFinhelpProcDB(finhelpProcDB, userInputOptions, studentInputOptions, finhelpCtgInputOptions, finhelpStageInputOptions), fmt.Sprintf(bodyVals, finhelpProcDB.FinhelpProcID), updatePOSTURL, deletePOSTURL).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = view.TableRowEdit(getInputsFromFinhelpProcDB(finhelpProcDB,
+			userInputOptions,
+			studentInputOptions,
+			finhelpCtgInputOptions,
+			finhelpStageInputOptions,
+		), fmt.Sprintf(bodyVals, finhelpProcDB.FinhelpProcID), updatePOSTURL, deletePOSTURL).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -138,7 +143,12 @@ func FinhelpProcTableRow(finhelpProcDB *finhelpprocschema.FinhelpProcDB,
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = view.TableRow(getInputsFromFinhelpProcDB(finhelpProcDB, userInputOptions, studentInputOptions, finhelpCtgInputOptions, finhelpStageInputOptions), fmt.Sprintf(bodyVals, finhelpProcDB.FinhelpProcID), editPOSTURL, deletePOSTURL).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = view.TableRow(getInputsFromFinhelpProcDB(finhelpProcDB,
+			userInputOptions,
+			studentInputOptions,
+			finhelpCtgInputOptions,
+			finhelpStageInputOptions,
+		), fmt.Sprintf(bodyVals, finhelpProcDB.FinhelpProcID), editPOSTURL, deletePOSTURL).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -173,7 +183,12 @@ func FinhelpProcTableRows(finhelpProcsDB []*finhelpprocschema.FinhelpProcDB,
 		}
 		ctx = templ.ClearChildren(ctx)
 		for _, finhelpProcDB := range finhelpProcsDB {
-			templ_7745c5c3_Err = FinhelpProcTableRow(finhelpProcDB, userInputOptions, studentInputOptions, finhelpCtgInputOptions, finhelpStageInputOptions).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = FinhelpProcTableRow(finhelpProcDB,
+				userInputOptions,
+				studentInputOptions,
+				finhelpCtgInputOptions,
+				finhelpStageInputOptions,
+			).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -207,7 +222,11 @@ func FinhelpProc(
 			templ_7745c5c3_Var4 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Err = view.InsertForm(insertFormTitle, insertPOSTURL, getInsertFormInputs(studentInputOptions, finhelpCtgInputOptions, finhelpStageInputOptions)).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = view.InsertForm(insertFormTitle, insertPOSTURL, getInsertFormInputs(
+			studentInputOptions,
+			finhelpCtgInputOptions,
+			finhelpStageInputOptions,
+		)).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -259,7 +278,7 @@ func FinhelpProcPage() templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(getfinhelpProcPOSTURL)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/finhelpprocview/finhelpprocview.templ`, Line: 114, Col: 34}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/finhelpprocview/finhelpprocview.templ`, Line: 133, Col: 34}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {

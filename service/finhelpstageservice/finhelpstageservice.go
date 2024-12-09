@@ -30,16 +30,20 @@ func NewFinhelpStageService(db *sql.DB, finhelpStageTN string) (fsts *FinhelpSta
 func (fsts *FinhelpStageService) InsertFinhelpStage(data *finhelpstageschema.FinhelpStageInsert) (finhelpStageDB *finhelpstageschema.FinhelpStageDB, err error) {
 	query := fmt.Sprintf(`
 INSERT INTO %[1]s (
+		%[1]sName,
 		%[1]sDescription
 	)
 	VALUES (
-		"%[2]s"
+		"%[2]s",
+		"%[3]s"
 	)
 RETURNING
 	%[1]sID,
+	%[1]sName,
 	%[1]sDescription,
 	%[1]sIsHidden`,
 		fsts.finhelpStageTN,
+		data.FinhelpStageName,
 		data.FinhelpStageDescription,
 	)
 
@@ -53,6 +57,7 @@ RETURNING
 	finhelpStageDB = &finhelpstageschema.FinhelpStageDB{}
 	err = stmt.QueryRow().Scan(
 		&finhelpStageDB.FinhelpStageID,
+		&finhelpStageDB.FinhelpStageName,
 		&finhelpStageDB.FinhelpStageDescription,
 		&finhelpStageDB.FinhelpStageIsHidden,
 	)
@@ -70,14 +75,17 @@ RETURNING
 func (fsts *FinhelpStageService) UpdateFinhelpStage(data *finhelpstageschema.FinhelpStageUpdate) (finhelpStageDB *finhelpstageschema.FinhelpStageDB, err error) {
 	query := fmt.Sprintf(`
 UPDATE %[1]s SET
-	%[1]sDescription = "%[3]s"
+	%[1]sName = "%[3]s",
+	%[1]sDescription = "%[4]s"
 WHERE %[1]sID = %[2]d
 RETURNING
 	%[1]sID,
+	%[1]sName,
 	%[1]sDescription,
 	%[1]sIsHidden`,
 		fsts.finhelpStageTN,
 		data.FinhelpStageID,
+		data.FinhelpStageName,
 		data.FinhelpStageDescription,
 	)
 
@@ -91,6 +99,7 @@ RETURNING
 	finhelpStageDB = &finhelpstageschema.FinhelpStageDB{}
 	err = stmt.QueryRow().Scan(
 		&finhelpStageDB.FinhelpStageID,
+		&finhelpStageDB.FinhelpStageName,
 		&finhelpStageDB.FinhelpStageDescription,
 		&finhelpStageDB.FinhelpStageIsHidden,
 	)
@@ -116,6 +125,7 @@ UPDATE %[1]s
 	WHERE %[1]sID = %[2]d
 RETURNING
 	%[1]sID,
+	%[1]sName,
 	%[1]sDescription,
 	%[1]sIsHidden`,
 		fsts.finhelpStageTN,
@@ -132,6 +142,7 @@ RETURNING
 	finhelpStageDB = &finhelpstageschema.FinhelpStageDB{}
 	err = stmt.QueryRow().Scan(
 		&finhelpStageDB.FinhelpStageID,
+		&finhelpStageDB.FinhelpStageName,
 		&finhelpStageDB.FinhelpStageDescription,
 		&finhelpStageDB.FinhelpStageIsHidden,
 	)
@@ -153,6 +164,7 @@ func (fsts *FinhelpStageService) GetFinhelpStage(data *finhelpstageschema.Finhel
 	query := fmt.Sprintf(`
 SELECT
 	%[1]sID,
+	%[1]sName,
 	%[1]sDescription,
 	%[1]sIsHidden
 FROM %[1]s
@@ -171,6 +183,7 @@ WHERE %[1]sID = %[2]d`,
 	finhelpStageDB = &finhelpstageschema.FinhelpStageDB{}
 	err = stmt.QueryRow().Scan(
 		&finhelpStageDB.FinhelpStageID,
+		&finhelpStageDB.FinhelpStageName,
 		&finhelpStageDB.FinhelpStageDescription,
 		&finhelpStageDB.FinhelpStageIsHidden,
 	)
@@ -192,6 +205,7 @@ func (fsts *FinhelpStageService) GetFinhelpStages(data *finhelpstageschema.Finhe
 	query := fmt.Sprintf(`
 SELECT
 	%[1]sID,
+	%[1]sName,
 	%[1]sDescription,
 	%[1]sIsHidden
 FROM %[1]s
@@ -217,6 +231,7 @@ ORDER BY %[1]sID DESC`,
 	for rows.Next() {
 		err = rows.Scan(
 			&finhelpStageDB.FinhelpStageID,
+			&finhelpStageDB.FinhelpStageName,
 			&finhelpStageDB.FinhelpStageDescription,
 			&finhelpStageDB.FinhelpStageIsHidden,
 		)

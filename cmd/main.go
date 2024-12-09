@@ -8,6 +8,7 @@ import (
 	"github.com/mangustc/obd/handler"
 	"github.com/mangustc/obd/handler/authhandler"
 	"github.com/mangustc/obd/handler/finhelpctghandler"
+	"github.com/mangustc/obd/handler/finhelpprochandler"
 	"github.com/mangustc/obd/handler/finhelpstagehandler"
 	"github.com/mangustc/obd/handler/grouphandler"
 	"github.com/mangustc/obd/handler/jobhandler"
@@ -16,6 +17,7 @@ import (
 	"github.com/mangustc/obd/logger"
 	"github.com/mangustc/obd/middleware"
 	"github.com/mangustc/obd/service/finhelpctgservice"
+	"github.com/mangustc/obd/service/finhelpprocservice"
 	"github.com/mangustc/obd/service/finhelpstageservice"
 	"github.com/mangustc/obd/service/groupservice"
 	"github.com/mangustc/obd/service/jobservice"
@@ -119,6 +121,7 @@ CREATE TABLE IF NOT EXISTS %[1]s (
 	finhelpStageCT = fmt.Sprintf(`
 CREATE TABLE IF NOT EXISTS %[1]s (
 	%[1]sID INTEGER PRIMARY KEY AUTOINCREMENT,
+	%[1]sName VARCHAR(50) NOT NULL,
 	%[1]sIsHidden INTEGER NOT NULL DEFAULT FALSE,
 	%[1]sDescription VARCHAR(150) NOT NULL
 );`, finhelpStageTN)
@@ -252,6 +255,13 @@ func main() {
 	grs := groupservice.NewGroupService(db, groupTN)
 	fctgs := finhelpctgservice.NewFinhelpCtgService(db, finhelpCtgTN)
 	fsts := finhelpstageservice.NewFinhelpStageService(db, finhelpStageTN)
+	fprs := finhelpprocservice.NewFinhelpProcService(db,
+		finhelpProcTN,
+		userTN,
+		studentTN,
+		finhelpCtgTN,
+		finhelpStageTN,
+	)
 	sts := studentservice.NewStudentService(db, studentTN, groupTN)
 
 	jh := jobhandler.NewJobHandler(ss, us, js)
@@ -298,6 +308,15 @@ func main() {
 	router.HandleFunc("POST /api/finhelpstage/updatefinhelpstage", fsth.UpdateFinhelpStage)
 	router.HandleFunc("POST /api/finhelpstage/deletefinhelpstage", fsth.DeleteFinhelpStage)
 	router.HandleFunc("POST /api/finhelpstage/editfinhelpstage", fsth.EditFinhelpStage)
+
+	fprh := finhelpprochandler.NewFinhelpProcHandler(ss, us, js, sts, fctgs, fsts, fprs)
+	router.HandleFunc("GET /finhelpproc", fprh.FinhelpProcPage)
+	router.HandleFunc("POST /api/finhelpproc", fprh.FinhelpProc)
+	router.HandleFunc("POST /api/finhelpproc/getfinhelpprocs", fprh.GetFinhelpProcs)
+	router.HandleFunc("POST /api/finhelpproc/insertfinhelpproc", fprh.InsertFinhelpProc)
+	router.HandleFunc("POST /api/finhelpproc/updatefinhelpproc", fprh.UpdateFinhelpProc)
+	router.HandleFunc("POST /api/finhelpproc/deletefinhelpproc", fprh.DeleteFinhelpProc)
+	router.HandleFunc("POST /api/finhelpproc/editfinhelpproc", fprh.EditFinhelpProc)
 
 	sth := studenthandler.NewStudentHandler(ss, us, js, grs, sts)
 	router.HandleFunc("GET /student", sth.StudentPage)

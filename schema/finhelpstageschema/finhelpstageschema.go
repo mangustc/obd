@@ -8,16 +8,19 @@ import (
 
 type FinhelpStageDB struct {
 	FinhelpStageID          int    `json:"FinhelpStageID" server:"y"`
+	FinhelpStageName        string `json:"FinhelpStageName"`
 	FinhelpStageDescription string `json:"FinhelpStageDescription"`
 	FinhelpStageIsHidden    bool   `json:"FinhelpStageIsHidden"`
 }
 
 type FinhelpStageInsert struct {
+	FinhelpStageName        string `json:"FinhelpStageName"`
 	FinhelpStageDescription string `json:"FinhelpStageDescription"`
 }
 
 type FinhelpStageUpdate struct {
 	FinhelpStageID          int    `json:"FinhelpStageID" server:"y"`
+	FinhelpStageName        string `json:"FinhelpStageName"`
 	FinhelpStageDescription string `json:"FinhelpStageDescription"`
 }
 
@@ -36,7 +39,7 @@ func GetFinhelpStageInputOptionsFromFinhelpStagesDB(finhelpStagesDB []*FinhelpSt
 	inputOptions := []*schema.InputOption{}
 	for _, finhelpStageDB := range notHiddenFinhelpStagesDB {
 		inputOptions = append(inputOptions, &schema.InputOption{
-			InputOptionLabel: fmt.Sprintf("%d", finhelpStageDB.FinhelpStageID),
+			InputOptionLabel: fmt.Sprintf("%s", finhelpStageDB.FinhelpStageName),
 			InputOptionValue: fmt.Sprintf("%d", finhelpStageDB.FinhelpStageID),
 		})
 	}
@@ -57,7 +60,7 @@ func ValidateFinhelpStageDB(finhelpStageDB *FinhelpStageDB) (err error) {
 	if finhelpStageDB == nil {
 		panic("Object is nil")
 	}
-	if finhelpStageDB.FinhelpStageID <= 0 {
+	if finhelpStageDB.FinhelpStageID <= 0 || finhelpStageDB.FinhelpStageName == "" {
 		return fmt.Errorf("One or more neccesary arguments are zero")
 	}
 	return nil
@@ -67,6 +70,9 @@ func ValidateFinhelpStageInsert(finhelpStageInsert *FinhelpStageInsert) (err err
 	if finhelpStageInsert == nil {
 		panic("Object is nil")
 	}
+	if finhelpStageInsert.FinhelpStageName == "" {
+		return fmt.Errorf("One or more neccesary arguments are zero")
+	}
 	return nil
 }
 
@@ -74,7 +80,7 @@ func ValidateFinhelpStageUpdate(finhelpStageUpdate *FinhelpStageUpdate) (err err
 	if finhelpStageUpdate == nil {
 		panic("Object is nil")
 	}
-	if finhelpStageUpdate.FinhelpStageID <= 0 {
+	if finhelpStageUpdate.FinhelpStageID <= 0 || finhelpStageUpdate.FinhelpStageName == "" {
 		return fmt.Errorf("One or more neccesary arguments are zero")
 	}
 	return nil

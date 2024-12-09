@@ -386,14 +386,14 @@ func Input(input *schema.Input) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if input.InputTitle != "" {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<span>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<span style=\"width: 152px;\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var14 string
 			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(input.InputTitle)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 121, Col: 27}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 121, Col: 49}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 			if templ_7745c5c3_Err != nil {
@@ -770,7 +770,7 @@ func NavigationByJobDB(jobDB *jobschema.JobDB) templ.Component {
 			}
 		} else {
 			if jobDB.JobAccessUser {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/user\" hx-target=\"#main\" hx-swap=\"innerHTML\">Us</button>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/user\" hx-target=\"#main\" hx-swap=\"innerHTML\">U</button>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -810,7 +810,7 @@ func NavigationByJobDB(jobDB *jobschema.JobDB) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			if jobDB.JobAccessFinhelpCtg {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/finhelpctg\" hx-target=\"#main\" hx-swap=\"innerHTML\">FC</button>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/finhelpctg\" hx-target=\"#main\" hx-swap=\"innerHTML\">FCtg</button>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -820,7 +820,7 @@ func NavigationByJobDB(jobDB *jobschema.JobDB) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			if jobDB.JobAccessFinhelpStage {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/finhelpstage\" hx-target=\"#main\" hx-swap=\"innerHTML\">FS</button>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/finhelpstage\" hx-target=\"#main\" hx-swap=\"innerHTML\">FSt</button>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -830,7 +830,7 @@ func NavigationByJobDB(jobDB *jobschema.JobDB) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			if jobDB.JobAccessFinhelpProc {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/finhelpproc\" hx-target=\"#main\" hx-swap=\"innerHTML\">FP</button>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/finhelpproc\" hx-target=\"#main\" hx-swap=\"innerHTML\">FPr</button>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -871,6 +871,16 @@ func NavigationByJobDB(jobDB *jobschema.JobDB) templ.Component {
 			}
 			if jobDB.JobAccessClassType {
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/classtype\" hx-target=\"#main\" hx-swap=\"innerHTML\">ClT</button>")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" ")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			if jobDB.JobAccessClass {
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/class\" hx-target=\"#main\" hx-swap=\"innerHTML\">Cl</button>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -921,16 +931,6 @@ func NavigationByJobDB(jobDB *jobschema.JobDB) templ.Component {
 			}
 			if jobDB.JobAccessSkip {
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/skip\" hx-target=\"#main\" hx-swap=\"innerHTML\">Sk</button>")
-				if templ_7745c5c3_Err != nil {
-					return templ_7745c5c3_Err
-				}
-			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" ")
-			if templ_7745c5c3_Err != nil {
-				return templ_7745c5c3_Err
-			}
-			if jobDB.JobAccessClass {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/class\" hx-target=\"#main\" hx-swap=\"innerHTML\">Cl</button>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

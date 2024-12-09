@@ -73,8 +73,6 @@ func (fctgh *FinhelpCtgHandler) GetFinhelpCtgs(w http.ResponseWriter, r *http.Re
 		return
 	}
 
-	println(util.PrettyPrint(finhelpCtgsDB))
-
 	util.RenderComponent(r, &out, finhelpctgview.FinhelpCtgTableRows(finhelpCtgsDB))
 }
 

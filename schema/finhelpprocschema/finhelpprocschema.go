@@ -7,25 +7,25 @@ import (
 type FinhelpProcDB struct {
 	FinhelpProcID        int    `json:"FinhelpProcID" server:"y"`
 	FinhelpProcCreatedAt string `json:"FinhelpProcCreatedAt"`
-	UserID               int    `json:"UserID" cookie:"y"`
-	StudentID            int    `json:"StudentID"`
-	FinhelpCtgID         int    `json:"FinhelpCtgID"`
-	FinhelpStageID       int    `json:"FinhelpStageID"`
+	UserID               int    `json:"UserID" cookie:"y" server:"y"`
+	StudentID            int    `json:"StudentID" server:"y"`
+	FinhelpCtgID         int    `json:"FinhelpCtgID" server:"y"`
+	FinhelpStageID       int    `json:"FinhelpStageID" server:"y"`
 }
 
 type FinhelpProcInsert struct {
-	UserID         int `json:"UserID" cookie:"y"`
-	StudentID      int `json:"StudentID"`
-	FinhelpCtgID   int `json:"FinhelpCtgID"`
-	FinhelpStageID int `json:"FinhelpStageID"`
+	UserID         int `json:"UserID" cookie:"y" server:"y"`
+	StudentID      int `json:"StudentID" server:"y"`
+	FinhelpCtgID   int `json:"FinhelpCtgID" server:"y"`
+	FinhelpStageID int `json:"FinhelpStageID" server:"y"`
 }
 
 type FinhelpProcUpdate struct {
 	FinhelpProcID  int `json:"FinhelpProcID" server:"y"`
-	UserID         int `json:"UserID" cookie:"y"`
-	StudentID      int `json:"StudentID"`
-	FinhelpCtgID   int `json:"FinhelpCtgID"`
-	FinhelpStageID int `json:"FinhelpStageID"`
+	UserID         int `json:"UserID" cookie:"y" server:"y"`
+	StudentID      int `json:"StudentID" server:"y"`
+	FinhelpCtgID   int `json:"FinhelpCtgID" server:"y"`
+	FinhelpStageID int `json:"FinhelpStageID" server:"y"`
 }
 
 type FinhelpProcDelete struct {

@@ -52,7 +52,7 @@ INSERT INTO %[1]s (
 		%[2]sID,
 		%[3]sID,
 		%[4]sID,
-		%[5]sID,
+		%[5]sID
 	)
 	VALUES (
 		%[6]d,

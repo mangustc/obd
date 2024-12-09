@@ -7,6 +7,7 @@ import (
 	"github.com/mangustc/obd/logger"
 	"github.com/mangustc/obd/msg"
 	"github.com/mangustc/obd/schema/finhelpctgschema"
+	"github.com/mangustc/obd/schema/finhelpprocschema"
 	"github.com/mangustc/obd/schema/finhelpstageschema"
 	"github.com/mangustc/obd/schema/groupschema"
 	"github.com/mangustc/obd/schema/jobschema"
@@ -58,6 +59,13 @@ type (
 		DeleteFinhelpStage(data *finhelpstageschema.FinhelpStageDelete) (finhelpStageDB *finhelpstageschema.FinhelpStageDB, err error)
 		GetFinhelpStage(data *finhelpstageschema.FinhelpStageGet) (finhelpStageDB *finhelpstageschema.FinhelpStageDB, err error)
 		GetFinhelpStages(data *finhelpstageschema.FinhelpStagesGet) (finhelpStagesDB []*finhelpstageschema.FinhelpStageDB, err error)
+	}
+	FinhelpProcService interface {
+		InsertFinhelpProc(data *finhelpprocschema.FinhelpProcInsert) (finhelpProcDB *finhelpprocschema.FinhelpProcDB, err error)
+		UpdateFinhelpProc(data *finhelpprocschema.FinhelpProcUpdate) (finhelpProcDB *finhelpprocschema.FinhelpProcDB, err error)
+		DeleteFinhelpProc(data *finhelpprocschema.FinhelpProcDelete) (finhelpProcDB *finhelpprocschema.FinhelpProcDB, err error)
+		GetFinhelpProc(data *finhelpprocschema.FinhelpProcGet) (finhelpProcDB *finhelpprocschema.FinhelpProcDB, err error)
+		GetFinhelpProcs(data *finhelpprocschema.FinhelpProcsGet) (finhelpProcsDB []*finhelpprocschema.FinhelpProcDB, err error)
 	}
 	StudentService interface {
 		InsertStudent(data *studentschema.StudentInsert) (studentDB *studentschema.StudentDB, err error)

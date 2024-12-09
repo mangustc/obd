@@ -73,8 +73,6 @@ func (fsth *FinhelpStageHandler) GetFinhelpStages(w http.ResponseWriter, r *http
 		return
 	}
 
-	println(util.PrettyPrint(finhelpStagesDB))
-
 	util.RenderComponent(r, &out, finhelpstageview.FinhelpStageTableRows(finhelpStagesDB))
 }
 

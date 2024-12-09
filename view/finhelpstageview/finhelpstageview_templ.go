@@ -30,25 +30,29 @@ const (
 )
 
 var (
+	taFinhelpStageName        = schema.NewTA(finhelpStageTN+"Name", "Name", schema.StringInput)
 	taFinhelpStageDescription = schema.NewTA(finhelpStageTN+"Description", "Description", schema.StringInput)
 	taFinhelpStageIsHidden    = schema.NewTA(finhelpStageTN+"IsHidden", "Is Hidden", schema.BooleanInput)
 )
 
 func getTableHeaders() []*schema.TableHeaderColumn {
 	return []*schema.TableHeaderColumn{
-		schema.NewTableHeaderColumn(taFinhelpStageDescription.TATitle, 90),
+		schema.NewTableHeaderColumn(taFinhelpStageName.TATitle, 20),
+		schema.NewTableHeaderColumn(taFinhelpStageDescription.TATitle, 70),
 		schema.NewTableHeaderColumn(taFinhelpStageIsHidden.TATitle, 10),
 	}
 }
 
 func getInsertFormInputs() []*schema.Input {
 	return []*schema.Input{
+		schema.NewInput(taFinhelpStageName.TATitle, taFinhelpStageName.TAName, taFinhelpStageName.TAInputType, "", nil, nil, ""),
 		schema.NewInput(taFinhelpStageDescription.TATitle, taFinhelpStageDescription.TAName, taFinhelpStageDescription.TAInputType, "", nil, nil, ""),
 	}
 }
 
 func getInputsFromFinhelpStageDB(finhelpStageDB *finhelpstageschema.FinhelpStageDB) []*schema.Input {
 	return []*schema.Input{
+		schema.NewInput("", taFinhelpStageName.TAName, taFinhelpStageName.TAInputType, finhelpStageDB.FinhelpStageName, nil, nil, ""),
 		schema.NewInput("", taFinhelpStageDescription.TAName, taFinhelpStageDescription.TAInputType, finhelpStageDB.FinhelpStageDescription, nil, nil, ""),
 		schema.NewInput("", taFinhelpStageIsHidden.TAName, taFinhelpStageIsHidden.TAInputType, finhelpStageDB.FinhelpStageIsHidden, nil, nil, ""),
 	}
@@ -216,7 +220,7 @@ func FinhelpStagePage() templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(getfinhelpStagePOSTURL)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/finhelpstageview/finhelpstageview.templ`, Line: 71, Col: 35}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/finhelpstageview/finhelpstageview.templ`, Line: 75, Col: 35}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {

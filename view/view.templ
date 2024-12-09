@@ -118,7 +118,7 @@ func getInt(v any) int {
 templ Input(input *schema.Input) {
 	<div style="display: flex; flex-direction: row;">
 		if input.InputTitle != "" {
-			<span>{ input.InputTitle }: </span>
+			<span style="width: 152px;">{ input.InputTitle }: </span>
 		}
 		if input.InputOptions != nil {
 			if !input.InputEditable {
@@ -166,7 +166,7 @@ templ NavigationByJobDB(jobDB *jobschema.JobDB) {
 						hx-post="/api/user"
 						hx-target="#main"
 						hx-swap="innerHTML"
-					>Us</button>
+					>U</button>
 				}
 				if jobDB.JobAccessJob {
 					<button
@@ -198,7 +198,7 @@ templ NavigationByJobDB(jobDB *jobschema.JobDB) {
 						hx-post="/api/finhelpctg"
 						hx-target="#main"
 						hx-swap="innerHTML"
-					>FC</button>
+					>FCtg</button>
 				}
 				if jobDB.JobAccessFinhelpStage {
 					<button
@@ -206,7 +206,7 @@ templ NavigationByJobDB(jobDB *jobschema.JobDB) {
 						hx-post="/api/finhelpstage"
 						hx-target="#main"
 						hx-swap="innerHTML"
-					>FS</button>
+					>FSt</button>
 				}
 				if jobDB.JobAccessFinhelpProc {
 					<button
@@ -214,7 +214,7 @@ templ NavigationByJobDB(jobDB *jobschema.JobDB) {
 						hx-post="/api/finhelpproc"
 						hx-target="#main"
 						hx-swap="innerHTML"
-					>FP</button>
+					>FPr</button>
 				}
 				if jobDB.JobAccessBuilding {
 					<button
@@ -247,6 +247,14 @@ templ NavigationByJobDB(jobDB *jobschema.JobDB) {
 						hx-target="#main"
 						hx-swap="innerHTML"
 					>ClT</button>
+				}
+				if jobDB.JobAccessClass {
+					<button
+						class="link-button"
+						hx-post="/api/class"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>Cl</button>
 				}
 				if jobDB.JobAccessProf {
 					<button
@@ -287,14 +295,6 @@ templ NavigationByJobDB(jobDB *jobschema.JobDB) {
 						hx-target="#main"
 						hx-swap="innerHTML"
 					>Sk</button>
-				}
-				if jobDB.JobAccessClass {
-					<button
-						class="link-button"
-						hx-post="/api/class"
-						hx-target="#main"
-						hx-swap="innerHTML"
-					>Cl</button>
 				}
 				<p>OBD Project</p>
 				<button
