@@ -2,26 +2,30 @@ package finhelpprocschema
 
 import (
 	"fmt"
-
-	"github.com/mangustc/obd/schema"
 )
 
 type FinhelpProcDB struct {
-	FinhelpProcID          int    `json:"FinhelpProcID" server:"y"`
-	FinhelpProcDescription string `json:"FinhelpProcDescription"`
-	FinhelpProcPayment     int    `json:"FinhelpProcPayment"`
-	FinhelpProcIsHidden    bool   `json:"FinhelpProcIsHidden"`
+	FinhelpProcID        int    `json:"FinhelpProcID" server:"y"`
+	FinhelpProcCreatedAt string `json:"FinhelpProcCreatedAt"`
+	UserID               int    `json:"UserID" cookie:"y"`
+	StudentID            int    `json:"StudentID"`
+	FinhelpCtgID         int    `json:"FinhelpCtgID"`
+	FinhelpStageID       int    `json:"FinhelpStageID"`
 }
 
 type FinhelpProcInsert struct {
-	FinhelpProcDescription string `json:"FinhelpProcDescription"`
-	FinhelpProcPayment     int    `json:"FinhelpProcPayment"`
+	UserID         int `json:"UserID" cookie:"y"`
+	StudentID      int `json:"StudentID"`
+	FinhelpCtgID   int `json:"FinhelpCtgID"`
+	FinhelpStageID int `json:"FinhelpStageID"`
 }
 
 type FinhelpProcUpdate struct {
-	FinhelpProcID          int    `json:"FinhelpProcID" server:"y"`
-	FinhelpProcDescription string `json:"FinhelpProcDescription"`
-	FinhelpProcPayment     int    `json:"FinhelpProcPayment"`
+	FinhelpProcID  int `json:"FinhelpProcID" server:"y"`
+	UserID         int `json:"UserID" cookie:"y"`
+	StudentID      int `json:"StudentID"`
+	FinhelpCtgID   int `json:"FinhelpCtgID"`
+	FinhelpStageID int `json:"FinhelpStageID"`
 }
 
 type FinhelpProcDelete struct {
@@ -34,33 +38,12 @@ type FinhelpProcGet struct {
 
 type FinhelpProcsGet struct{}
 
-func GetFinhelpProcInputOptionsFromFinhelpProcsDB(finhelpProcsDB []*FinhelpProcDB) []*schema.InputOption {
-	notHiddenFinhelpProcsDB := GetNotHiddenFinhelpProcsDB(finhelpProcsDB)
-	inputOptions := []*schema.InputOption{}
-	for _, finhelpProcDB := range notHiddenFinhelpProcsDB {
-		inputOptions = append(inputOptions, &schema.InputOption{
-			InputOptionLabel: fmt.Sprintf("%d", finhelpProcDB.FinhelpProcID),
-			InputOptionValue: fmt.Sprintf("%d", finhelpProcDB.FinhelpProcID),
-		})
-	}
-	return inputOptions
-}
-
-func GetNotHiddenFinhelpProcsDB(finhelpProcsDB []*FinhelpProcDB) []*FinhelpProcDB {
-	notHiddenFinhelpProcsDB := []*FinhelpProcDB{}
-	for _, finhelpProcDB := range finhelpProcsDB {
-		if !finhelpProcDB.FinhelpProcIsHidden {
-			notHiddenFinhelpProcsDB = append(notHiddenFinhelpProcsDB, finhelpProcDB)
-		}
-	}
-	return notHiddenFinhelpProcsDB
-}
-
 func ValidateFinhelpProcDB(finhelpProcDB *FinhelpProcDB) (err error) {
 	if finhelpProcDB == nil {
 		panic("Object is nil")
 	}
-	if finhelpProcDB.FinhelpProcID <= 0 {
+	if finhelpProcDB.FinhelpProcID <= 0 || finhelpProcDB.StudentID <= 0 || finhelpProcDB.UserID <= 0 ||
+		finhelpProcDB.FinhelpCtgID <= 0 || finhelpProcDB.FinhelpStageID <= 0 {
 		return fmt.Errorf("One or more neccesary arguments are zero")
 	}
 	return nil
@@ -70,6 +53,10 @@ func ValidateFinhelpProcInsert(finhelpProcInsert *FinhelpProcInsert) (err error)
 	if finhelpProcInsert == nil {
 		panic("Object is nil")
 	}
+	if finhelpProcInsert.StudentID <= 0 || finhelpProcInsert.UserID <= 0 ||
+		finhelpProcInsert.FinhelpCtgID <= 0 || finhelpProcInsert.FinhelpStageID <= 0 {
+		return fmt.Errorf("One or more neccesary arguments are zero")
+	}
 	return nil
 }
 
@@ -77,7 +64,8 @@ func ValidateFinhelpProcUpdate(finhelpProcUpdate *FinhelpProcUpdate) (err error)
 	if finhelpProcUpdate == nil {
 		panic("Object is nil")
 	}
-	if finhelpProcUpdate.FinhelpProcID <= 0 {
+	if finhelpProcUpdate.FinhelpProcID <= 0 || finhelpProcUpdate.StudentID <= 0 || finhelpProcUpdate.UserID <= 0 ||
+		finhelpProcUpdate.FinhelpCtgID <= 0 || finhelpProcUpdate.FinhelpStageID <= 0 {
 		return fmt.Errorf("One or more neccesary arguments are zero")
 	}
 	return nil

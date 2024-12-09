@@ -109,4 +109,14 @@ var (
 		schema.AlertNotification,
 		"This Financial Help Stage already exists",
 	)
+	StudentWrong = NewMsg(
+		http.StatusUnprocessableEntity,
+		schema.AlertNotification,
+		"Student first name, last name and phone number can't be empty",
+	)
+	StudentExists = NewMsg(
+		http.StatusUnprocessableEntity,
+		schema.AlertNotification,
+		"This student already exists",
+	)
 )

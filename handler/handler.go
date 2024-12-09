@@ -11,6 +11,7 @@ import (
 	"github.com/mangustc/obd/schema/groupschema"
 	"github.com/mangustc/obd/schema/jobschema"
 	"github.com/mangustc/obd/schema/sessionschema"
+	"github.com/mangustc/obd/schema/studentschema"
 	"github.com/mangustc/obd/schema/userschema"
 	"github.com/mangustc/obd/util"
 	"github.com/mangustc/obd/view"
@@ -57,6 +58,13 @@ type (
 		DeleteFinhelpStage(data *finhelpstageschema.FinhelpStageDelete) (finhelpStageDB *finhelpstageschema.FinhelpStageDB, err error)
 		GetFinhelpStage(data *finhelpstageschema.FinhelpStageGet) (finhelpStageDB *finhelpstageschema.FinhelpStageDB, err error)
 		GetFinhelpStages(data *finhelpstageschema.FinhelpStagesGet) (finhelpStagesDB []*finhelpstageschema.FinhelpStageDB, err error)
+	}
+	StudentService interface {
+		InsertStudent(data *studentschema.StudentInsert) (studentDB *studentschema.StudentDB, err error)
+		UpdateStudent(data *studentschema.StudentUpdate) (studentDB *studentschema.StudentDB, err error)
+		DeleteStudent(data *studentschema.StudentDelete) (studentDB *studentschema.StudentDB, err error)
+		GetStudent(data *studentschema.StudentGet) (studentDB *studentschema.StudentDB, err error)
+		GetStudents(data *studentschema.StudentsGet) (studentsDB []*studentschema.StudentDB, err error)
 	}
 )
 

@@ -11,6 +11,7 @@ import (
 	"github.com/mangustc/obd/handler/finhelpstagehandler"
 	"github.com/mangustc/obd/handler/grouphandler"
 	"github.com/mangustc/obd/handler/jobhandler"
+	"github.com/mangustc/obd/handler/studenthandler"
 	"github.com/mangustc/obd/handler/userhandler"
 	"github.com/mangustc/obd/logger"
 	"github.com/mangustc/obd/middleware"
@@ -19,6 +20,7 @@ import (
 	"github.com/mangustc/obd/service/groupservice"
 	"github.com/mangustc/obd/service/jobservice"
 	"github.com/mangustc/obd/service/sessionservice"
+	"github.com/mangustc/obd/service/studentservice"
 	"github.com/mangustc/obd/service/userservice"
 )
 
@@ -250,6 +252,7 @@ func main() {
 	grs := groupservice.NewGroupService(db, groupTN)
 	fctgs := finhelpctgservice.NewFinhelpCtgService(db, finhelpCtgTN)
 	fsts := finhelpstageservice.NewFinhelpStageService(db, finhelpStageTN)
+	sts := studentservice.NewStudentService(db, studentTN, groupTN)
 
 	jh := jobhandler.NewJobHandler(ss, us, js)
 	router.HandleFunc("GET /job", jh.JobPage)
@@ -295,6 +298,15 @@ func main() {
 	router.HandleFunc("POST /api/finhelpstage/updatefinhelpstage", fsth.UpdateFinhelpStage)
 	router.HandleFunc("POST /api/finhelpstage/deletefinhelpstage", fsth.DeleteFinhelpStage)
 	router.HandleFunc("POST /api/finhelpstage/editfinhelpstage", fsth.EditFinhelpStage)
+
+	sth := studenthandler.NewStudentHandler(ss, us, js, grs, sts)
+	router.HandleFunc("GET /student", sth.StudentPage)
+	router.HandleFunc("POST /api/student", sth.Student)
+	router.HandleFunc("POST /api/student/getstudents", sth.GetStudents)
+	router.HandleFunc("POST /api/student/insertstudent", sth.InsertStudent)
+	router.HandleFunc("POST /api/student/updatestudent", sth.UpdateStudent)
+	router.HandleFunc("POST /api/student/deletestudent", sth.DeleteStudent)
+	router.HandleFunc("POST /api/student/editstudent", sth.EditStudent)
 
 	auh := authhandler.NewAuthHandler(ss, us)
 	router.HandleFunc("GET /auth", auh.AuthPage)

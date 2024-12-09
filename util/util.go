@@ -40,10 +40,17 @@ func ParseStructFromForm(r *http.Request, structPtr interface{}) error {
 
 		fieldTag := s.Type().Field(i).Tag.Get("json")
 		server := s.Type().Field(i).Tag.Get("server")
+		cookie := s.Type().Field(i).Tag.Get("cookie")
+		if cookie == "y" {
+			continue
+		}
 		switch field.Kind() {
 		case reflect.Int:
 			value, err := GetIntFromForm(r, fieldTag)
 			if err != nil {
+				if cookie == "y" {
+					continue
+				}
 				if server == "y" {
 					return E.ErrInternalServer
 				}
