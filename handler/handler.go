@@ -6,6 +6,8 @@ import (
 	"github.com/mangustc/obd/errs"
 	"github.com/mangustc/obd/logger"
 	"github.com/mangustc/obd/msg"
+	"github.com/mangustc/obd/schema/finhelpctgschema"
+	"github.com/mangustc/obd/schema/finhelpstageschema"
 	"github.com/mangustc/obd/schema/groupschema"
 	"github.com/mangustc/obd/schema/jobschema"
 	"github.com/mangustc/obd/schema/sessionschema"
@@ -29,6 +31,12 @@ type (
 		GetUser(data *userschema.UserGet) (userDB *userschema.UserDB, err error)
 		GetUsers(data *userschema.UsersGet) (usersDB []*userschema.UserDB, err error)
 	}
+	SessionService interface {
+		InsertSession(data *sessionschema.SessionInsert) (sessionDB *sessionschema.SessionDB, err error)
+		DeleteSession(data *sessionschema.SessionDelete) (sessionDB *sessionschema.SessionDB, err error)
+		GetSession(data *sessionschema.SessionGet) (sessionDB *sessionschema.SessionDB, err error)
+		GetSessions(data *sessionschema.SessionsGet) (sessionsDB []*sessionschema.SessionDB, err error)
+	}
 	GroupService interface {
 		InsertGroup(data *groupschema.GroupInsert) (groupDB *groupschema.GroupDB, err error)
 		UpdateGroup(data *groupschema.GroupUpdate) (groupDB *groupschema.GroupDB, err error)
@@ -36,11 +44,19 @@ type (
 		GetGroup(data *groupschema.GroupGet) (groupDB *groupschema.GroupDB, err error)
 		GetGroups(data *groupschema.GroupsGet) (groupsDB []*groupschema.GroupDB, err error)
 	}
-	SessionService interface {
-		InsertSession(data *sessionschema.SessionInsert) (sessionDB *sessionschema.SessionDB, err error)
-		DeleteSession(data *sessionschema.SessionDelete) (sessionDB *sessionschema.SessionDB, err error)
-		GetSession(data *sessionschema.SessionGet) (sessionDB *sessionschema.SessionDB, err error)
-		GetSessions(data *sessionschema.SessionsGet) (sessionsDB []*sessionschema.SessionDB, err error)
+	FinhelpCtgService interface {
+		InsertFinhelpCtg(data *finhelpctgschema.FinhelpCtgInsert) (finhelpCtgDB *finhelpctgschema.FinhelpCtgDB, err error)
+		UpdateFinhelpCtg(data *finhelpctgschema.FinhelpCtgUpdate) (finhelpCtgDB *finhelpctgschema.FinhelpCtgDB, err error)
+		DeleteFinhelpCtg(data *finhelpctgschema.FinhelpCtgDelete) (finhelpCtgDB *finhelpctgschema.FinhelpCtgDB, err error)
+		GetFinhelpCtg(data *finhelpctgschema.FinhelpCtgGet) (finhelpCtgDB *finhelpctgschema.FinhelpCtgDB, err error)
+		GetFinhelpCtgs(data *finhelpctgschema.FinhelpCtgsGet) (finhelpCtgsDB []*finhelpctgschema.FinhelpCtgDB, err error)
+	}
+	FinhelpStageService interface {
+		InsertFinhelpStage(data *finhelpstageschema.FinhelpStageInsert) (finhelpStageDB *finhelpstageschema.FinhelpStageDB, err error)
+		UpdateFinhelpStage(data *finhelpstageschema.FinhelpStageUpdate) (finhelpStageDB *finhelpstageschema.FinhelpStageDB, err error)
+		DeleteFinhelpStage(data *finhelpstageschema.FinhelpStageDelete) (finhelpStageDB *finhelpstageschema.FinhelpStageDB, err error)
+		GetFinhelpStage(data *finhelpstageschema.FinhelpStageGet) (finhelpStageDB *finhelpstageschema.FinhelpStageDB, err error)
+		GetFinhelpStages(data *finhelpstageschema.FinhelpStagesGet) (finhelpStagesDB []*finhelpstageschema.FinhelpStageDB, err error)
 	}
 )
 

@@ -7,11 +7,15 @@ import (
 	"github.com/mangustc/obd/database"
 	"github.com/mangustc/obd/handler"
 	"github.com/mangustc/obd/handler/authhandler"
+	"github.com/mangustc/obd/handler/finhelpctghandler"
+	"github.com/mangustc/obd/handler/finhelpstagehandler"
 	"github.com/mangustc/obd/handler/grouphandler"
 	"github.com/mangustc/obd/handler/jobhandler"
 	"github.com/mangustc/obd/handler/userhandler"
 	"github.com/mangustc/obd/logger"
 	"github.com/mangustc/obd/middleware"
+	"github.com/mangustc/obd/service/finhelpctgservice"
+	"github.com/mangustc/obd/service/finhelpstageservice"
 	"github.com/mangustc/obd/service/groupservice"
 	"github.com/mangustc/obd/service/jobservice"
 	"github.com/mangustc/obd/service/sessionservice"
@@ -244,6 +248,8 @@ func main() {
 	us := userservice.NewUserService(db, userTN, jobTN)
 	ss := sessionservice.NewSessionService(db, sessionTN, userTN)
 	grs := groupservice.NewGroupService(db, groupTN)
+	fctgs := finhelpctgservice.NewFinhelpCtgService(db, finhelpCtgTN)
+	fsts := finhelpstageservice.NewFinhelpStageService(db, finhelpStageTN)
 
 	jh := jobhandler.NewJobHandler(ss, us, js)
 	router.HandleFunc("GET /job", jh.JobPage)
@@ -271,6 +277,24 @@ func main() {
 	router.HandleFunc("POST /api/group/updategroup", grh.UpdateGroup)
 	router.HandleFunc("POST /api/group/deletegroup", grh.DeleteGroup)
 	router.HandleFunc("POST /api/group/editgroup", grh.EditGroup)
+
+	fctgh := finhelpctghandler.NewFinhelpCtgHandler(ss, us, js, fctgs)
+	router.HandleFunc("GET /finhelpctg", fctgh.FinhelpCtgPage)
+	router.HandleFunc("POST /api/finhelpctg", fctgh.FinhelpCtg)
+	router.HandleFunc("POST /api/finhelpctg/getfinhelpctgs", fctgh.GetFinhelpCtgs)
+	router.HandleFunc("POST /api/finhelpctg/insertfinhelpctg", fctgh.InsertFinhelpCtg)
+	router.HandleFunc("POST /api/finhelpctg/updatefinhelpctg", fctgh.UpdateFinhelpCtg)
+	router.HandleFunc("POST /api/finhelpctg/deletefinhelpctg", fctgh.DeleteFinhelpCtg)
+	router.HandleFunc("POST /api/finhelpctg/editfinhelpctg", fctgh.EditFinhelpCtg)
+
+	fsth := finhelpstagehandler.NewFinhelpStageHandler(ss, us, js, fsts)
+	router.HandleFunc("GET /finhelpstage", fsth.FinhelpStagePage)
+	router.HandleFunc("POST /api/finhelpstage", fsth.FinhelpStage)
+	router.HandleFunc("POST /api/finhelpstage/getfinhelpstages", fsth.GetFinhelpStages)
+	router.HandleFunc("POST /api/finhelpstage/insertfinhelpstage", fsth.InsertFinhelpStage)
+	router.HandleFunc("POST /api/finhelpstage/updatefinhelpstage", fsth.UpdateFinhelpStage)
+	router.HandleFunc("POST /api/finhelpstage/deletefinhelpstage", fsth.DeleteFinhelpStage)
+	router.HandleFunc("POST /api/finhelpstage/editfinhelpstage", fsth.EditFinhelpStage)
 
 	auh := authhandler.NewAuthHandler(ss, us)
 	router.HandleFunc("GET /auth", auh.AuthPage)

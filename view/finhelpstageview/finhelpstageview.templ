@@ -1,0 +1,77 @@
+package finhelpstageview
+
+import (
+	"github.com/mangustc/obd/view"
+	"github.com/mangustc/obd/schema"
+	"github.com/mangustc/obd/schema/finhelpstageschema"
+	"fmt"
+)
+
+const (
+	pageTitle              = "Financial Help Stage"
+	tableTitle             = pageTitle
+	insertFormTitle        = tableTitle
+	getPOSTURL             = "/api/finhelpstage/getfinhelpstages"
+	insertPOSTURL          = "/api/finhelpstage/insertfinhelpstage"
+	editPOSTURL            = "/api/finhelpstage/editfinhelpstage"
+	updatePOSTURL          = "/api/finhelpstage/updatefinhelpstage"
+	deletePOSTURL          = "/api/finhelpstage/deletefinhelpstage"
+	finhelpStageTN         = "FinhelpStage"
+	bodyVals               = `{"` + finhelpStageTN + `ID": %d}`
+	getfinhelpStagePOSTURL = "/api/finhelpstage"
+)
+
+var (
+	taFinhelpStageDescription = schema.NewTA(finhelpStageTN+"Description", "Description", schema.StringInput)
+	taFinhelpStageIsHidden    = schema.NewTA(finhelpStageTN+"IsHidden", "Is Hidden", schema.BooleanInput)
+)
+
+func getTableHeaders() []*schema.TableHeaderColumn {
+	return []*schema.TableHeaderColumn{
+		schema.NewTableHeaderColumn(taFinhelpStageDescription.TATitle, 90),
+		schema.NewTableHeaderColumn(taFinhelpStageIsHidden.TATitle, 10),
+	}
+}
+
+func getInsertFormInputs() []*schema.Input {
+	return []*schema.Input{
+		schema.NewInput(taFinhelpStageDescription.TATitle, taFinhelpStageDescription.TAName, taFinhelpStageDescription.TAInputType, "", nil, nil, ""),
+	}
+}
+
+func getInputsFromFinhelpStageDB(finhelpStageDB *finhelpstageschema.FinhelpStageDB) []*schema.Input {
+	return []*schema.Input{
+		schema.NewInput("", taFinhelpStageDescription.TAName, taFinhelpStageDescription.TAInputType, finhelpStageDB.FinhelpStageDescription, nil, nil, ""),
+		schema.NewInput("", taFinhelpStageIsHidden.TAName, taFinhelpStageIsHidden.TAInputType, finhelpStageDB.FinhelpStageIsHidden, nil, nil, ""),
+	}
+}
+
+templ FinhelpStageTableRowEdit(finhelpStageDB *finhelpstageschema.FinhelpStageDB) {
+	@view.TableRowEdit(getInputsFromFinhelpStageDB(finhelpStageDB), fmt.Sprintf(bodyVals, finhelpStageDB.FinhelpStageID), updatePOSTURL, deletePOSTURL)
+}
+
+templ FinhelpStageTableRow(finhelpStageDB *finhelpstageschema.FinhelpStageDB) {
+	@view.TableRow(getInputsFromFinhelpStageDB(finhelpStageDB), fmt.Sprintf(bodyVals, finhelpStageDB.FinhelpStageID), editPOSTURL, deletePOSTURL)
+}
+
+templ FinhelpStageTableRows(finhelpStagesDB []*finhelpstageschema.FinhelpStageDB) {
+	for _, finhelpStageDB := range finhelpStagesDB {
+		@FinhelpStageTableRow(finhelpStageDB)
+	}
+}
+
+templ FinhelpStage() {
+	@view.InsertForm(insertFormTitle, insertPOSTURL, getInsertFormInputs())
+	@view.Table(tableTitle, getPOSTURL, getTableHeaders())
+}
+
+templ FinhelpStagePage() {
+	@view.Layout(pageTitle) {
+		<div
+			hx-post={ getfinhelpStagePOSTURL }
+			hx-target="this"
+			hx-swap="outerHTML"
+			hx-trigger="load"
+		></div>
+	}
+}

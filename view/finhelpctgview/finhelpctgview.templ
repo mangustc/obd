@@ -1,0 +1,81 @@
+package finhelpctgview
+
+import (
+	"github.com/mangustc/obd/view"
+	"github.com/mangustc/obd/schema"
+	"github.com/mangustc/obd/schema/finhelpctgschema"
+	"fmt"
+)
+
+const (
+	pageTitle            = "Financial Help Category"
+	tableTitle           = pageTitle
+	insertFormTitle      = tableTitle
+	getPOSTURL           = "/api/finhelpctg/getfinhelpctgs"
+	insertPOSTURL        = "/api/finhelpctg/insertfinhelpctg"
+	editPOSTURL          = "/api/finhelpctg/editfinhelpctg"
+	updatePOSTURL        = "/api/finhelpctg/updatefinhelpctg"
+	deletePOSTURL        = "/api/finhelpctg/deletefinhelpctg"
+	finhelpCtgTN         = "FinhelpCtg"
+	bodyVals             = `{"` + finhelpCtgTN + `ID": %d}`
+	getfinhelpCtgPOSTURL = "/api/finhelpctg"
+)
+
+var (
+	taFinhelpCtgDescription = schema.NewTA(finhelpCtgTN+"Description", "Description", schema.StringInput)
+	taFinhelpCtgPayment     = schema.NewTA(finhelpCtgTN+"Payment", "Payment", schema.NumberInput)
+	taFinhelpCtgIsHidden    = schema.NewTA(finhelpCtgTN+"IsHidden", "Is Hidden", schema.BooleanInput)
+)
+
+func getTableHeaders() []*schema.TableHeaderColumn {
+	return []*schema.TableHeaderColumn{
+		schema.NewTableHeaderColumn(taFinhelpCtgDescription.TATitle, 75),
+		schema.NewTableHeaderColumn(taFinhelpCtgPayment.TATitle, 15),
+		schema.NewTableHeaderColumn(taFinhelpCtgIsHidden.TATitle, 10),
+	}
+}
+
+func getInsertFormInputs() []*schema.Input {
+	return []*schema.Input{
+		schema.NewInput(taFinhelpCtgDescription.TATitle, taFinhelpCtgDescription.TAName, taFinhelpCtgDescription.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taFinhelpCtgPayment.TATitle, taFinhelpCtgPayment.TAName, taFinhelpCtgPayment.TAInputType, "", nil, nil, ""),
+	}
+}
+
+func getInputsFromFinhelpCtgDB(finhelpCtgDB *finhelpctgschema.FinhelpCtgDB) []*schema.Input {
+	return []*schema.Input{
+		schema.NewInput("", taFinhelpCtgDescription.TAName, taFinhelpCtgDescription.TAInputType, finhelpCtgDB.FinhelpCtgDescription, nil, nil, ""),
+		schema.NewInput("", taFinhelpCtgPayment.TAName, taFinhelpCtgPayment.TAInputType, finhelpCtgDB.FinhelpCtgPayment, nil, nil, ""),
+		schema.NewInput("", taFinhelpCtgIsHidden.TAName, taFinhelpCtgIsHidden.TAInputType, finhelpCtgDB.FinhelpCtgIsHidden, nil, nil, ""),
+	}
+}
+
+templ FinhelpCtgTableRowEdit(finhelpCtgDB *finhelpctgschema.FinhelpCtgDB) {
+	@view.TableRowEdit(getInputsFromFinhelpCtgDB(finhelpCtgDB), fmt.Sprintf(bodyVals, finhelpCtgDB.FinhelpCtgID), updatePOSTURL, deletePOSTURL)
+}
+
+templ FinhelpCtgTableRow(finhelpCtgDB *finhelpctgschema.FinhelpCtgDB) {
+	@view.TableRow(getInputsFromFinhelpCtgDB(finhelpCtgDB), fmt.Sprintf(bodyVals, finhelpCtgDB.FinhelpCtgID), editPOSTURL, deletePOSTURL)
+}
+
+templ FinhelpCtgTableRows(finhelpCtgsDB []*finhelpctgschema.FinhelpCtgDB) {
+	for _, finhelpCtgDB := range finhelpCtgsDB {
+		@FinhelpCtgTableRow(finhelpCtgDB)
+	}
+}
+
+templ FinhelpCtg() {
+	@view.InsertForm(insertFormTitle, insertPOSTURL, getInsertFormInputs())
+	@view.Table(tableTitle, getPOSTURL, getTableHeaders())
+}
+
+templ FinhelpCtgPage() {
+	@view.Layout(pageTitle) {
+		<div
+			hx-post={ getfinhelpCtgPOSTURL }
+			hx-target="this"
+			hx-swap="outerHTML"
+			hx-trigger="load"
+		></div>
+	}
+}

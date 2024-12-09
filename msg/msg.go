@@ -89,4 +89,24 @@ var (
 		schema.AlertNotification,
 		"This group already exists",
 	)
+	FinhelpCtgWrong = NewMsg(
+		http.StatusUnprocessableEntity,
+		schema.AlertNotification,
+		"Financial Help Category descrpition and payment can't be empty",
+	)
+	FinhelpCtgExists = NewMsg(
+		http.StatusUnprocessableEntity,
+		schema.AlertNotification,
+		"This Financial Help Category already exists",
+	)
+	FinhelpStageWrong = NewMsg(
+		http.StatusUnprocessableEntity,
+		schema.AlertNotification,
+		"Financial Help Stage descrpition can't be empty",
+	)
+	FinhelpStageExists = NewMsg(
+		http.StatusUnprocessableEntity,
+		schema.AlertNotification,
+		"This Financial Help Stage already exists",
+	)
 )

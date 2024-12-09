@@ -122,9 +122,9 @@ templ Input(input *schema.Input) {
 		}
 		if input.InputOptions != nil {
 			if !input.InputEditable {
-				<input name={ input.InputName } value={ schema.GetSelectedInputOptionLabel(input) } type={ input.InputType } readonly?={ !input.InputEditable }/>
+				<input style="width: 100%;" name={ input.InputName } value={ schema.GetSelectedInputOptionLabel(input) } type={ input.InputType } readonly?={ !input.InputEditable }/>
 			} else {
-				<select name={ input.InputName }>
+				<select style="width: 100%;" name={ input.InputName }>
 					for _, inputOption := range input.InputOptions {
 						<option
 							label={ inputOption.InputOptionLabel }
@@ -136,14 +136,14 @@ templ Input(input *schema.Input) {
 			}
 		} else if input.InputType == "checkbox" {
 			if !input.InputEditable {
-				<input name={ input.InputName } type={ input.InputType } checked?={ getBool(input.InputValue) } onclick="return false;"/>
+				<input style="width: 100%;" name={ input.InputName } type={ input.InputType } checked?={ getBool(input.InputValue) } onclick="return false;"/>
 			} else {
-				<input name={ input.InputName } type={ input.InputType } checked?={ getBool(input.InputValue) }/>
+				<input style="width: 100%;" name={ input.InputName } type={ input.InputType } checked?={ getBool(input.InputValue) }/>
 			}
 		} else if input.InputType == "number" {
-			<input name={ input.InputName } value={ fmt.Sprint(getInt(input.InputValue)) } type={ input.InputType } readonly?={ !input.InputEditable }/>
+			<input style="width: 100%;" name={ input.InputName } value={ fmt.Sprint(getInt(input.InputValue)) } type={ input.InputType } readonly?={ !input.InputEditable }/>
 		} else {
-			<input name={ input.InputName } value={ getString(input.InputValue) } type={ input.InputType } readonly?={ !input.InputEditable }/>
+			<input style="width: 100%;" name={ input.InputName } value={ getString(input.InputValue) } type={ input.InputType } readonly?={ !input.InputEditable }/>
 		}
 	</div>
 }
