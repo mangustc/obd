@@ -59,7 +59,7 @@ func (grh *GroupHandler) GetGroups(w http.ResponseWriter, r *http.Request) {
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &groupschema.GroupsGet{}
 
-	sessionJobDB, err := util.GetJobBySessionCookie(
+	sessionJobDB, _, err := util.GetJobBySessionCookie(
 		w, r,
 		grh.SessionService.GetSession,
 		grh.UserService.GetUser,
@@ -98,7 +98,7 @@ func (grh *GroupHandler) InsertGroup(w http.ResponseWriter, r *http.Request) {
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &groupschema.GroupInsert{}
 
-	sessionJobDB, err := util.GetJobBySessionCookie(
+	sessionJobDB, _, err := util.GetJobBySessionCookie(
 		w, r,
 		grh.SessionService.GetSession,
 		grh.UserService.GetUser,
@@ -155,7 +155,7 @@ func (grh *GroupHandler) EditGroup(w http.ResponseWriter, r *http.Request) {
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &groupschema.GroupGet{}
 
-	sessionJobDB, err := util.GetJobBySessionCookie(
+	sessionJobDB, _, err := util.GetJobBySessionCookie(
 		w, r,
 		grh.SessionService.GetSession,
 		grh.UserService.GetUser,
@@ -195,7 +195,7 @@ func (grh *GroupHandler) UpdateGroup(w http.ResponseWriter, r *http.Request) {
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &groupschema.GroupUpdate{}
 
-	sessionJobDB, err := util.GetJobBySessionCookie(
+	sessionJobDB, _, err := util.GetJobBySessionCookie(
 		w, r,
 		grh.SessionService.GetSession,
 		grh.UserService.GetUser,
@@ -253,7 +253,7 @@ func (grh *GroupHandler) DeleteGroup(w http.ResponseWriter, r *http.Request) {
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &groupschema.GroupDelete{}
 
-	sessionJobDB, err := util.GetJobBySessionCookie(
+	sessionJobDB, _, err := util.GetJobBySessionCookie(
 		w, r,
 		grh.SessionService.GetSession,
 		grh.UserService.GetUser,

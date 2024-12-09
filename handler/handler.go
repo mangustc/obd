@@ -101,7 +101,7 @@ func (dh *DefaultHandler) Navigation(w http.ResponseWriter, r *http.Request) {
 	var out []byte
 	defer util.RespondHTTP(w, r, &message, &out)
 
-	jobDB, err := util.GetJobBySessionCookie(
+	jobDB, _, err := util.GetJobBySessionCookie(
 		w, r,
 		dh.SessionService.GetSession,
 		dh.UserService.GetUser,

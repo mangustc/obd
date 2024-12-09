@@ -87,7 +87,7 @@ func (fsth *FinhelpStageHandler) InsertFinhelpStage(w http.ResponseWriter, r *ht
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &finhelpstageschema.FinhelpStageInsert{}
 
-	sessionJobDB, err := util.GetJobBySessionCookie(
+	sessionJobDB, _, err := util.GetJobBySessionCookie(
 		w, r,
 		fsth.SessionService.GetSession,
 		fsth.UserService.GetUser,
@@ -138,7 +138,7 @@ func (fsth *FinhelpStageHandler) EditFinhelpStage(w http.ResponseWriter, r *http
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &finhelpstageschema.FinhelpStageGet{}
 
-	sessionJobDB, err := util.GetJobBySessionCookie(
+	sessionJobDB, _, err := util.GetJobBySessionCookie(
 		w, r,
 		fsth.SessionService.GetSession,
 		fsth.UserService.GetUser,
@@ -178,7 +178,7 @@ func (fsth *FinhelpStageHandler) UpdateFinhelpStage(w http.ResponseWriter, r *ht
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &finhelpstageschema.FinhelpStageUpdate{}
 
-	sessionJobDB, err := util.GetJobBySessionCookie(
+	sessionJobDB, _, err := util.GetJobBySessionCookie(
 		w, r,
 		fsth.SessionService.GetSession,
 		fsth.UserService.GetUser,
@@ -230,7 +230,7 @@ func (fsth *FinhelpStageHandler) DeleteFinhelpStage(w http.ResponseWriter, r *ht
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &finhelpstageschema.FinhelpStageDelete{}
 
-	sessionJobDB, err := util.GetJobBySessionCookie(
+	sessionJobDB, _, err := util.GetJobBySessionCookie(
 		w, r,
 		fsth.SessionService.GetSession,
 		fsth.UserService.GetUser,

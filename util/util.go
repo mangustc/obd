@@ -41,9 +41,6 @@ func ParseStructFromForm(r *http.Request, structPtr interface{}) error {
 		fieldTag := s.Type().Field(i).Tag.Get("json")
 		server := s.Type().Field(i).Tag.Get("server")
 		cookie := s.Type().Field(i).Tag.Get("cookie")
-		if cookie == "y" {
-			continue
-		}
 		switch field.Kind() {
 		case reflect.Int:
 			value, err := GetIntFromForm(r, fieldTag)
@@ -143,10 +140,10 @@ func GetJobBySessionCookie(
 	getSession func(*sessionschema.SessionGet) (*sessionschema.SessionDB, error),
 	getUser func(*userschema.UserGet) (*userschema.UserDB, error),
 	getJob func(*jobschema.JobGet) (*jobschema.JobDB, error),
-) (*jobschema.JobDB, error) {
+) (*jobschema.JobDB, *userschema.UserDB, error) {
 	sessionUUID, err := GetUserSessionCookieValue(w, r)
 	if err != nil {
-		return &jobschema.JobDB{}, err
+		return nil, nil, err
 	}
 
 	sessionDB, err := getSession(&sessionschema.SessionGet{
@@ -154,7 +151,7 @@ func GetJobBySessionCookie(
 	})
 	if err != nil {
 		DeleteUserSessionCookie(w)
-		return &jobschema.JobDB{}, E.ErrNotFound
+		return nil, nil, E.ErrNotFound
 	}
 
 	userDB, err := getUser(&userschema.UserGet{
@@ -162,7 +159,7 @@ func GetJobBySessionCookie(
 	})
 	if err != nil {
 		DeleteUserSessionCookie(w)
-		return &jobschema.JobDB{}, E.ErrNotFound
+		return nil, nil, E.ErrNotFound
 	}
 
 	jobDB, err := getJob(&jobschema.JobGet{
@@ -170,10 +167,10 @@ func GetJobBySessionCookie(
 	})
 	if err != nil {
 		DeleteUserSessionCookie(w)
-		return &jobschema.JobDB{}, E.ErrNotFound
+		return nil, nil, E.ErrNotFound
 	}
 
-	return jobDB, nil
+	return jobDB, userDB, nil
 }
 
 func SetUserSessionCookie(w http.ResponseWriter, sessionUUID string) {

@@ -66,7 +66,7 @@ func (uh *StudentHandler) GetStudents(w http.ResponseWriter, r *http.Request) {
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &studentschema.StudentsGet{}
 
-	sessionJobDB, err := util.GetJobBySessionCookie(
+	sessionJobDB, _, err := util.GetJobBySessionCookie(
 		w, r,
 		uh.SessionService.GetSession,
 		uh.UserService.GetUser,
@@ -109,7 +109,7 @@ func (uh *StudentHandler) InsertStudent(w http.ResponseWriter, r *http.Request) 
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &studentschema.StudentInsert{}
 
-	sessionJobDB, err := util.GetJobBySessionCookie(
+	sessionJobDB, _, err := util.GetJobBySessionCookie(
 		w, r,
 		uh.SessionService.GetSession,
 		uh.UserService.GetUser,
@@ -164,7 +164,7 @@ func (uh *StudentHandler) EditStudent(w http.ResponseWriter, r *http.Request) {
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &studentschema.StudentGet{}
 
-	sessionJobDB, err := util.GetJobBySessionCookie(
+	sessionJobDB, _, err := util.GetJobBySessionCookie(
 		w, r,
 		uh.SessionService.GetSession,
 		uh.UserService.GetUser,
@@ -208,7 +208,7 @@ func (uh *StudentHandler) UpdateStudent(w http.ResponseWriter, r *http.Request) 
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &studentschema.StudentUpdate{}
 
-	sessionJobDB, err := util.GetJobBySessionCookie(
+	sessionJobDB, _, err := util.GetJobBySessionCookie(
 		w, r,
 		uh.SessionService.GetSession,
 		uh.UserService.GetUser,
@@ -264,7 +264,7 @@ func (uh *StudentHandler) DeleteStudent(w http.ResponseWriter, r *http.Request) 
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &studentschema.StudentDelete{}
 
-	sessionJobDB, err := util.GetJobBySessionCookie(
+	sessionJobDB, _, err := util.GetJobBySessionCookie(
 		w, r,
 		uh.SessionService.GetSession,
 		uh.UserService.GetUser,

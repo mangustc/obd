@@ -87,7 +87,7 @@ func (fctgh *FinhelpCtgHandler) InsertFinhelpCtg(w http.ResponseWriter, r *http.
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &finhelpctgschema.FinhelpCtgInsert{}
 
-	sessionJobDB, err := util.GetJobBySessionCookie(
+	sessionJobDB, _, err := util.GetJobBySessionCookie(
 		w, r,
 		fctgh.SessionService.GetSession,
 		fctgh.UserService.GetUser,
@@ -138,7 +138,7 @@ func (fctgh *FinhelpCtgHandler) EditFinhelpCtg(w http.ResponseWriter, r *http.Re
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &finhelpctgschema.FinhelpCtgGet{}
 
-	sessionJobDB, err := util.GetJobBySessionCookie(
+	sessionJobDB, _, err := util.GetJobBySessionCookie(
 		w, r,
 		fctgh.SessionService.GetSession,
 		fctgh.UserService.GetUser,
@@ -178,7 +178,7 @@ func (fctgh *FinhelpCtgHandler) UpdateFinhelpCtg(w http.ResponseWriter, r *http.
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &finhelpctgschema.FinhelpCtgUpdate{}
 
-	sessionJobDB, err := util.GetJobBySessionCookie(
+	sessionJobDB, _, err := util.GetJobBySessionCookie(
 		w, r,
 		fctgh.SessionService.GetSession,
 		fctgh.UserService.GetUser,
@@ -230,7 +230,7 @@ func (fctgh *FinhelpCtgHandler) DeleteFinhelpCtg(w http.ResponseWriter, r *http.
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &finhelpctgschema.FinhelpCtgDelete{}
 
-	sessionJobDB, err := util.GetJobBySessionCookie(
+	sessionJobDB, _, err := util.GetJobBySessionCookie(
 		w, r,
 		fctgh.SessionService.GetSession,
 		fctgh.UserService.GetUser,

@@ -62,7 +62,7 @@ func (uh *UserHandler) GetUsers(w http.ResponseWriter, r *http.Request) {
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &userschema.UsersGet{}
 
-	sessionJobDB, err := util.GetJobBySessionCookie(
+	sessionJobDB, _, err := util.GetJobBySessionCookie(
 		w, r,
 		uh.SessionService.GetSession,
 		uh.UserService.GetUser,
@@ -105,7 +105,7 @@ func (uh *UserHandler) InsertUser(w http.ResponseWriter, r *http.Request) {
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &userschema.UserInsert{}
 
-	sessionJobDB, err := util.GetJobBySessionCookie(
+	sessionJobDB, _, err := util.GetJobBySessionCookie(
 		w, r,
 		uh.SessionService.GetSession,
 		uh.UserService.GetUser,
@@ -160,7 +160,7 @@ func (uh *UserHandler) EditUser(w http.ResponseWriter, r *http.Request) {
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &userschema.UserGet{}
 
-	sessionJobDB, err := util.GetJobBySessionCookie(
+	sessionJobDB, _, err := util.GetJobBySessionCookie(
 		w, r,
 		uh.SessionService.GetSession,
 		uh.UserService.GetUser,
@@ -204,7 +204,7 @@ func (uh *UserHandler) UpdateUser(w http.ResponseWriter, r *http.Request) {
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &userschema.UserUpdate{}
 
-	sessionJobDB, err := util.GetJobBySessionCookie(
+	sessionJobDB, _, err := util.GetJobBySessionCookie(
 		w, r,
 		uh.SessionService.GetSession,
 		uh.UserService.GetUser,
@@ -260,7 +260,7 @@ func (uh *UserHandler) DeleteUser(w http.ResponseWriter, r *http.Request) {
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &userschema.UserDelete{}
 
-	sessionJobDB, err := util.GetJobBySessionCookie(
+	sessionJobDB, _, err := util.GetJobBySessionCookie(
 		w, r,
 		uh.SessionService.GetSession,
 		uh.UserService.GetUser,
