@@ -59,19 +59,6 @@ func (fsth *FinhelpStageHandler) GetFinhelpStages(w http.ResponseWriter, r *http
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &finhelpstageschema.FinhelpStagesGet{}
 
-	sessionJobDB, err := util.GetJobBySessionCookie(
-		w, r,
-		fsth.SessionService.GetSession,
-		fsth.UserService.GetUser,
-		fsth.JobService.GetJob,
-	)
-	if !sessionJobDB.JobAccessFinhelpStage {
-		err := errs.ErrUnauthorized
-		message = msg.Unauthorized
-		logger.Error.Print(err.Error())
-		return
-	}
-
 	err = finhelpstageschema.ValidateFinhelpStagesGet(in)
 	if err != nil {
 		message = msg.InternalServerError

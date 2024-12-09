@@ -59,19 +59,6 @@ func (fctgh *FinhelpCtgHandler) GetFinhelpCtgs(w http.ResponseWriter, r *http.Re
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &finhelpctgschema.FinhelpCtgsGet{}
 
-	sessionJobDB, err := util.GetJobBySessionCookie(
-		w, r,
-		fctgh.SessionService.GetSession,
-		fctgh.UserService.GetUser,
-		fctgh.JobService.GetJob,
-	)
-	if !sessionJobDB.JobAccessFinhelpCtg {
-		err := errs.ErrUnauthorized
-		message = msg.Unauthorized
-		logger.Error.Print(err.Error())
-		return
-	}
-
 	err = finhelpctgschema.ValidateFinhelpCtgsGet(in)
 	if err != nil {
 		message = msg.InternalServerError
