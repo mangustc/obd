@@ -129,4 +129,14 @@ var (
 		schema.AlertNotification,
 		"This Financial Help Process already exists",
 	)
+	BuildingWrong = NewMsg(
+		http.StatusUnprocessableEntity,
+		schema.AlertNotification,
+		"Building name and address can't be empty",
+	)
+	BuildingExists = NewMsg(
+		http.StatusUnprocessableEntity,
+		schema.AlertNotification,
+		"This Building already exists",
+	)
 )

@@ -7,6 +7,7 @@ import (
 	"github.com/mangustc/obd/database"
 	"github.com/mangustc/obd/handler"
 	"github.com/mangustc/obd/handler/authhandler"
+	"github.com/mangustc/obd/handler/buildinghandler"
 	"github.com/mangustc/obd/handler/finhelpctghandler"
 	"github.com/mangustc/obd/handler/finhelpprochandler"
 	"github.com/mangustc/obd/handler/finhelpstagehandler"
@@ -16,6 +17,7 @@ import (
 	"github.com/mangustc/obd/handler/userhandler"
 	"github.com/mangustc/obd/logger"
 	"github.com/mangustc/obd/middleware"
+	"github.com/mangustc/obd/service/buildingservice"
 	"github.com/mangustc/obd/service/finhelpctgservice"
 	"github.com/mangustc/obd/service/finhelpprocservice"
 	"github.com/mangustc/obd/service/finhelpstageservice"
@@ -249,12 +251,26 @@ func main() {
 	database.NewTable(db, skipCT)
 	logger.Info.Println("Database created")
 
-	js := jobservice.NewJobService(db, jobTN)
-	us := userservice.NewUserService(db, userTN, jobTN)
-	ss := sessionservice.NewSessionService(db, sessionTN, userTN)
-	grs := groupservice.NewGroupService(db, groupTN)
-	fctgs := finhelpctgservice.NewFinhelpCtgService(db, finhelpCtgTN)
-	fsts := finhelpstageservice.NewFinhelpStageService(db, finhelpStageTN)
+	js := jobservice.NewJobService(db,
+		jobTN,
+	)
+	us := userservice.NewUserService(db,
+		userTN,
+		jobTN,
+	)
+	ss := sessionservice.NewSessionService(db,
+		sessionTN,
+		userTN,
+	)
+	grs := groupservice.NewGroupService(db,
+		groupTN,
+	)
+	fctgs := finhelpctgservice.NewFinhelpCtgService(db,
+		finhelpCtgTN,
+	)
+	fsts := finhelpstageservice.NewFinhelpStageService(db,
+		finhelpStageTN,
+	)
 	fprs := finhelpprocservice.NewFinhelpProcService(db,
 		finhelpProcTN,
 		userTN,
@@ -262,9 +278,19 @@ func main() {
 		finhelpCtgTN,
 		finhelpStageTN,
 	)
-	sts := studentservice.NewStudentService(db, studentTN, groupTN)
+	sts := studentservice.NewStudentService(db,
+		studentTN,
+		groupTN,
+	)
+	bs := buildingservice.NewBuildingService(db,
+		buildingTN,
+	)
 
-	jh := jobhandler.NewJobHandler(ss, us, js)
+	jh := jobhandler.NewJobHandler(
+		ss,
+		us,
+		js,
+	)
 	router.HandleFunc("GET /job", jh.JobPage)
 	router.HandleFunc("POST /api/job", jh.Job)
 	router.HandleFunc("POST /api/job/getjobs", jh.GetJobs)
@@ -273,7 +299,10 @@ func main() {
 	router.HandleFunc("POST /api/job/deletejob", jh.DeleteJob)
 	router.HandleFunc("POST /api/job/editjob", jh.EditJob)
 
-	uh := userhandler.NewUserHandler(ss, us, js)
+	uh := userhandler.NewUserHandler(ss,
+		us,
+		js,
+	)
 	router.HandleFunc("GET /user", uh.UserPage)
 	router.HandleFunc("POST /api/user", uh.User)
 	router.HandleFunc("POST /api/user/getusers", uh.GetUsers)
@@ -282,7 +311,12 @@ func main() {
 	router.HandleFunc("POST /api/user/deleteuser", uh.DeleteUser)
 	router.HandleFunc("POST /api/user/edituser", uh.EditUser)
 
-	grh := grouphandler.NewGroupHandler(ss, us, js, grs)
+	grh := grouphandler.NewGroupHandler(
+		ss,
+		us,
+		js,
+		grs,
+	)
 	router.HandleFunc("GET /group", grh.GroupPage)
 	router.HandleFunc("POST /api/group", grh.Group)
 	router.HandleFunc("POST /api/group/getgroups", grh.GetGroups)
@@ -291,7 +325,12 @@ func main() {
 	router.HandleFunc("POST /api/group/deletegroup", grh.DeleteGroup)
 	router.HandleFunc("POST /api/group/editgroup", grh.EditGroup)
 
-	fctgh := finhelpctghandler.NewFinhelpCtgHandler(ss, us, js, fctgs)
+	fctgh := finhelpctghandler.NewFinhelpCtgHandler(
+		ss,
+		us,
+		js,
+		fctgs,
+	)
 	router.HandleFunc("GET /finhelpctg", fctgh.FinhelpCtgPage)
 	router.HandleFunc("POST /api/finhelpctg", fctgh.FinhelpCtg)
 	router.HandleFunc("POST /api/finhelpctg/getfinhelpctgs", fctgh.GetFinhelpCtgs)
@@ -300,7 +339,12 @@ func main() {
 	router.HandleFunc("POST /api/finhelpctg/deletefinhelpctg", fctgh.DeleteFinhelpCtg)
 	router.HandleFunc("POST /api/finhelpctg/editfinhelpctg", fctgh.EditFinhelpCtg)
 
-	fsth := finhelpstagehandler.NewFinhelpStageHandler(ss, us, js, fsts)
+	fsth := finhelpstagehandler.NewFinhelpStageHandler(
+		ss,
+		us,
+		js,
+		fsts,
+	)
 	router.HandleFunc("GET /finhelpstage", fsth.FinhelpStagePage)
 	router.HandleFunc("POST /api/finhelpstage", fsth.FinhelpStage)
 	router.HandleFunc("POST /api/finhelpstage/getfinhelpstages", fsth.GetFinhelpStages)
@@ -309,7 +353,15 @@ func main() {
 	router.HandleFunc("POST /api/finhelpstage/deletefinhelpstage", fsth.DeleteFinhelpStage)
 	router.HandleFunc("POST /api/finhelpstage/editfinhelpstage", fsth.EditFinhelpStage)
 
-	fprh := finhelpprochandler.NewFinhelpProcHandler(ss, us, js, sts, fctgs, fsts, fprs)
+	fprh := finhelpprochandler.NewFinhelpProcHandler(
+		ss,
+		us,
+		js,
+		sts,
+		fctgs,
+		fsts,
+		fprs,
+	)
 	router.HandleFunc("GET /finhelpproc", fprh.FinhelpProcPage)
 	router.HandleFunc("POST /api/finhelpproc", fprh.FinhelpProc)
 	router.HandleFunc("POST /api/finhelpproc/getfinhelpprocs", fprh.GetFinhelpProcs)
@@ -318,7 +370,13 @@ func main() {
 	router.HandleFunc("POST /api/finhelpproc/deletefinhelpproc", fprh.DeleteFinhelpProc)
 	router.HandleFunc("POST /api/finhelpproc/editfinhelpproc", fprh.EditFinhelpProc)
 
-	sth := studenthandler.NewStudentHandler(ss, us, js, grs, sts)
+	sth := studenthandler.NewStudentHandler(
+		ss,
+		us,
+		js,
+		grs,
+		sts,
+	)
 	router.HandleFunc("GET /student", sth.StudentPage)
 	router.HandleFunc("POST /api/student", sth.Student)
 	router.HandleFunc("POST /api/student/getstudents", sth.GetStudents)
@@ -327,14 +385,35 @@ func main() {
 	router.HandleFunc("POST /api/student/deletestudent", sth.DeleteStudent)
 	router.HandleFunc("POST /api/student/editstudent", sth.EditStudent)
 
-	auh := authhandler.NewAuthHandler(ss, us)
+	bh := buildinghandler.NewBuildingHandler(
+		ss,
+		us,
+		js,
+		bs,
+	)
+	router.HandleFunc("GET /building", bh.BuildingPage)
+	router.HandleFunc("POST /api/building", bh.Building)
+	router.HandleFunc("POST /api/building/getbuildings", bh.GetBuildings)
+	router.HandleFunc("POST /api/building/insertbuilding", bh.InsertBuilding)
+	router.HandleFunc("POST /api/building/updatebuilding", bh.UpdateBuilding)
+	router.HandleFunc("POST /api/building/deletebuilding", bh.DeleteBuilding)
+	router.HandleFunc("POST /api/building/editbuilding", bh.EditBuilding)
+
+	auh := authhandler.NewAuthHandler(
+		ss,
+		us,
+	)
 	router.HandleFunc("GET /auth", auh.AuthPage)
 	router.HandleFunc("POST /api/auth", auh.Auth)
 	router.HandleFunc("POST /api/auth/userinput", auh.UserInput)
 	router.HandleFunc("POST /api/auth/login", auh.AuthLogin)
 	router.HandleFunc("POST /api/auth/logout", auh.AuthLogout)
 
-	dh := handler.NewDefaultHandler(ss, us, js)
+	dh := handler.NewDefaultHandler(
+		ss,
+		us,
+		js,
+	)
 	router.HandleFunc("GET /", dh.Default)
 	router.HandleFunc("POST /api/navigation", dh.Navigation)
 	cssDir := http.FileServer(http.Dir("./css"))

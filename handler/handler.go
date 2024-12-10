@@ -6,6 +6,7 @@ import (
 	"github.com/mangustc/obd/errs"
 	"github.com/mangustc/obd/logger"
 	"github.com/mangustc/obd/msg"
+	"github.com/mangustc/obd/schema/buildingschema"
 	"github.com/mangustc/obd/schema/finhelpctgschema"
 	"github.com/mangustc/obd/schema/finhelpprocschema"
 	"github.com/mangustc/obd/schema/finhelpstageschema"
@@ -73,6 +74,13 @@ type (
 		DeleteStudent(data *studentschema.StudentDelete) (studentDB *studentschema.StudentDB, err error)
 		GetStudent(data *studentschema.StudentGet) (studentDB *studentschema.StudentDB, err error)
 		GetStudents(data *studentschema.StudentsGet) (studentsDB []*studentschema.StudentDB, err error)
+	}
+	BuildingService interface {
+		InsertBuilding(data *buildingschema.BuildingInsert) (buildingDB *buildingschema.BuildingDB, err error)
+		UpdateBuilding(data *buildingschema.BuildingUpdate) (buildingDB *buildingschema.BuildingDB, err error)
+		DeleteBuilding(data *buildingschema.BuildingDelete) (buildingDB *buildingschema.BuildingDB, err error)
+		GetBuilding(data *buildingschema.BuildingGet) (buildingDB *buildingschema.BuildingDB, err error)
+		GetBuildings(data *buildingschema.BuildingsGet) (buildingsDB []*buildingschema.BuildingDB, err error)
 	}
 )
 

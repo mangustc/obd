@@ -22,6 +22,7 @@ const (
 )
 
 var (
+	taFinhelpCtgID          = schema.NewTA(finhelpCtgTN+"ID", "ID", schema.NumberInput)
 	taFinhelpCtgDescription = schema.NewTA(finhelpCtgTN+"Description", "Description", schema.StringInput)
 	taFinhelpCtgPayment     = schema.NewTA(finhelpCtgTN+"Payment", "Payment", schema.NumberInput)
 	taFinhelpCtgIsHidden    = schema.NewTA(finhelpCtgTN+"IsHidden", "Is Hidden", schema.BooleanInput)
@@ -29,8 +30,9 @@ var (
 
 func getTableHeaders() []*schema.TableHeaderColumn {
 	return []*schema.TableHeaderColumn{
+		schema.NewTableHeaderColumn(taFinhelpCtgID.TATitle, 5),
 		schema.NewTableHeaderColumn(taFinhelpCtgDescription.TATitle, 75),
-		schema.NewTableHeaderColumn(taFinhelpCtgPayment.TATitle, 15),
+		schema.NewTableHeaderColumn(taFinhelpCtgPayment.TATitle, 10),
 		schema.NewTableHeaderColumn(taFinhelpCtgIsHidden.TATitle, 10),
 	}
 }
@@ -44,6 +46,7 @@ func getInsertFormInputs() []*schema.Input {
 
 func getInputsFromFinhelpCtgDB(finhelpCtgDB *finhelpctgschema.FinhelpCtgDB) []*schema.Input {
 	return []*schema.Input{
+		schema.NewInput("", taFinhelpCtgID.TAName, taFinhelpCtgID.TAInputType, finhelpCtgDB.FinhelpCtgID, nil, nil, ""),
 		schema.NewInput("", taFinhelpCtgDescription.TAName, taFinhelpCtgDescription.TAInputType, finhelpCtgDB.FinhelpCtgDescription, nil, nil, ""),
 		schema.NewInput("", taFinhelpCtgPayment.TAName, taFinhelpCtgPayment.TAInputType, finhelpCtgDB.FinhelpCtgPayment, nil, nil, ""),
 		schema.NewInput("", taFinhelpCtgIsHidden.TAName, taFinhelpCtgIsHidden.TAInputType, finhelpCtgDB.FinhelpCtgIsHidden, nil, nil, ""),
