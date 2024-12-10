@@ -139,4 +139,34 @@ var (
 		schema.AlertNotification,
 		"This Building already exists",
 	)
+	CabinetTypeWrong = NewMsg(
+		http.StatusUnprocessableEntity,
+		schema.AlertNotification,
+		"Cabinet Type name can't be empty",
+	)
+	CabinetTypeExists = NewMsg(
+		http.StatusUnprocessableEntity,
+		schema.AlertNotification,
+		"This Cabinet Type already exists",
+	)
+	ClassTypeWrong = NewMsg(
+		http.StatusUnprocessableEntity,
+		schema.AlertNotification,
+		"Class Type name can't be empty",
+	)
+	ClassTypeExists = NewMsg(
+		http.StatusUnprocessableEntity,
+		schema.AlertNotification,
+		"This Class Type already exists",
+	)
+	CourseTypeWrong = NewMsg(
+		http.StatusUnprocessableEntity,
+		schema.AlertNotification,
+		"Course Type name can't be empty",
+	)
+	CourseTypeExists = NewMsg(
+		http.StatusUnprocessableEntity,
+		schema.AlertNotification,
+		"This Course Type already exists",
+	)
 )

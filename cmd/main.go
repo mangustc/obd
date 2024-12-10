@@ -8,6 +8,9 @@ import (
 	"github.com/mangustc/obd/handler"
 	"github.com/mangustc/obd/handler/authhandler"
 	"github.com/mangustc/obd/handler/buildinghandler"
+	"github.com/mangustc/obd/handler/cabinettypehandler"
+	"github.com/mangustc/obd/handler/classtypehandler"
+	"github.com/mangustc/obd/handler/coursetypehandler"
 	"github.com/mangustc/obd/handler/finhelpctghandler"
 	"github.com/mangustc/obd/handler/finhelpprochandler"
 	"github.com/mangustc/obd/handler/finhelpstagehandler"
@@ -18,6 +21,9 @@ import (
 	"github.com/mangustc/obd/logger"
 	"github.com/mangustc/obd/middleware"
 	"github.com/mangustc/obd/service/buildingservice"
+	"github.com/mangustc/obd/service/cabinettypeservice"
+	"github.com/mangustc/obd/service/classtypeservice"
+	"github.com/mangustc/obd/service/coursetypeservice"
 	"github.com/mangustc/obd/service/finhelpctgservice"
 	"github.com/mangustc/obd/service/finhelpprocservice"
 	"github.com/mangustc/obd/service/finhelpstageservice"
@@ -285,6 +291,15 @@ func main() {
 	bs := buildingservice.NewBuildingService(db,
 		buildingTN,
 	)
+	cts := cabinettypeservice.NewCabinetTypeService(db,
+		cabinetTypeTN,
+	)
+	clts := classtypeservice.NewClassTypeService(db,
+		classTypeTN,
+	)
+	cots := coursetypeservice.NewCourseTypeService(db,
+		courseTypeTN,
+	)
 
 	jh := jobhandler.NewJobHandler(
 		ss,
@@ -398,6 +413,48 @@ func main() {
 	router.HandleFunc("POST /api/building/updatebuilding", bh.UpdateBuilding)
 	router.HandleFunc("POST /api/building/deletebuilding", bh.DeleteBuilding)
 	router.HandleFunc("POST /api/building/editbuilding", bh.EditBuilding)
+
+	cth := cabinettypehandler.NewCabinetTypeHandler(
+		ss,
+		us,
+		js,
+		cts,
+	)
+	router.HandleFunc("GET /cabinettype", cth.CabinetTypePage)
+	router.HandleFunc("POST /api/cabinettype", cth.CabinetType)
+	router.HandleFunc("POST /api/cabinettype/getcabinettypes", cth.GetCabinetTypes)
+	router.HandleFunc("POST /api/cabinettype/insertcabinettype", cth.InsertCabinetType)
+	router.HandleFunc("POST /api/cabinettype/updatecabinettype", cth.UpdateCabinetType)
+	router.HandleFunc("POST /api/cabinettype/deletecabinettype", cth.DeleteCabinetType)
+	router.HandleFunc("POST /api/cabinettype/editcabinettype", cth.EditCabinetType)
+
+	clth := classtypehandler.NewClassTypeHandler(
+		ss,
+		us,
+		js,
+		clts,
+	)
+	router.HandleFunc("GET /classtype", clth.ClassTypePage)
+	router.HandleFunc("POST /api/classtype", clth.ClassType)
+	router.HandleFunc("POST /api/classtype/getclasstypes", clth.GetClassTypes)
+	router.HandleFunc("POST /api/classtype/insertclasstype", clth.InsertClassType)
+	router.HandleFunc("POST /api/classtype/updateclasstype", clth.UpdateClassType)
+	router.HandleFunc("POST /api/classtype/deleteclasstype", clth.DeleteClassType)
+	router.HandleFunc("POST /api/classtype/editclasstype", clth.EditClassType)
+
+	coth := coursetypehandler.NewCourseTypeHandler(
+		ss,
+		us,
+		js,
+		cots,
+	)
+	router.HandleFunc("GET /coursetype", coth.CourseTypePage)
+	router.HandleFunc("POST /api/coursetype", coth.CourseType)
+	router.HandleFunc("POST /api/coursetype/getcoursetypes", coth.GetCourseTypes)
+	router.HandleFunc("POST /api/coursetype/insertcoursetype", coth.InsertCourseType)
+	router.HandleFunc("POST /api/coursetype/updatecoursetype", coth.UpdateCourseType)
+	router.HandleFunc("POST /api/coursetype/deletecoursetype", coth.DeleteCourseType)
+	router.HandleFunc("POST /api/coursetype/editcoursetype", coth.EditCourseType)
 
 	auh := authhandler.NewAuthHandler(
 		ss,

@@ -7,6 +7,9 @@ import (
 	"github.com/mangustc/obd/logger"
 	"github.com/mangustc/obd/msg"
 	"github.com/mangustc/obd/schema/buildingschema"
+	"github.com/mangustc/obd/schema/cabinettypeschema"
+	"github.com/mangustc/obd/schema/classtypeschema"
+	"github.com/mangustc/obd/schema/coursetypeschema"
 	"github.com/mangustc/obd/schema/finhelpctgschema"
 	"github.com/mangustc/obd/schema/finhelpprocschema"
 	"github.com/mangustc/obd/schema/finhelpstageschema"
@@ -81,6 +84,27 @@ type (
 		DeleteBuilding(data *buildingschema.BuildingDelete) (buildingDB *buildingschema.BuildingDB, err error)
 		GetBuilding(data *buildingschema.BuildingGet) (buildingDB *buildingschema.BuildingDB, err error)
 		GetBuildings(data *buildingschema.BuildingsGet) (buildingsDB []*buildingschema.BuildingDB, err error)
+	}
+	CabinetTypeService interface {
+		InsertCabinetType(data *cabinettypeschema.CabinetTypeInsert) (cabinetTypeDB *cabinettypeschema.CabinetTypeDB, err error)
+		UpdateCabinetType(data *cabinettypeschema.CabinetTypeUpdate) (cabinetTypeDB *cabinettypeschema.CabinetTypeDB, err error)
+		DeleteCabinetType(data *cabinettypeschema.CabinetTypeDelete) (cabinetTypeDB *cabinettypeschema.CabinetTypeDB, err error)
+		GetCabinetType(data *cabinettypeschema.CabinetTypeGet) (cabinetTypeDB *cabinettypeschema.CabinetTypeDB, err error)
+		GetCabinetTypes(data *cabinettypeschema.CabinetTypesGet) (cabinetTypesDB []*cabinettypeschema.CabinetTypeDB, err error)
+	}
+	ClassTypeService interface {
+		InsertClassType(data *classtypeschema.ClassTypeInsert) (classTypeDB *classtypeschema.ClassTypeDB, err error)
+		UpdateClassType(data *classtypeschema.ClassTypeUpdate) (classTypeDB *classtypeschema.ClassTypeDB, err error)
+		DeleteClassType(data *classtypeschema.ClassTypeDelete) (classTypeDB *classtypeschema.ClassTypeDB, err error)
+		GetClassType(data *classtypeschema.ClassTypeGet) (classTypeDB *classtypeschema.ClassTypeDB, err error)
+		GetClassTypes(data *classtypeschema.ClassTypesGet) (classTypesDB []*classtypeschema.ClassTypeDB, err error)
+	}
+	CourseTypeService interface {
+		InsertCourseType(data *coursetypeschema.CourseTypeInsert) (courseTypeDB *coursetypeschema.CourseTypeDB, err error)
+		UpdateCourseType(data *coursetypeschema.CourseTypeUpdate) (courseTypeDB *coursetypeschema.CourseTypeDB, err error)
+		DeleteCourseType(data *coursetypeschema.CourseTypeDelete) (courseTypeDB *coursetypeschema.CourseTypeDB, err error)
+		GetCourseType(data *coursetypeschema.CourseTypeGet) (courseTypeDB *coursetypeschema.CourseTypeDB, err error)
+		GetCourseTypes(data *coursetypeschema.CourseTypesGet) (courseTypesDB []*coursetypeschema.CourseTypeDB, err error)
 	}
 )
 
