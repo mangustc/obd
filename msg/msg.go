@@ -169,4 +169,14 @@ var (
 		schema.AlertNotification,
 		"This Course Type already exists",
 	)
+	ProfWrong = NewMsg(
+		http.StatusUnprocessableEntity,
+		schema.AlertNotification,
+		"Prof first name, last name, phone number and email can't be empty",
+	)
+	ProfExists = NewMsg(
+		http.StatusUnprocessableEntity,
+		schema.AlertNotification,
+		"This prof already exists",
+	)
 )

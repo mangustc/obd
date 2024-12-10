@@ -1,74 +1,90 @@
-package cabinettypeview
+package profview
 
 import (
 	"github.com/mangustc/obd/view"
 	"github.com/mangustc/obd/schema"
-	"github.com/mangustc/obd/schema/cabinettypeschema"
+	"github.com/mangustc/obd/schema/profschema"
 	"fmt"
 )
 
 const (
-	pageTitle             = "Cabinet Types"
-	tableTitle            = pageTitle
-	insertFormTitle       = tableTitle
-	getPOSTURL            = "/api/cabinettype/getcabinettypes"
-	insertPOSTURL         = "/api/cabinettype/insertcabinettype"
-	editPOSTURL           = "/api/cabinettype/editcabinettype"
-	updatePOSTURL         = "/api/cabinettype/updatecabinettype"
-	deletePOSTURL         = "/api/cabinettype/deletecabinettype"
-	cabinetTypeTN         = "CabinetType"
-	bodyVals              = `{"` + cabinetTypeTN + `ID": %d}`
-	getcabinetTypePOSTURL = "/api/cabinettype"
+	pageTitle       = "Professors"
+	tableTitle      = pageTitle
+	insertFormTitle = tableTitle
+	getPOSTURL      = "/api/prof/getprofs"
+	insertPOSTURL   = "/api/prof/insertprof"
+	editPOSTURL     = "/api/prof/editprof"
+	updatePOSTURL   = "/api/prof/updateprof"
+	deletePOSTURL   = "/api/prof/deleteprof"
+	profTN          = "Prof"
+	bodyVals        = `{"` + profTN + `ID": %d}`
+	getprofPOSTURL  = "/api/prof"
 )
 
 var (
-	taCabinetTypeName     = schema.NewTA(cabinetTypeTN+"Name", "Name", schema.StringInput)
-	taCabinetTypeIsHidden = schema.NewTA(cabinetTypeTN+"IsHidden", "Is Hidden", schema.BooleanInput)
+	taProfLastname    = schema.NewTA(profTN+"Lastname", "Last name", schema.StringInput)
+	taProfFirstname   = schema.NewTA(profTN+"Firstname", "First name", schema.StringInput)
+	taProfMiddlename  = schema.NewTA(profTN+"Middlename", "Middle name", schema.StringInput)
+	taProfPhoneNumber = schema.NewTA(profTN+"PhoneNumber", "Phone number", schema.StringInput)
+	taProfEmail       = schema.NewTA(profTN+"Email", "Email", schema.StringInput)
+	taProfIsHidden    = schema.NewTA(profTN+"IsHidden", "Is Hidden", schema.BooleanInput)
 )
 
 func getTableHeaders() []*schema.TableHeaderColumn {
 	return []*schema.TableHeaderColumn{
-		schema.NewTableHeaderColumn(taCabinetTypeName.TATitle, 90),
-		schema.NewTableHeaderColumn(taCabinetTypeIsHidden.TATitle, 10),
+		schema.NewTableHeaderColumn(taProfLastname.TATitle, 20),
+		schema.NewTableHeaderColumn(taProfFirstname.TATitle, 20),
+		schema.NewTableHeaderColumn(taProfMiddlename.TATitle, 20),
+		schema.NewTableHeaderColumn(taProfPhoneNumber.TATitle, 15),
+		schema.NewTableHeaderColumn(taProfEmail.TATitle, 15),
+		schema.NewTableHeaderColumn(taProfIsHidden.TATitle, 10),
 	}
 }
 
 func getInsertFormInputs() []*schema.Input {
 	return []*schema.Input{
-		schema.NewInput(taCabinetTypeName.TATitle, taCabinetTypeName.TAName, taCabinetTypeName.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taProfLastname.TATitle, taProfLastname.TAName, taProfLastname.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taProfFirstname.TATitle, taProfFirstname.TAName, taProfFirstname.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taProfMiddlename.TATitle, taProfMiddlename.TAName, taProfMiddlename.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taProfPhoneNumber.TATitle, taProfPhoneNumber.TAName, taProfPhoneNumber.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taProfEmail.TATitle, taProfEmail.TAName, taProfEmail.TAInputType, "", nil, nil, ""),
 	}
 }
 
-func getInputsFromCabinetTypeDB(cabinetTypeDB *cabinettypeschema.CabinetTypeDB) []*schema.Input {
+func getInputsFromProfDB(profDB *profschema.ProfDB) []*schema.Input {
 	return []*schema.Input{
-		schema.NewInput("", taCabinetTypeName.TAName, taCabinetTypeName.TAInputType, cabinetTypeDB.CabinetTypeName, nil, nil, ""),
-		schema.NewInput("", taCabinetTypeIsHidden.TAName, taCabinetTypeIsHidden.TAInputType, cabinetTypeDB.CabinetTypeIsHidden, nil, nil, ""),
+		schema.NewInput("", taProfLastname.TAName, taProfLastname.TAInputType, profDB.ProfLastname, nil, nil, ""),
+		schema.NewInput("", taProfFirstname.TAName, taProfFirstname.TAInputType, profDB.ProfFirstname, nil, nil, ""),
+		schema.NewInput("", taProfMiddlename.TAName, taProfMiddlename.TAInputType, profDB.ProfMiddlename, nil, nil, ""),
+		schema.NewInput("", taProfPhoneNumber.TAName, taProfPhoneNumber.TAInputType, profDB.ProfPhoneNumber, nil, nil, ""),
+		schema.NewInput("", taProfEmail.TAName, taProfEmail.TAInputType, profDB.ProfEmail, nil, nil, ""),
+		schema.NewInput("", taProfIsHidden.TAName, taProfIsHidden.TAInputType, profDB.ProfIsHidden, nil, nil, ""),
 	}
 }
 
-templ CabinetTypeTableRowEdit(cabinetTypeDB *cabinettypeschema.CabinetTypeDB) {
-	@view.TableRowEdit(getInputsFromCabinetTypeDB(cabinetTypeDB), fmt.Sprintf(bodyVals, cabinetTypeDB.CabinetTypeID), updatePOSTURL, deletePOSTURL)
+templ ProfTableRowEdit(profDB *profschema.ProfDB) {
+	@view.TableRowEdit(getInputsFromProfDB(profDB), fmt.Sprintf(bodyVals, profDB.ProfID), updatePOSTURL, deletePOSTURL)
 }
 
-templ CabinetTypeTableRow(cabinetTypeDB *cabinettypeschema.CabinetTypeDB) {
-	@view.TableRow(getInputsFromCabinetTypeDB(cabinetTypeDB), fmt.Sprintf(bodyVals, cabinetTypeDB.CabinetTypeID), editPOSTURL, deletePOSTURL)
+templ ProfTableRow(profDB *profschema.ProfDB) {
+	@view.TableRow(getInputsFromProfDB(profDB), fmt.Sprintf(bodyVals, profDB.ProfID), editPOSTURL, deletePOSTURL)
 }
 
-templ CabinetTypeTableRows(cabinetTypesDB []*cabinettypeschema.CabinetTypeDB) {
-	for _, cabinetTypeDB := range cabinetTypesDB {
-		@CabinetTypeTableRow(cabinetTypeDB)
+templ ProfTableRows(profsDB []*profschema.ProfDB) {
+	for _, profDB := range profsDB {
+		@ProfTableRow(profDB)
 	}
 }
 
-templ CabinetType() {
+templ Prof() {
 	@view.InsertForm(insertFormTitle, insertPOSTURL, getInsertFormInputs())
 	@view.Table(tableTitle, getPOSTURL, getTableHeaders())
 }
 
-templ CabinetTypePage() {
+templ ProfPage() {
 	@view.Layout(pageTitle) {
 		<div
-			hx-post={ getcabinetTypePOSTURL }
+			hx-post={ getprofPOSTURL }
 			hx-target="this"
 			hx-swap="outerHTML"
 			hx-trigger="load"

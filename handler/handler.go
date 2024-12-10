@@ -15,6 +15,7 @@ import (
 	"github.com/mangustc/obd/schema/finhelpstageschema"
 	"github.com/mangustc/obd/schema/groupschema"
 	"github.com/mangustc/obd/schema/jobschema"
+	"github.com/mangustc/obd/schema/profschema"
 	"github.com/mangustc/obd/schema/sessionschema"
 	"github.com/mangustc/obd/schema/studentschema"
 	"github.com/mangustc/obd/schema/userschema"
@@ -105,6 +106,13 @@ type (
 		DeleteCourseType(data *coursetypeschema.CourseTypeDelete) (courseTypeDB *coursetypeschema.CourseTypeDB, err error)
 		GetCourseType(data *coursetypeschema.CourseTypeGet) (courseTypeDB *coursetypeschema.CourseTypeDB, err error)
 		GetCourseTypes(data *coursetypeschema.CourseTypesGet) (courseTypesDB []*coursetypeschema.CourseTypeDB, err error)
+	}
+	ProfService interface {
+		InsertProf(data *profschema.ProfInsert) (profDB *profschema.ProfDB, err error)
+		UpdateProf(data *profschema.ProfUpdate) (profDB *profschema.ProfDB, err error)
+		DeleteProf(data *profschema.ProfDelete) (profDB *profschema.ProfDB, err error)
+		GetProf(data *profschema.ProfGet) (profDB *profschema.ProfDB, err error)
+		GetProfs(data *profschema.ProfsGet) (profsDB []*profschema.ProfDB, err error)
 	}
 )
 

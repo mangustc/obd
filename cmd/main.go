@@ -16,6 +16,7 @@ import (
 	"github.com/mangustc/obd/handler/finhelpstagehandler"
 	"github.com/mangustc/obd/handler/grouphandler"
 	"github.com/mangustc/obd/handler/jobhandler"
+	"github.com/mangustc/obd/handler/profhandler"
 	"github.com/mangustc/obd/handler/studenthandler"
 	"github.com/mangustc/obd/handler/userhandler"
 	"github.com/mangustc/obd/logger"
@@ -29,6 +30,7 @@ import (
 	"github.com/mangustc/obd/service/finhelpstageservice"
 	"github.com/mangustc/obd/service/groupservice"
 	"github.com/mangustc/obd/service/jobservice"
+	"github.com/mangustc/obd/service/profservice"
 	"github.com/mangustc/obd/service/sessionservice"
 	"github.com/mangustc/obd/service/studentservice"
 	"github.com/mangustc/obd/service/userservice"
@@ -300,6 +302,9 @@ func main() {
 	cots := coursetypeservice.NewCourseTypeService(db,
 		courseTypeTN,
 	)
+	prs := profservice.NewProfService(db,
+		profTN,
+	)
 
 	jh := jobhandler.NewJobHandler(
 		ss,
@@ -455,6 +460,20 @@ func main() {
 	router.HandleFunc("POST /api/coursetype/updatecoursetype", coth.UpdateCourseType)
 	router.HandleFunc("POST /api/coursetype/deletecoursetype", coth.DeleteCourseType)
 	router.HandleFunc("POST /api/coursetype/editcoursetype", coth.EditCourseType)
+
+	prh := profhandler.NewProfHandler(
+		ss,
+		us,
+		js,
+		prs,
+	)
+	router.HandleFunc("GET /prof", prh.ProfPage)
+	router.HandleFunc("POST /api/prof", prh.Prof)
+	router.HandleFunc("POST /api/prof/getprofs", prh.GetProfs)
+	router.HandleFunc("POST /api/prof/insertprof", prh.InsertProf)
+	router.HandleFunc("POST /api/prof/updateprof", prh.UpdateProf)
+	router.HandleFunc("POST /api/prof/deleteprof", prh.DeleteProf)
+	router.HandleFunc("POST /api/prof/editprof", prh.EditProf)
 
 	auh := authhandler.NewAuthHandler(
 		ss,
