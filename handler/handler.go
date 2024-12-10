@@ -7,6 +7,7 @@ import (
 	"github.com/mangustc/obd/logger"
 	"github.com/mangustc/obd/msg"
 	"github.com/mangustc/obd/schema/buildingschema"
+	"github.com/mangustc/obd/schema/cabinetschema"
 	"github.com/mangustc/obd/schema/cabinettypeschema"
 	"github.com/mangustc/obd/schema/classtypeschema"
 	"github.com/mangustc/obd/schema/coursetypeschema"
@@ -113,6 +114,13 @@ type (
 		DeleteProf(data *profschema.ProfDelete) (profDB *profschema.ProfDB, err error)
 		GetProf(data *profschema.ProfGet) (profDB *profschema.ProfDB, err error)
 		GetProfs(data *profschema.ProfsGet) (profsDB []*profschema.ProfDB, err error)
+	}
+	CabinetService interface {
+		InsertCabinet(data *cabinetschema.CabinetInsert) (cabinetDB *cabinetschema.CabinetDB, err error)
+		UpdateCabinet(data *cabinetschema.CabinetUpdate) (cabinetDB *cabinetschema.CabinetDB, err error)
+		DeleteCabinet(data *cabinetschema.CabinetDelete) (cabinetDB *cabinetschema.CabinetDB, err error)
+		GetCabinet(data *cabinetschema.CabinetGet) (cabinetDB *cabinetschema.CabinetDB, err error)
+		GetCabinets(data *cabinetschema.CabinetsGet) (cabinetsDB []*cabinetschema.CabinetDB, err error)
 	}
 )
 
