@@ -10,6 +10,7 @@ import (
 	"github.com/mangustc/obd/handler/buildinghandler"
 	"github.com/mangustc/obd/handler/cabinethandler"
 	"github.com/mangustc/obd/handler/cabinettypehandler"
+	"github.com/mangustc/obd/handler/classhandler"
 	"github.com/mangustc/obd/handler/classtypehandler"
 	"github.com/mangustc/obd/handler/coursehandler"
 	"github.com/mangustc/obd/handler/coursetypehandler"
@@ -26,6 +27,7 @@ import (
 	"github.com/mangustc/obd/service/buildingservice"
 	"github.com/mangustc/obd/service/cabinetservice"
 	"github.com/mangustc/obd/service/cabinettypeservice"
+	"github.com/mangustc/obd/service/classservice"
 	"github.com/mangustc/obd/service/classtypeservice"
 	"github.com/mangustc/obd/service/courseservice"
 	"github.com/mangustc/obd/service/coursetypeservice"
@@ -210,7 +212,6 @@ CREATE TABLE IF NOT EXISTS %[1]s (
 	%[1]sID INTEGER PRIMARY KEY AUTOINCREMENT,
 	%[1]sStart DATE NOT NULL,
 	%[1]sNumber INTEGER NOT NULL,
-	%[1]sIsHidden INTEGER NOT NULL DEFAULT FALSE,
 	%[2]sID INTEGER NOT NULL,
 	%[3]sID INTEGER NOT NULL,
 	%[4]sID INTEGER NOT NULL,
@@ -220,7 +221,8 @@ CREATE TABLE IF NOT EXISTS %[1]s (
 	FOREIGN KEY (%[3]sID) REFERENCES %[3]s (%[3]sID) ON DELETE CASCADE,
 	FOREIGN KEY (%[4]sID) REFERENCES %[4]s (%[4]sID) ON DELETE CASCADE,
 	FOREIGN KEY (%[5]sID) REFERENCES %[5]s (%[5]sID) ON DELETE CASCADE,
-	FOREIGN KEY (%[6]sID) REFERENCES %[6]s (%[6]sID) ON DELETE CASCADE
+	FOREIGN KEY (%[6]sID) REFERENCES %[6]s (%[6]sID) ON DELETE CASCADE,
+	UNIQUE(%[1]sStart, %[1]sNumber)
 );`, classTN, classTypeTN, profTN, cabinetTN, courseTN, groupTN)
 	skipCT = fmt.Sprintf(`
 CREATE TABLE IF NOT EXISTS %[1]s (
@@ -317,6 +319,14 @@ func main() {
 	cos := courseservice.NewCourseService(db,
 		courseTN,
 		courseTypeTN,
+	)
+	cls := classservice.NewClassService(db,
+		classTN,
+		classTypeTN,
+		profTN,
+		cabinetTN,
+		courseTN,
+		groupTN,
 	)
 
 	jh := jobhandler.NewJobHandler(
@@ -518,6 +528,25 @@ func main() {
 	router.HandleFunc("POST /api/course/updatecourse", coh.UpdateCourse)
 	router.HandleFunc("POST /api/course/deletecourse", coh.DeleteCourse)
 	router.HandleFunc("POST /api/course/editcourse", coh.EditCourse)
+
+	clh := classhandler.NewClassHandler(
+		ss,
+		us,
+		js,
+		cls,
+		clts,
+		prs,
+		cs,
+		cos,
+		grs,
+	)
+	router.HandleFunc("GET /class", clh.ClassPage)
+	router.HandleFunc("POST /api/class", clh.Class)
+	router.HandleFunc("POST /api/class/getclasss", clh.GetClasss)
+	router.HandleFunc("POST /api/class/insertclass", clh.InsertClass)
+	router.HandleFunc("POST /api/class/updateclass", clh.UpdateClass)
+	router.HandleFunc("POST /api/class/deleteclass", clh.DeleteClass)
+	router.HandleFunc("POST /api/class/editclass", clh.EditClass)
 
 	auh := authhandler.NewAuthHandler(
 		ss,

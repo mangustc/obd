@@ -9,6 +9,7 @@ import (
 	"github.com/mangustc/obd/schema/buildingschema"
 	"github.com/mangustc/obd/schema/cabinetschema"
 	"github.com/mangustc/obd/schema/cabinettypeschema"
+	"github.com/mangustc/obd/schema/classschema"
 	"github.com/mangustc/obd/schema/classtypeschema"
 	"github.com/mangustc/obd/schema/courseschema"
 	"github.com/mangustc/obd/schema/coursetypeschema"
@@ -129,6 +130,13 @@ type (
 		DeleteCourse(data *courseschema.CourseDelete) (courseDB *courseschema.CourseDB, err error)
 		GetCourse(data *courseschema.CourseGet) (courseDB *courseschema.CourseDB, err error)
 		GetCourses(data *courseschema.CoursesGet) (coursesDB []*courseschema.CourseDB, err error)
+	}
+	ClassService interface {
+		InsertClass(data *classschema.ClassInsert) (classDB *classschema.ClassDB, err error)
+		UpdateClass(data *classschema.ClassUpdate) (classDB *classschema.ClassDB, err error)
+		DeleteClass(data *classschema.ClassDelete) (classDB *classschema.ClassDB, err error)
+		GetClass(data *classschema.ClassGet) (classDB *classschema.ClassDB, err error)
+		GetClasss(data *classschema.ClasssGet) (classsDB []*classschema.ClassDB, err error)
 	}
 )
 

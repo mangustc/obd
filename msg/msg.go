@@ -199,4 +199,14 @@ var (
 		schema.AlertNotification,
 		"This Course already exists",
 	)
+	ClassWrong = NewMsg(
+		http.StatusUnprocessableEntity,
+		schema.AlertNotification,
+		"Class date should be formatted as YYYY-MM-DD and number in range [1, 7]",
+	)
+	ClassExists = NewMsg(
+		http.StatusUnprocessableEntity,
+		schema.AlertNotification,
+		"This Class already exists",
+	)
 )

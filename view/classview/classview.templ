@@ -1,99 +1,160 @@
-package courseview
+package classview
 
 import (
 	"github.com/mangustc/obd/view"
 	"github.com/mangustc/obd/schema"
-	"github.com/mangustc/obd/schema/courseschema"
+	"github.com/mangustc/obd/schema/classschema"
 	"fmt"
 )
 
 const (
-	pageTitle        = "Course"
-	tableTitle       = pageTitle
-	insertFormTitle  = tableTitle
-	getPOSTURL       = "/api/course/getcourses"
-	insertPOSTURL    = "/api/course/insertcourse"
-	editPOSTURL      = "/api/course/editcourse"
-	updatePOSTURL    = "/api/course/updatecourse"
-	deletePOSTURL    = "/api/course/deletecourse"
-	courseTN         = "Course"
-	courseTypeTN     = "CourseType"
-	bodyVals         = `{"` + courseTN + `ID": %d}`
-	getcoursePOSTURL = "/api/course"
+	pageTitle       = "Class"
+	tableTitle      = pageTitle
+	insertFormTitle = tableTitle
+	getPOSTURL      = "/api/class/getclasss"
+	insertPOSTURL   = "/api/class/insertclass"
+	editPOSTURL     = "/api/class/editclass"
+	updatePOSTURL   = "/api/class/updateclass"
+	deletePOSTURL   = "/api/class/deleteclass"
+	classTN         = "Class"
+	classTypeTN     = "ClassType"
+	profTN          = "Prof"
+	cabinetTN       = "Cabinet"
+	courseTN        = "Course"
+	groupTN         = "Group"
+	bodyVals        = `{"` + classTN + `ID": %d}`
+	getclassPOSTURL = "/api/class"
 )
 
 var (
-	taCourseTypeID   = schema.NewTA(courseTypeTN+"ID", "Course Type", schema.OptionInput)
-	taCourseName     = schema.NewTA(courseTN+"Name", "Course Name", schema.StringInput)
-	taCourseIsHidden = schema.NewTA(courseTN+"IsHidden", "Hidden", schema.BooleanInput)
+	taClassTypeID = schema.NewTA(classTypeTN+"ID", "Class Type", schema.OptionInput)
+	taProfID      = schema.NewTA(profTN+"ID", "Professor", schema.OptionInput)
+	taCabinetID   = schema.NewTA(cabinetTN+"ID", "Cabinet", schema.OptionInput)
+	taCourseID    = schema.NewTA(courseTN+"ID", "Course", schema.OptionInput)
+	taGroupID     = schema.NewTA(groupTN+"ID", "Group", schema.OptionInput)
+	taClassStart  = schema.NewTA(classTN+"Start", "Class Date", schema.StringInput)
+	taClassNumber = schema.NewTA(classTN+"Number", "Class Number", schema.NumberInput)
 )
 
 func getTableHeaders() []*schema.TableHeaderColumn {
 	return []*schema.TableHeaderColumn{
-		schema.NewTableHeaderColumn(taCourseTypeID.TATitle, 20),
-		schema.NewTableHeaderColumn(taCourseName.TATitle, 20),
-		schema.NewTableHeaderColumn(taCourseIsHidden.TATitle, 10),
+		schema.NewTableHeaderColumn(taClassTypeID.TATitle, 15),
+		schema.NewTableHeaderColumn(taProfID.TATitle, 15),
+		schema.NewTableHeaderColumn(taCabinetID.TATitle, 15),
+		schema.NewTableHeaderColumn(taCourseID.TATitle, 15),
+		schema.NewTableHeaderColumn(taGroupID.TATitle, 15),
+		schema.NewTableHeaderColumn(taClassStart.TATitle, 15),
+		schema.NewTableHeaderColumn(taClassNumber.TATitle, 10),
 	}
 }
 
 func getInsertFormInputs(
-	courseTypeInputOptions []*schema.InputOption,
+	classTypeInputOptions []*schema.InputOption,
+	profInputOptions []*schema.InputOption,
+	cabinetInputOptions []*schema.InputOption,
+	courseInputOptions []*schema.InputOption,
+	groupInputOptions []*schema.InputOption,
 ) []*schema.Input {
 	return []*schema.Input{
-		schema.NewInput(taCourseTypeID.TATitle, taCourseTypeID.TAName, taCourseTypeID.TAInputType, "", nil, courseTypeInputOptions, ""),
-		schema.NewInput(taCourseName.TATitle, taCourseName.TAName, taCourseName.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taClassTypeID.TATitle, taClassTypeID.TAName, taClassTypeID.TAInputType, "", nil, classTypeInputOptions, ""),
+		schema.NewInput(taProfID.TATitle, taProfID.TAName, taProfID.TAInputType, "", nil, profInputOptions, ""),
+		schema.NewInput(taCabinetID.TATitle, taCabinetID.TAName, taCabinetID.TAInputType, "", nil, cabinetInputOptions, ""),
+		schema.NewInput(taCourseID.TATitle, taCourseID.TAName, taCourseID.TAInputType, "", nil, courseInputOptions, ""),
+		schema.NewInput(taGroupID.TATitle, taGroupID.TAName, taGroupID.TAInputType, "", nil, groupInputOptions, ""),
+		schema.NewInput(taClassStart.TATitle, taClassStart.TAName, taClassStart.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taClassNumber.TATitle, taClassNumber.TAName, taClassNumber.TAInputType, "", nil, nil, ""),
 	}
 }
 
-func getInputsFromCourseDB(courseDB *courseschema.CourseDB,
-	courseTypeInputOptions []*schema.InputOption,
+func getInputsFromClassDB(classDB *classschema.ClassDB,
+	classTypeInputOptions []*schema.InputOption,
+	profInputOptions []*schema.InputOption,
+	cabinetInputOptions []*schema.InputOption,
+	courseInputOptions []*schema.InputOption,
+	groupInputOptions []*schema.InputOption,
 ) []*schema.Input {
 	return []*schema.Input{
-		schema.NewInput("", taCourseTypeID.TAName, taCourseTypeID.TAInputType, nil, nil, courseTypeInputOptions, fmt.Sprint(courseDB.CourseTypeID)),
-		schema.NewInput("", taCourseName.TAName, taCourseName.TAInputType, courseDB.CourseName, nil, nil, ""),
-		schema.NewInput("", taCourseIsHidden.TAName, taCourseIsHidden.TAInputType, courseDB.CourseIsHidden, nil, nil, ""),
+		schema.NewInput("", taClassTypeID.TAName, taClassTypeID.TAInputType, classDB.ClassTypeID, nil, classTypeInputOptions, fmt.Sprint(classDB.ClassTypeID)),
+		schema.NewInput("", taProfID.TAName, taProfID.TAInputType, classDB.ProfID, nil, profInputOptions, fmt.Sprint(classDB.ProfID)),
+		schema.NewInput("", taCabinetID.TAName, taCabinetID.TAInputType, classDB.CabinetID, nil, cabinetInputOptions, fmt.Sprint(classDB.CabinetID)),
+		schema.NewInput("", taCourseID.TAName, taCourseID.TAInputType, classDB.CourseID, nil, courseInputOptions, fmt.Sprint(classDB.CourseID)),
+		schema.NewInput("", taGroupID.TAName, taGroupID.TAInputType, classDB.GroupID, nil, groupInputOptions, fmt.Sprint(classDB.GroupID)),
+		schema.NewInput("", taClassStart.TAName, taClassStart.TAInputType, classDB.ClassStart, nil, nil, ""),
+		schema.NewInput("", taClassNumber.TAName, taClassNumber.TAInputType, classDB.ClassNumber, nil, nil, ""),
 	}
 }
 
-templ CourseTableRowEdit(courseDB *courseschema.CourseDB,
-	courseTypeInputOptions []*schema.InputOption,
+templ ClassTableRowEdit(classDB *classschema.ClassDB,
+	classTypeInputOptions []*schema.InputOption,
+	profInputOptions []*schema.InputOption,
+	cabinetInputOptions []*schema.InputOption,
+	courseInputOptions []*schema.InputOption,
+	groupInputOptions []*schema.InputOption,
 ) {
-	@view.TableRowEdit(getInputsFromCourseDB(courseDB,
-		courseTypeInputOptions,
-	), fmt.Sprintf(bodyVals, courseDB.CourseID), updatePOSTURL, deletePOSTURL)
+	@view.TableRowEdit(getInputsFromClassDB(classDB,
+		classTypeInputOptions,
+		profInputOptions,
+		cabinetInputOptions,
+		courseInputOptions,
+		groupInputOptions,
+	), fmt.Sprintf(bodyVals, classDB.ClassID), updatePOSTURL, deletePOSTURL)
 }
 
-templ CourseTableRow(courseDB *courseschema.CourseDB,
-	courseTypeInputOptions []*schema.InputOption,
+templ ClassTableRow(classDB *classschema.ClassDB,
+	classTypeInputOptions []*schema.InputOption,
+	profInputOptions []*schema.InputOption,
+	cabinetInputOptions []*schema.InputOption,
+	courseInputOptions []*schema.InputOption,
+	groupInputOptions []*schema.InputOption,
 ) {
-	@view.TableRow(getInputsFromCourseDB(courseDB,
-		courseTypeInputOptions,
-	), fmt.Sprintf(bodyVals, courseDB.CourseID), editPOSTURL, deletePOSTURL)
+	@view.TableRow(getInputsFromClassDB(classDB,
+		classTypeInputOptions,
+		profInputOptions,
+		cabinetInputOptions,
+		courseInputOptions,
+		groupInputOptions,
+	), fmt.Sprintf(bodyVals, classDB.ClassID), editPOSTURL, deletePOSTURL)
 }
 
-templ CourseTableRows(coursesDB []*courseschema.CourseDB,
-	courseTypeInputOptions []*schema.InputOption,
+templ ClassTableRows(classsDB []*classschema.ClassDB,
+	classTypeInputOptions []*schema.InputOption,
+	profInputOptions []*schema.InputOption,
+	cabinetInputOptions []*schema.InputOption,
+	courseInputOptions []*schema.InputOption,
+	groupInputOptions []*schema.InputOption,
 ) {
-	for _, courseDB := range coursesDB {
-		@CourseTableRow(courseDB,
-			courseTypeInputOptions,
+	for _, classDB := range classsDB {
+		@ClassTableRow(classDB,
+			classTypeInputOptions,
+			profInputOptions,
+			cabinetInputOptions,
+			courseInputOptions,
+			groupInputOptions,
 		)
 	}
 }
 
-templ Course(
-	courseTypeInputOptions []*schema.InputOption,
+templ Class(
+	classTypeInputOptions []*schema.InputOption,
+	profInputOptions []*schema.InputOption,
+	cabinetInputOptions []*schema.InputOption,
+	courseInputOptions []*schema.InputOption,
+	groupInputOptions []*schema.InputOption,
 ) {
 	@view.InsertForm(insertFormTitle, insertPOSTURL, getInsertFormInputs(
-		courseTypeInputOptions,
+		classTypeInputOptions,
+		profInputOptions,
+		cabinetInputOptions,
+		courseInputOptions,
+		groupInputOptions,
 	))
 	@view.Table(tableTitle, getPOSTURL, getTableHeaders())
 }
 
-templ CoursePage() {
+templ ClassPage() {
 	@view.Layout(pageTitle) {
 		<div
-			hx-post={ getcoursePOSTURL }
+			hx-post={ getclassPOSTURL }
 			hx-target="this"
 			hx-swap="outerHTML"
 			hx-trigger="load"
