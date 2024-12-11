@@ -1,0 +1,102 @@
+package courseview
+
+import (
+	"github.com/mangustc/obd/view"
+	"github.com/mangustc/obd/schema"
+	"github.com/mangustc/obd/schema/courseschema"
+	"fmt"
+)
+
+const (
+	pageTitle        = "Course"
+	tableTitle       = pageTitle
+	insertFormTitle  = tableTitle
+	getPOSTURL       = "/api/course/getcourses"
+	insertPOSTURL    = "/api/course/insertcourse"
+	editPOSTURL      = "/api/course/editcourse"
+	updatePOSTURL    = "/api/course/updatecourse"
+	deletePOSTURL    = "/api/course/deletecourse"
+	courseTN         = "Course"
+	courseTypeTN     = "CourseType"
+	bodyVals         = `{"` + courseTN + `ID": %d}`
+	getcoursePOSTURL = "/api/course"
+)
+
+var (
+	taCourseTypeID   = schema.NewTA(courseTypeTN+"ID", "Course Type", schema.OptionInput)
+	taCourseName     = schema.NewTA(courseTN+"Name", "Course Name", schema.StringInput)
+	taCourseIsHidden = schema.NewTA(courseTN+"IsHidden", "Hidden", schema.BooleanInput)
+)
+
+func getTableHeaders() []*schema.TableHeaderColumn {
+	return []*schema.TableHeaderColumn{
+		schema.NewTableHeaderColumn(taCourseTypeID.TATitle, 20),
+		schema.NewTableHeaderColumn(taCourseName.TATitle, 20),
+		schema.NewTableHeaderColumn(taCourseIsHidden.TATitle, 10),
+	}
+}
+
+func getInsertFormInputs(
+	courseTypeInputOptions []*schema.InputOption,
+) []*schema.Input {
+	return []*schema.Input{
+		schema.NewInput(taCourseTypeID.TATitle, taCourseTypeID.TAName, taCourseTypeID.TAInputType, "", nil, courseTypeInputOptions, ""),
+		schema.NewInput(taCourseName.TATitle, taCourseName.TAName, taCourseName.TAInputType, "", nil, nil, ""),
+	}
+}
+
+func getInputsFromCourseDB(courseDB *courseschema.CourseDB,
+	courseTypeInputOptions []*schema.InputOption,
+) []*schema.Input {
+	return []*schema.Input{
+		schema.NewInput("", taCourseTypeID.TAName, taCourseTypeID.TAInputType, nil, nil, courseTypeInputOptions, fmt.Sprint(courseDB.CourseTypeID)),
+		schema.NewInput("", taCourseName.TAName, taCourseName.TAInputType, courseDB.CourseName, nil, nil, ""),
+		schema.NewInput("", taCourseIsHidden.TAName, taCourseIsHidden.TAInputType, courseDB.CourseIsHidden, nil, nil, ""),
+	}
+}
+
+templ CourseTableRowEdit(courseDB *courseschema.CourseDB,
+	courseTypeInputOptions []*schema.InputOption,
+) {
+	@view.TableRowEdit(getInputsFromCourseDB(courseDB,
+		courseTypeInputOptions,
+	), fmt.Sprintf(bodyVals, courseDB.CourseID), updatePOSTURL, deletePOSTURL)
+}
+
+templ CourseTableRow(courseDB *courseschema.CourseDB,
+	courseTypeInputOptions []*schema.InputOption,
+) {
+	@view.TableRow(getInputsFromCourseDB(courseDB,
+		courseTypeInputOptions,
+	), fmt.Sprintf(bodyVals, courseDB.CourseID), editPOSTURL, deletePOSTURL)
+}
+
+templ CourseTableRows(coursesDB []*courseschema.CourseDB,
+	courseTypeInputOptions []*schema.InputOption,
+) {
+	for _, courseDB := range coursesDB {
+		@CourseTableRow(courseDB,
+			courseTypeInputOptions,
+		)
+	}
+}
+
+templ Course(
+	courseTypeInputOptions []*schema.InputOption,
+) {
+	@view.InsertForm(insertFormTitle, insertPOSTURL, getInsertFormInputs(
+		courseTypeInputOptions,
+	))
+	@view.Table(tableTitle, getPOSTURL, getTableHeaders())
+}
+
+templ CoursePage() {
+	@view.Layout(pageTitle) {
+		<div
+			hx-post={ getcoursePOSTURL }
+			hx-target="this"
+			hx-swap="outerHTML"
+			hx-trigger="load"
+		></div>
+	}
+}

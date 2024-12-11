@@ -10,6 +10,7 @@ import (
 	"github.com/mangustc/obd/schema/cabinetschema"
 	"github.com/mangustc/obd/schema/cabinettypeschema"
 	"github.com/mangustc/obd/schema/classtypeschema"
+	"github.com/mangustc/obd/schema/courseschema"
 	"github.com/mangustc/obd/schema/coursetypeschema"
 	"github.com/mangustc/obd/schema/finhelpctgschema"
 	"github.com/mangustc/obd/schema/finhelpprocschema"
@@ -121,6 +122,13 @@ type (
 		DeleteCabinet(data *cabinetschema.CabinetDelete) (cabinetDB *cabinetschema.CabinetDB, err error)
 		GetCabinet(data *cabinetschema.CabinetGet) (cabinetDB *cabinetschema.CabinetDB, err error)
 		GetCabinets(data *cabinetschema.CabinetsGet) (cabinetsDB []*cabinetschema.CabinetDB, err error)
+	}
+	CourseService interface {
+		InsertCourse(data *courseschema.CourseInsert) (courseDB *courseschema.CourseDB, err error)
+		UpdateCourse(data *courseschema.CourseUpdate) (courseDB *courseschema.CourseDB, err error)
+		DeleteCourse(data *courseschema.CourseDelete) (courseDB *courseschema.CourseDB, err error)
+		GetCourse(data *courseschema.CourseGet) (courseDB *courseschema.CourseDB, err error)
+		GetCourses(data *courseschema.CoursesGet) (coursesDB []*courseschema.CourseDB, err error)
 	}
 )
 

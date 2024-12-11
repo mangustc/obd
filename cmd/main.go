@@ -11,6 +11,7 @@ import (
 	"github.com/mangustc/obd/handler/cabinethandler"
 	"github.com/mangustc/obd/handler/cabinettypehandler"
 	"github.com/mangustc/obd/handler/classtypehandler"
+	"github.com/mangustc/obd/handler/coursehandler"
 	"github.com/mangustc/obd/handler/coursetypehandler"
 	"github.com/mangustc/obd/handler/finhelpctghandler"
 	"github.com/mangustc/obd/handler/finhelpprochandler"
@@ -26,6 +27,7 @@ import (
 	"github.com/mangustc/obd/service/cabinetservice"
 	"github.com/mangustc/obd/service/cabinettypeservice"
 	"github.com/mangustc/obd/service/classtypeservice"
+	"github.com/mangustc/obd/service/courseservice"
 	"github.com/mangustc/obd/service/coursetypeservice"
 	"github.com/mangustc/obd/service/finhelpctgservice"
 	"github.com/mangustc/obd/service/finhelpprocservice"
@@ -312,6 +314,10 @@ func main() {
 		buildingTN,
 		cabinetTypeTN,
 	)
+	cos := courseservice.NewCourseService(db,
+		courseTN,
+		courseTypeTN,
+	)
 
 	jh := jobhandler.NewJobHandler(
 		ss,
@@ -497,6 +503,21 @@ func main() {
 	router.HandleFunc("POST /api/cabinet/updatecabinet", ch.UpdateCabinet)
 	router.HandleFunc("POST /api/cabinet/deletecabinet", ch.DeleteCabinet)
 	router.HandleFunc("POST /api/cabinet/editcabinet", ch.EditCabinet)
+
+	coh := coursehandler.NewCourseHandler(
+		ss,
+		us,
+		js,
+		cos,
+		cots,
+	)
+	router.HandleFunc("GET /course", coh.CoursePage)
+	router.HandleFunc("POST /api/course", coh.Course)
+	router.HandleFunc("POST /api/course/getcourses", coh.GetCourses)
+	router.HandleFunc("POST /api/course/insertcourse", coh.InsertCourse)
+	router.HandleFunc("POST /api/course/updatecourse", coh.UpdateCourse)
+	router.HandleFunc("POST /api/course/deletecourse", coh.DeleteCourse)
+	router.HandleFunc("POST /api/course/editcourse", coh.EditCourse)
 
 	auh := authhandler.NewAuthHandler(
 		ss,

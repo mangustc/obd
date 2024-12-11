@@ -189,4 +189,14 @@ var (
 		schema.AlertNotification,
 		"This Cabinet already exists",
 	)
+	CourseWrong = NewMsg(
+		http.StatusUnprocessableEntity,
+		schema.AlertNotification,
+		"Course type and name can't be empty",
+	)
+	CourseExists = NewMsg(
+		http.StatusUnprocessableEntity,
+		schema.AlertNotification,
+		"This Course already exists",
+	)
 )
