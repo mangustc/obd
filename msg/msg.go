@@ -209,4 +209,20 @@ var (
 		schema.AlertNotification,
 		"This Class already exists",
 	)
+	PerfWrong = NewMsg(
+		http.StatusUnprocessableEntity,
+		schema.AlertNotification,
+		"Perf grade should be in range [0, 5]",
+	)
+	PerfExists = NewMsg(
+		http.StatusUnprocessableEntity,
+		schema.AlertNotification,
+		"This Perf already exists",
+	)
+	SkipWrong  = InternalServerError
+	SkipExists = NewMsg(
+		http.StatusUnprocessableEntity,
+		schema.AlertNotification,
+		"This Skip already exists",
+	)
 )

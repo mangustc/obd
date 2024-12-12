@@ -1,0 +1,110 @@
+package skipview
+
+import (
+	"github.com/mangustc/obd/view"
+	"github.com/mangustc/obd/schema"
+	"github.com/mangustc/obd/schema/skipschema"
+	"fmt"
+)
+
+const (
+	pageTitle       = "Skip"
+	tableTitle      = pageTitle
+	insertFormTitle = tableTitle
+	getPOSTURL      = "/api/skip/getskips"
+	insertPOSTURL   = "/api/skip/insertskip"
+	editPOSTURL     = "/api/skip/editskip"
+	updatePOSTURL   = "/api/skip/updateskip"
+	deletePOSTURL   = "/api/skip/deleteskip"
+	skipTN          = "Skip"
+	classTN         = "Class"
+	studentTN       = "Student"
+	bodyVals        = `{"` + skipTN + `ID": %d}`
+	getskipPOSTURL  = "/api/skip"
+)
+
+var (
+	taClassID   = schema.NewTA(classTN+"ID", "Class", schema.OptionInput)
+	taStudentID = schema.NewTA(studentTN+"ID", "Student", schema.OptionInput)
+)
+
+func getTableHeaders() []*schema.TableHeaderColumn {
+	return []*schema.TableHeaderColumn{
+		schema.NewTableHeaderColumn(taClassID.TATitle, 15),
+		schema.NewTableHeaderColumn(taStudentID.TATitle, 15),
+	}
+}
+
+func getInsertFormInputs(
+	classInputOptions []*schema.InputOption,
+	studentInputOptions []*schema.InputOption,
+) []*schema.Input {
+	return []*schema.Input{
+		schema.NewInput(taClassID.TATitle, taClassID.TAName, taClassID.TAInputType, "", nil, classInputOptions, ""),
+		schema.NewInput(taStudentID.TATitle, taStudentID.TAName, taStudentID.TAInputType, "", nil, studentInputOptions, ""),
+	}
+}
+
+func getInputsFromSkipDB(skipDB *skipschema.SkipDB,
+	classInputOptions []*schema.InputOption,
+	studentInputOptions []*schema.InputOption,
+) []*schema.Input {
+	return []*schema.Input{
+		schema.NewInput("", taClassID.TAName, taClassID.TAInputType, skipDB.ClassID, nil, classInputOptions, fmt.Sprint(skipDB.ClassID)),
+		schema.NewInput("", taStudentID.TAName, taStudentID.TAInputType, skipDB.StudentID, nil, studentInputOptions, fmt.Sprint(skipDB.StudentID)),
+	}
+}
+
+templ SkipTableRowEdit(skipDB *skipschema.SkipDB,
+	classInputOptions []*schema.InputOption,
+	studentInputOptions []*schema.InputOption,
+) {
+	@view.TableRowEdit(getInputsFromSkipDB(skipDB,
+		classInputOptions,
+		studentInputOptions,
+	), fmt.Sprintf(bodyVals, skipDB.SkipID), updatePOSTURL, deletePOSTURL)
+}
+
+templ SkipTableRow(skipDB *skipschema.SkipDB,
+	classInputOptions []*schema.InputOption,
+	studentInputOptions []*schema.InputOption,
+) {
+	@view.TableRow(getInputsFromSkipDB(skipDB,
+		classInputOptions,
+		studentInputOptions,
+	), fmt.Sprintf(bodyVals, skipDB.SkipID), editPOSTURL, deletePOSTURL)
+}
+
+templ SkipTableRows(skipsDB []*skipschema.SkipDB,
+	classInputOptions []*schema.InputOption,
+	studentInputOptions []*schema.InputOption,
+) {
+	for _, skipDB := range skipsDB {
+		@SkipTableRow(skipDB,
+			classInputOptions,
+			studentInputOptions,
+		)
+	}
+}
+
+templ Skip(
+	classInputOptions []*schema.InputOption,
+	studentInputOptions []*schema.InputOption,
+) {
+	@view.InsertForm(insertFormTitle, insertPOSTURL, getInsertFormInputs(
+		classInputOptions,
+		studentInputOptions,
+	))
+	@view.Table(tableTitle, getPOSTURL, getTableHeaders())
+}
+
+templ SkipPage() {
+	@view.Layout(pageTitle) {
+		<div
+			hx-post={ getskipPOSTURL }
+			hx-target="this"
+			hx-swap="outerHTML"
+			hx-trigger="load"
+		></div>
+	}
+}

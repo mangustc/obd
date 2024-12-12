@@ -19,7 +19,9 @@ import (
 	"github.com/mangustc/obd/handler/finhelpstagehandler"
 	"github.com/mangustc/obd/handler/grouphandler"
 	"github.com/mangustc/obd/handler/jobhandler"
+	"github.com/mangustc/obd/handler/perfhandler"
 	"github.com/mangustc/obd/handler/profhandler"
+	"github.com/mangustc/obd/handler/skiphandler"
 	"github.com/mangustc/obd/handler/studenthandler"
 	"github.com/mangustc/obd/handler/userhandler"
 	"github.com/mangustc/obd/logger"
@@ -36,8 +38,10 @@ import (
 	"github.com/mangustc/obd/service/finhelpstageservice"
 	"github.com/mangustc/obd/service/groupservice"
 	"github.com/mangustc/obd/service/jobservice"
+	"github.com/mangustc/obd/service/perfservice"
 	"github.com/mangustc/obd/service/profservice"
 	"github.com/mangustc/obd/service/sessionservice"
+	"github.com/mangustc/obd/service/skipservice"
 	"github.com/mangustc/obd/service/studentservice"
 	"github.com/mangustc/obd/service/userservice"
 )
@@ -228,12 +232,14 @@ CREATE TABLE IF NOT EXISTS %[1]s (
 CREATE TABLE IF NOT EXISTS %[1]s (
 	%[1]sID INTEGER PRIMARY KEY AUTOINCREMENT,
 	%[2]sID INTEGER NOT NULL,
-	FOREIGN KEY (%[2]sID) REFERENCES %[2]s (%[2]sID) ON DELETE CASCADE
-);`, skipTN, classTN)
+	%[3]sID INTEGER NOT NULL,
+	FOREIGN KEY (%[2]sID) REFERENCES %[2]s (%[2]sID) ON DELETE CASCADE,
+	FOREIGN KEY (%[3]sID) REFERENCES %[3]s (%[3]sID) ON DELETE CASCADE
+);`, skipTN, classTN, studentTN)
 	perfCT = fmt.Sprintf(`
 CREATE TABLE IF NOT EXISTS %[1]s (
 	%[1]sID INTEGER PRIMARY KEY AUTOINCREMENT,
-	%[1]sGrade INTEGER,
+	%[1]sGrade INTEGER NOT NULL DEFAULT 0,
 	%[2]sID INTEGER NOT NULL,
 	%[3]sID INTEGER NOT NULL,
 	FOREIGN KEY (%[2]sID) REFERENCES %[2]s (%[2]sID) ON DELETE CASCADE,
@@ -327,6 +333,16 @@ func main() {
 		cabinetTN,
 		courseTN,
 		groupTN,
+	)
+	ps := perfservice.NewPerfService(db,
+		perfTN,
+		courseTN,
+		studentTN,
+	)
+	sks := skipservice.NewSkipService(db,
+		skipTN,
+		classTN,
+		studentTN,
 	)
 
 	jh := jobhandler.NewJobHandler(
@@ -547,6 +563,38 @@ func main() {
 	router.HandleFunc("POST /api/class/updateclass", clh.UpdateClass)
 	router.HandleFunc("POST /api/class/deleteclass", clh.DeleteClass)
 	router.HandleFunc("POST /api/class/editclass", clh.EditClass)
+
+	ph := perfhandler.NewPerfHandler(
+		ss,
+		us,
+		js,
+		ps,
+		cos,
+		sts,
+	)
+	router.HandleFunc("GET /perf", ph.PerfPage)
+	router.HandleFunc("POST /api/perf", ph.Perf)
+	router.HandleFunc("POST /api/perf/getperfs", ph.GetPerfs)
+	router.HandleFunc("POST /api/perf/insertperf", ph.InsertPerf)
+	router.HandleFunc("POST /api/perf/updateperf", ph.UpdatePerf)
+	router.HandleFunc("POST /api/perf/deleteperf", ph.DeletePerf)
+	router.HandleFunc("POST /api/perf/editperf", ph.EditPerf)
+
+	skh := skiphandler.NewSkipHandler(
+		ss,
+		us,
+		js,
+		sks,
+		cls,
+		sts,
+	)
+	router.HandleFunc("GET /skip", skh.SkipPage)
+	router.HandleFunc("POST /api/skip", skh.Skip)
+	router.HandleFunc("POST /api/skip/getskips", skh.GetSkips)
+	router.HandleFunc("POST /api/skip/insertskip", skh.InsertSkip)
+	router.HandleFunc("POST /api/skip/updateskip", skh.UpdateSkip)
+	router.HandleFunc("POST /api/skip/deleteskip", skh.DeleteSkip)
+	router.HandleFunc("POST /api/skip/editskip", skh.EditSkip)
 
 	auh := authhandler.NewAuthHandler(
 		ss,

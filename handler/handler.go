@@ -18,8 +18,10 @@ import (
 	"github.com/mangustc/obd/schema/finhelpstageschema"
 	"github.com/mangustc/obd/schema/groupschema"
 	"github.com/mangustc/obd/schema/jobschema"
+	"github.com/mangustc/obd/schema/perfschema"
 	"github.com/mangustc/obd/schema/profschema"
 	"github.com/mangustc/obd/schema/sessionschema"
+	"github.com/mangustc/obd/schema/skipschema"
 	"github.com/mangustc/obd/schema/studentschema"
 	"github.com/mangustc/obd/schema/userschema"
 	"github.com/mangustc/obd/util"
@@ -137,6 +139,20 @@ type (
 		DeleteClass(data *classschema.ClassDelete) (classDB *classschema.ClassDB, err error)
 		GetClass(data *classschema.ClassGet) (classDB *classschema.ClassDB, err error)
 		GetClasss(data *classschema.ClasssGet) (classsDB []*classschema.ClassDB, err error)
+	}
+	PerfService interface {
+		InsertPerf(data *perfschema.PerfInsert) (perfDB *perfschema.PerfDB, err error)
+		UpdatePerf(data *perfschema.PerfUpdate) (perfDB *perfschema.PerfDB, err error)
+		DeletePerf(data *perfschema.PerfDelete) (perfDB *perfschema.PerfDB, err error)
+		GetPerf(data *perfschema.PerfGet) (perfDB *perfschema.PerfDB, err error)
+		GetPerfs(data *perfschema.PerfsGet) (perfsDB []*perfschema.PerfDB, err error)
+	}
+	SkipService interface {
+		InsertSkip(data *skipschema.SkipInsert) (skipDB *skipschema.SkipDB, err error)
+		UpdateSkip(data *skipschema.SkipUpdate) (skipDB *skipschema.SkipDB, err error)
+		DeleteSkip(data *skipschema.SkipDelete) (skipDB *skipschema.SkipDB, err error)
+		GetSkip(data *skipschema.SkipGet) (skipDB *skipschema.SkipDB, err error)
+		GetSkips(data *skipschema.SkipsGet) (skipsDB []*skipschema.SkipDB, err error)
 	}
 )
 

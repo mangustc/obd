@@ -1,0 +1,114 @@
+package perfview
+
+import (
+	"github.com/mangustc/obd/view"
+	"github.com/mangustc/obd/schema"
+	"github.com/mangustc/obd/schema/perfschema"
+	"fmt"
+)
+
+const (
+	pageTitle       = "Perf"
+	tableTitle      = pageTitle
+	insertFormTitle = tableTitle
+	getPOSTURL      = "/api/perf/getperfs"
+	insertPOSTURL   = "/api/perf/insertperf"
+	editPOSTURL     = "/api/perf/editperf"
+	updatePOSTURL   = "/api/perf/updateperf"
+	deletePOSTURL   = "/api/perf/deleteperf"
+	perfTN          = "Perf"
+	courseTN        = "Course"
+	studentTN       = "Student"
+	bodyVals        = `{"` + perfTN + `ID": %d}`
+	getperfPOSTURL  = "/api/perf"
+)
+
+var (
+	taCourseID  = schema.NewTA(courseTN+"ID", "Course", schema.OptionInput)
+	taStudentID = schema.NewTA(studentTN+"ID", "Student", schema.OptionInput)
+	taPerfGrade = schema.NewTA(perfTN+"Grade", "Grade", schema.NumberInput)
+)
+
+func getTableHeaders() []*schema.TableHeaderColumn {
+	return []*schema.TableHeaderColumn{
+		schema.NewTableHeaderColumn(taCourseID.TATitle, 15),
+		schema.NewTableHeaderColumn(taStudentID.TATitle, 15),
+		schema.NewTableHeaderColumn(taPerfGrade.TATitle, 10),
+	}
+}
+
+func getInsertFormInputs(
+	courseInputOptions []*schema.InputOption,
+	studentInputOptions []*schema.InputOption,
+) []*schema.Input {
+	return []*schema.Input{
+		schema.NewInput(taCourseID.TATitle, taCourseID.TAName, taCourseID.TAInputType, "", nil, courseInputOptions, ""),
+		schema.NewInput(taStudentID.TATitle, taStudentID.TAName, taStudentID.TAInputType, "", nil, studentInputOptions, ""),
+		schema.NewInput(taPerfGrade.TATitle, taPerfGrade.TAName, taPerfGrade.TAInputType, "", nil, nil, ""),
+	}
+}
+
+func getInputsFromPerfDB(perfDB *perfschema.PerfDB,
+	courseInputOptions []*schema.InputOption,
+	studentInputOptions []*schema.InputOption,
+) []*schema.Input {
+	return []*schema.Input{
+		schema.NewInput("", taCourseID.TAName, taCourseID.TAInputType, perfDB.CourseID, nil, courseInputOptions, fmt.Sprint(perfDB.CourseID)),
+		schema.NewInput("", taStudentID.TAName, taStudentID.TAInputType, perfDB.StudentID, nil, studentInputOptions, fmt.Sprint(perfDB.StudentID)),
+		schema.NewInput("", taPerfGrade.TAName, taPerfGrade.TAInputType, perfDB.PerfGrade, nil, nil, ""),
+	}
+}
+
+templ PerfTableRowEdit(perfDB *perfschema.PerfDB,
+	courseInputOptions []*schema.InputOption,
+	studentInputOptions []*schema.InputOption,
+) {
+	@view.TableRowEdit(getInputsFromPerfDB(perfDB,
+		courseInputOptions,
+		studentInputOptions,
+	), fmt.Sprintf(bodyVals, perfDB.PerfID), updatePOSTURL, deletePOSTURL)
+}
+
+templ PerfTableRow(perfDB *perfschema.PerfDB,
+	courseInputOptions []*schema.InputOption,
+	studentInputOptions []*schema.InputOption,
+) {
+	@view.TableRow(getInputsFromPerfDB(perfDB,
+		courseInputOptions,
+		studentInputOptions,
+	), fmt.Sprintf(bodyVals, perfDB.PerfID), editPOSTURL, deletePOSTURL)
+}
+
+templ PerfTableRows(perfsDB []*perfschema.PerfDB,
+	courseInputOptions []*schema.InputOption,
+	studentInputOptions []*schema.InputOption,
+) {
+	for _, perfDB := range perfsDB {
+		@PerfTableRow(perfDB,
+			courseInputOptions,
+			studentInputOptions,
+		)
+	}
+}
+
+templ Perf(
+	courseInputOptions []*schema.InputOption,
+	studentInputOptions []*schema.InputOption,
+) {
+	@view.InsertForm(insertFormTitle, insertPOSTURL, getInsertFormInputs(
+		courseInputOptions,
+		studentInputOptions,
+	))
+	@view.Table(tableTitle, getPOSTURL, getTableHeaders())
+}
+
+templ PerfPage() {
+	@view.Layout(pageTitle) {
+		<div
+			hx-post={ getperfPOSTURL }
+			hx-target="this"
+			hx-swap="outerHTML"
+			hx-trigger="load"
+		></div>
+	}
+}

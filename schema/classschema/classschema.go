@@ -53,7 +53,7 @@ func GetClassInputOptionsFromClasssDB(classsDB []*ClassDB) []*schema.InputOption
 	inputOptions := []*schema.InputOption{}
 	for _, classDB := range classsDB {
 		inputOptions = append(inputOptions, &schema.InputOption{
-			InputOptionLabel: fmt.Sprintf("%s", classDB.ClassStart),
+			InputOptionLabel: fmt.Sprintf("%.10s Number %d", classDB.ClassStart, classDB.ClassNumber),
 			InputOptionValue: fmt.Sprintf("%d", classDB.ClassID),
 		})
 	}
