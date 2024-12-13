@@ -891,7 +891,7 @@ func NavigationByJobDB(jobDB *jobschema.JobDB) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			if jobDB.JobAccessProf {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/prof\" hx-target=\"#main\" hx-swap=\"innerHTML\">Профессора</button>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/prof\" hx-target=\"#main\" hx-swap=\"innerHTML\">Преподаватели</button>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}

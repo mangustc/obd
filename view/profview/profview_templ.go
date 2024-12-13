@@ -16,9 +16,9 @@ import (
 )
 
 const (
-	pageTitle       = "Профессора"
+	pageTitle       = "Преподаватели"
 	tableTitle      = pageTitle
-	insertFormTitle = "Профессора"
+	insertFormTitle = "Преподавателя"
 	getPOSTURL      = "/api/prof/getprofs"
 	insertPOSTURL   = "/api/prof/insertprof"
 	editPOSTURL     = "/api/prof/editprof"

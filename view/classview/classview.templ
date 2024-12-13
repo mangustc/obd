@@ -28,7 +28,7 @@ const (
 
 var (
 	taClassTypeID = schema.NewTA(classTypeTN+"ID", "Тип пары", schema.OptionInput)
-	taProfID      = schema.NewTA(profTN+"ID", "Профессор", schema.OptionInput)
+	taProfID      = schema.NewTA(profTN+"ID", "Преподаватель", schema.OptionInput)
 	taCabinetID   = schema.NewTA(cabinetTN+"ID", "Кабинет", schema.OptionInput)
 	taCourseID    = schema.NewTA(courseTN+"ID", "Дисциплина", schema.OptionInput)
 	taGroupID     = schema.NewTA(groupTN+"ID", "Группа", schema.OptionInput)
@@ -38,13 +38,13 @@ var (
 
 func getTableHeaders() []*schema.TableHeaderColumn {
 	return []*schema.TableHeaderColumn{
-		schema.NewTableHeaderColumn(taClassTypeID.TATitle, 15),
+		schema.NewTableHeaderColumn(taClassTypeID.TATitle, 10),
 		schema.NewTableHeaderColumn(taProfID.TATitle, 15),
-		schema.NewTableHeaderColumn(taCabinetID.TATitle, 15),
-		schema.NewTableHeaderColumn(taCourseID.TATitle, 15),
-		schema.NewTableHeaderColumn(taGroupID.TATitle, 15),
-		schema.NewTableHeaderColumn(taClassStart.TATitle, 15),
-		schema.NewTableHeaderColumn(taClassNumber.TATitle, 10),
+		schema.NewTableHeaderColumn(taCabinetID.TATitle, 5),
+		schema.NewTableHeaderColumn(taCourseID.TATitle, 25),
+		schema.NewTableHeaderColumn(taGroupID.TATitle, 10),
+		schema.NewTableHeaderColumn(taClassStart.TATitle, 10),
+		schema.NewTableHeaderColumn(taClassNumber.TATitle, 5),
 	}
 }
 
@@ -141,13 +141,30 @@ templ Class(
 	courseInputOptions []*schema.InputOption,
 	groupInputOptions []*schema.InputOption,
 ) {
-	<div id="filterClassContainer">
+	<div id="filterClassContainer" style="display: flex; flex-direction: column;">
 		<script src="/js/filterclass.js"></script>
-		<button onclick="toggleUI()">Режим печати</button>
-		<button id="downloadPDF" style="display: none;" onclick="printTable()">Download as PDF</button>
-		<select id="week" style="display: none;">
-			<option></option>
-		</select>
+		<div>
+			<button onclick="toggleUI()">Режим печати</button>
+			<button id="downloadPDF" style="display: none;" onclick="printTable()">Экспортировать PDF</button>
+		</div>
+		<div id="filterContainer" style="display: none;">
+			<div>
+				<input id="dateStart" name="dateStart" placeholder="2024-12-10" value="2024-12-10" type="text"/>
+				<input id="dateEnd" name="dateEnd" placeholder="2024-12-13" value="2024-12-13" type="text"/>
+			</div>
+			<div>
+				<select id="column" name="column">
+					<option label="Группа" value="group"></option>
+					<option label="Кабинет" value="cabinet"></option>
+					<option label="Преподаватель" value="prof"></option>
+				</select>
+				<input id="searchTerm" name="searchTerm" placeholder="Поиск" value="422-3" type="text"/>
+			</div>
+			<div>
+				<button onclick="filterTable()">Отфильтровать</button>
+				<button onclick="returnTableRows()">Сбросить</button>
+			</div>
+		</div>
 	</div>
 	@view.InsertForm(insertFormTitle, insertPOSTURL, getInsertFormInputs(
 		classTypeInputOptions,

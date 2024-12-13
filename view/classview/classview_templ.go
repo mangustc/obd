@@ -36,7 +36,7 @@ const (
 
 var (
 	taClassTypeID = schema.NewTA(classTypeTN+"ID", "Тип пары", schema.OptionInput)
-	taProfID      = schema.NewTA(profTN+"ID", "Профессор", schema.OptionInput)
+	taProfID      = schema.NewTA(profTN+"ID", "Преподаватель", schema.OptionInput)
 	taCabinetID   = schema.NewTA(cabinetTN+"ID", "Кабинет", schema.OptionInput)
 	taCourseID    = schema.NewTA(courseTN+"ID", "Дисциплина", schema.OptionInput)
 	taGroupID     = schema.NewTA(groupTN+"ID", "Группа", schema.OptionInput)
@@ -46,13 +46,13 @@ var (
 
 func getTableHeaders() []*schema.TableHeaderColumn {
 	return []*schema.TableHeaderColumn{
-		schema.NewTableHeaderColumn(taClassTypeID.TATitle, 15),
+		schema.NewTableHeaderColumn(taClassTypeID.TATitle, 10),
 		schema.NewTableHeaderColumn(taProfID.TATitle, 15),
-		schema.NewTableHeaderColumn(taCabinetID.TATitle, 15),
-		schema.NewTableHeaderColumn(taCourseID.TATitle, 15),
-		schema.NewTableHeaderColumn(taGroupID.TATitle, 15),
-		schema.NewTableHeaderColumn(taClassStart.TATitle, 15),
-		schema.NewTableHeaderColumn(taClassNumber.TATitle, 10),
+		schema.NewTableHeaderColumn(taCabinetID.TATitle, 5),
+		schema.NewTableHeaderColumn(taCourseID.TATitle, 25),
+		schema.NewTableHeaderColumn(taGroupID.TATitle, 10),
+		schema.NewTableHeaderColumn(taClassStart.TATitle, 10),
+		schema.NewTableHeaderColumn(taClassNumber.TATitle, 5),
 	}
 }
 
@@ -244,7 +244,7 @@ func Class(
 			templ_7745c5c3_Var4 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"filterClassContainer\"><script src=\"/js/filterclass.js\"></script><button onclick=\"toggleUI()\">Режим печати</button> <button id=\"downloadPDF\" style=\"display: none;\" onclick=\"printTable()\">Download as PDF</button> <select id=\"week\" style=\"display: none;\"><option></option></select></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"filterClassContainer\" style=\"display: flex; flex-direction: column;\"><script src=\"/js/filterclass.js\"></script><div><button onclick=\"toggleUI()\">Режим печати</button> <button id=\"downloadPDF\" style=\"display: none;\" onclick=\"printTable()\">Экспортировать PDF</button></div><div id=\"filterContainer\" style=\"display: none;\"><div><input id=\"dateStart\" name=\"dateStart\" placeholder=\"2024-12-10\" value=\"2024-12-10\" type=\"text\"> <input id=\"dateEnd\" name=\"dateEnd\" placeholder=\"2024-12-13\" value=\"2024-12-13\" type=\"text\"></div><div><select id=\"column\" name=\"column\"><option label=\"Группа\" value=\"group\"></option> <option label=\"Кабинет\" value=\"cabinet\"></option> <option label=\"Преподаватель\" value=\"prof\"></option></select> <input id=\"searchTerm\" name=\"searchTerm\" placeholder=\"Поиск\" value=\"422-3\" type=\"text\"></div><div><button onclick=\"filterTable()\">Отфильтровать</button> <button onclick=\"returnTableRows()\">Сбросить</button></div></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -306,7 +306,7 @@ func ClassPage() templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(getclassPOSTURL)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/classview/classview.templ`, Line: 165, Col: 28}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/classview/classview.templ`, Line: 182, Col: 28}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {

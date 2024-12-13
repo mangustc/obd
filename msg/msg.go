@@ -32,197 +32,197 @@ var (
 	OK = NewMsg(
 		http.StatusOK,
 		schema.SuccessNotification,
-		"Successful",
+		"Успешно выполнено",
 	)
 	InternalServerError = NewMsg(
 		http.StatusInternalServerError,
 		schema.ErrorNotification,
-		"Internal server error, try refreshing the page",
+		"Внутренняя ошибка сервера, попробуйте перезагрузить страницу",
 	)
 	AuthWrongPassword = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"Wrong password, please try again",
+		"Неверный пароль, попробуйте еще раз",
 	)
 	AuthSuccessLogin = NewMsg(
 		http.StatusOK,
 		schema.SuccessNotification,
-		"Successfully logged in",
+		"Успешный вход в систему",
 	)
 	AuthSuccessLogout = NewMsg(
 		http.StatusOK,
 		schema.SuccessNotification,
-		"Successfully logged out",
+		"Успешный выход из системы",
 	)
 	Unauthorized = NewMsg(
 		http.StatusUnauthorized,
 		schema.ErrorNotification,
-		"Unauthorized access",
+		"Несанкционированный доступ",
 	)
 	JobNameEmpty = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"Job name can't be empty",
+		"Имя должности не может быть пустым",
 	)
 	JobExists = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"This job already exists",
+		"Такая должность уже существует",
 	)
 	UserWrong = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"User first name, last name and password can't be empty",
+		"Фамилия, имя и пароль сотрудника не могут быть пустыми",
 	)
 	UserExists = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"This user already exists",
+		"Такой сотрудник уже существует",
 	)
 	GroupWrong = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"Group number, course name and year can't be empty",
+		"Номер, год поступления и название направления группы не могут быть пустыми",
 	)
 	GroupExists = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"This group already exists",
+		"Такая группа уже существует",
 	)
 	FinhelpCtgWrong = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"Financial Help Category descrpition and payment can't be empty",
+		"Описание и выплата категории не могут быть пустыми",
 	)
 	FinhelpCtgExists = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"This Financial Help Category already exists",
+		"Такая категория уже существует",
 	)
 	FinhelpStageWrong = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"Financial Help Stage descrpition can't be empty",
+		"Описание этапа не может быть пустым",
 	)
 	FinhelpStageExists = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"This Financial Help Stage already exists",
+		"Такой этап уже существует",
 	)
 	StudentWrong = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"Student first name, last name and phone number can't be empty",
+		"Фамилия, имя и номер телефона студента не могут быть пустыми",
 	)
 	StudentExists = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"This student already exists",
+		"Такой студент уже существует",
 	)
 	FinhelpProcWrong = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"Financial Help Process student, category and stage can't be empty",
+		"Студент, категория и этап процесса материальной помощи не могут быть пустыми",
 	)
 	FinhelpProcExists = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"This Financial Help Process already exists",
+		"Такой процесс уже существует",
 	)
 	BuildingWrong = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"Building name and address can't be empty",
+		"Название и адрес корпуса не могут быть пустыми",
 	)
 	BuildingExists = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"This Building already exists",
+		"Такое здание уже существует",
 	)
 	CabinetTypeWrong = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"Cabinet Type name can't be empty",
+		"Название типа кабинета не может быть пустым",
 	)
 	CabinetTypeExists = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"This Cabinet Type already exists",
+		"Такой тип кабинета уже существует",
 	)
 	ClassTypeWrong = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"Class Type name can't be empty",
+		"Название типа пары не может быть пустым",
 	)
 	ClassTypeExists = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"This Class Type already exists",
+		"Такой тип пары уже существует",
 	)
 	CourseTypeWrong = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"Course Type name can't be empty",
+		"Название типа дисциплины не может быть пустым",
 	)
 	CourseTypeExists = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"This Course Type already exists",
+		"Такой тип дисциплины уже существует",
 	)
 	ProfWrong = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"Prof first name, last name, phone number and email can't be empty",
+		"Фамилия, имя, номер телефона и почта преподавателя не могут быть пустыми",
 	)
 	ProfExists = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"This prof already exists",
+		"Такой преподаватель уже существует",
 	)
 	CabinetWrong = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"Cabinet type and building can't be empty",
+		"Тип кабинета и корпус не могут быть пустыми",
 	)
 	CabinetExists = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"This Cabinet already exists",
+		"Такой кабинет уже существует",
 	)
 	CourseWrong = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"Course type and name can't be empty",
+		"Тип дисциплинны и название не могут быть пустыми",
 	)
 	CourseExists = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"This Course already exists",
+		"Такая дисциплина уже существует",
 	)
 	ClassWrong = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"Class date should be formatted as YYYY-MM-DD and number in range [1, 7]",
+		"Дата пары должна быть формата ГГГГ-ММ-ДД и её номер в отрезке [1, 7]",
 	)
 	ClassExists = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"This Class already exists",
+		"Такая пара уже существует",
 	)
 	PerfWrong = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"Perf grade should be in range [0, 5]",
+		"Оценка успеваемости должна быть в отрезке [0, 5]",
 	)
 	PerfExists = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"This Perf already exists",
+		"Успеваемость студента по этой дисциплине уже существует",
 	)
 	SkipWrong  = InternalServerError
 	SkipExists = NewMsg(
 		http.StatusUnprocessableEntity,
 		schema.AlertNotification,
-		"This Skip already exists",
+		"Такой пропуск уже стоит",
 	)
 )
