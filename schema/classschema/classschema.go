@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/mangustc/obd/schema"
+	"github.com/mangustc/obd/schema/groupschema"
 )
 
 type ClassDB struct {
@@ -49,11 +50,11 @@ type ClassGet struct {
 
 type ClasssGet struct{}
 
-func GetClassInputOptionsFromClasssDB(classsDB []*ClassDB) []*schema.InputOption {
+func GetClassInputOptionsFromClasssDB(classsDB []*ClassDB, groupsDB []*groupschema.GroupDB) []*schema.InputOption {
 	inputOptions := []*schema.InputOption{}
 	for _, classDB := range classsDB {
 		inputOptions = append(inputOptions, &schema.InputOption{
-			InputOptionLabel: fmt.Sprintf("%.10s Number %d", classDB.ClassStart, classDB.ClassNumber),
+			InputOptionLabel: fmt.Sprintf("%s %.10s Number %d", groupschema.GetGroupByGroupID(groupsDB, classDB.GroupID).GroupNumber, classDB.ClassStart, classDB.ClassNumber),
 			InputOptionValue: fmt.Sprintf("%d", classDB.ClassID),
 		})
 	}

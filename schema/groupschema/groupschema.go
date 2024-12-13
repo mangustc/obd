@@ -37,6 +37,15 @@ type GroupGet struct {
 
 type GroupsGet struct{}
 
+func GetGroupByGroupID(groupsDB []*GroupDB, groupID int) *GroupDB {
+	for _, groupDB := range groupsDB {
+		if groupDB.GroupID == groupID {
+			return groupDB
+		}
+	}
+	return nil
+}
+
 func GetGroupInputOptionsFromGroupsDB(groupsDB []*GroupDB) []*schema.InputOption {
 	notHiddenGroupsDB := GetNotHiddenGroupsDB(groupsDB)
 	inputOptions := []*schema.InputOption{}

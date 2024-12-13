@@ -34,6 +34,15 @@ type BuildingGet struct {
 
 type BuildingsGet struct{}
 
+func GetBuildingByBuildingID(buildingsDB []*BuildingDB, buildingID int) *BuildingDB {
+	for _, buildingDB := range buildingsDB {
+		if buildingDB.BuildingID == buildingID {
+			return buildingDB
+		}
+	}
+	return nil
+}
+
 func GetBuildingInputOptionsFromBuildingsDB(buildingsDB []*BuildingDB) []*schema.InputOption {
 	notHiddenBuildingsDB := GetNotHiddenBuildingsDB(buildingsDB)
 	inputOptions := []*schema.InputOption{}

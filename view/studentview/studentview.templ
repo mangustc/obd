@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	pageTitle         = "Student"
+	pageTitle         = "Студенты"
 	tableTitle        = pageTitle
-	insertFormTitle   = tableTitle
+	insertFormTitle   = "Студента"
 	getPOSTURL        = "/api/student/getstudents"
 	insertPOSTURL     = "/api/student/insertstudent"
 	editPOSTURL       = "/api/student/editstudent"
@@ -23,12 +23,12 @@ const (
 )
 
 var (
-	taStudentLastname    = schema.NewTA(studentTN+"Lastname", "Last Name", schema.StringInput)
-	taStudentFirstname   = schema.NewTA(studentTN+"Firstname", "First Name", schema.StringInput)
-	taStudentMiddlename  = schema.NewTA(studentTN+"Middlename", "Middle Name", schema.StringInput)
-	taStudentPhoneNumber = schema.NewTA(studentTN+"PhoneNumber", "Phone Number", schema.StringInput)
-	taGroupID            = schema.NewTA(groupTN+"ID", "Group", schema.OptionInput)
-	taStudentIsHidden    = schema.NewTA(studentTN+"IsHidden", "Is Hidden", schema.BooleanInput)
+	taStudentLastname    = schema.NewTA(studentTN+"Lastname", "Фамилия", schema.StringInput)
+	taStudentFirstname   = schema.NewTA(studentTN+"Firstname", "Имя", schema.StringInput)
+	taStudentMiddlename  = schema.NewTA(studentTN+"Middlename", "Отчество", schema.StringInput)
+	taStudentPhoneNumber = schema.NewTA(studentTN+"PhoneNumber", "Номер телефона", schema.StringInput)
+	taGroupID            = schema.NewTA(groupTN+"ID", "Группа", schema.OptionInput)
+	taStudentIsHidden    = schema.NewTA(studentTN+"IsHidden", "Скрыт", schema.BooleanInput)
 )
 
 func getTableHeaders() []*schema.TableHeaderColumn {
@@ -36,9 +36,9 @@ func getTableHeaders() []*schema.TableHeaderColumn {
 		schema.NewTableHeaderColumn(taStudentLastname.TATitle, 15),
 		schema.NewTableHeaderColumn(taStudentFirstname.TATitle, 15),
 		schema.NewTableHeaderColumn(taStudentMiddlename.TATitle, 15),
-		schema.NewTableHeaderColumn(taStudentPhoneNumber.TATitle, 20),
-		schema.NewTableHeaderColumn(taGroupID.TATitle, 20),
-		schema.NewTableHeaderColumn(taStudentIsHidden.TATitle, 10),
+		schema.NewTableHeaderColumn(taStudentPhoneNumber.TATitle, 10),
+		schema.NewTableHeaderColumn(taGroupID.TATitle, 10),
+		schema.NewTableHeaderColumn(taStudentIsHidden.TATitle, 5),
 	}
 }
 

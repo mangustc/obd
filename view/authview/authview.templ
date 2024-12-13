@@ -4,7 +4,7 @@ import "github.com/mangustc/obd/view"
 import "github.com/mangustc/obd/schema"
 
 const (
-	pageTitle        = "Auth"
+	pageTitle        = "Вход"
 	userTN           = "User"
 	loginPOSTURL     = "/api/auth/login"
 	userinputPOSTURL = "/api/auth/userinput"
@@ -12,8 +12,8 @@ const (
 )
 
 var (
-	taUserID       = schema.NewTA(userTN+"ID", "User", schema.OptionInput)
-	taUserPassword = schema.NewTA(userTN+"Password", "User Password", schema.StringInput)
+	taUserID       = schema.NewTA(userTN+"ID", "Сотрудник", schema.OptionInput)
+	taUserPassword = schema.NewTA(userTN+"Password", "Пароль", schema.StringInput)
 )
 
 templ UserInput(userInputOptions []*schema.InputOption) {
@@ -24,18 +24,18 @@ templ Auth() {
 	<div>
 		<h3>Login</h3>
 		<div style="display: flex; flex-direction: column;" id="auth-form">
-			<label>Choose User:</label>
+			<label>Выберите сотрудника:</label>
 			<span
 				hx-post={ userinputPOSTURL }
 				hx-target="this"
 				hx-swap="outerHTML"
 				hx-trigger="load"
-			>Loading...</span>
-			<label>Password:</label>
+			>Загрузка...</span>
+			<label>Пароль:</label>
 			<input
 				type="password"
 				name={ taUserPassword.TAName }
-				placeholder="Enter your Password"
+				placeholder="Введите свой пароль"
 				required
 				value=""
 			/>
@@ -47,7 +47,7 @@ templ Auth() {
 				hx-swap="outerHTML"
 				hx-target="#navigation"
 			>
-				Login
+				Вход
 			</button>
 		</div>
 	</div>

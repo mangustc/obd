@@ -4,6 +4,7 @@ import (
 	"github.com/mangustc/obd/schema"
 	"fmt"
 	"github.com/mangustc/obd/schema/jobschema"
+	"strings"
 )
 
 templ Navigation() {
@@ -118,13 +119,13 @@ func getInt(v any) int {
 templ Input(input *schema.Input) {
 	<div style="display: flex; flex-direction: row;">
 		if input.InputTitle != "" {
-			<span style="width: 152px;">{ input.InputTitle }: </span>
+			<span style="width: 300px;">{ input.InputTitle }: </span>
 		}
 		if input.InputOptions != nil {
 			if !input.InputEditable {
 				<input style="width: 100%;" name={ input.InputName } value={ schema.GetSelectedInputOptionLabel(input) } type={ input.InputType } readonly?={ !input.InputEditable }/>
 			} else {
-				<select style="width: 100%;" name={ input.InputName }>
+				<select name={ input.InputName }>
 					for _, inputOption := range input.InputOptions {
 						<option
 							label={ inputOption.InputOptionLabel }
@@ -136,9 +137,9 @@ templ Input(input *schema.Input) {
 			}
 		} else if input.InputType == "checkbox" {
 			if !input.InputEditable {
-				<input style="width: 100%;" name={ input.InputName } type={ input.InputType } checked?={ getBool(input.InputValue) } onclick="return false;"/>
+				<input name={ input.InputName } type={ input.InputType } checked?={ getBool(input.InputValue) } onclick="return false;"/>
 			} else {
-				<input style="width: 100%;" name={ input.InputName } type={ input.InputType } checked?={ getBool(input.InputValue) }/>
+				<input name={ input.InputName } type={ input.InputType } checked?={ getBool(input.InputValue) }/>
 			}
 		} else if input.InputType == "number" {
 			<input style="width: 100%;" name={ input.InputName } value={ fmt.Sprint(getInt(input.InputValue)) } type={ input.InputType } readonly?={ !input.InputEditable }/>
@@ -157,8 +158,8 @@ templ NavigationByJobDB(jobDB *jobschema.JobDB) {
 					hx-post="/api/auth"
 					hx-target="#main"
 					hx-swap="innerHTML"
-				>Au</button>
-				<p>OBD Project</p>
+				>Войти</button>
+				<p>КР ОБД</p>
 			} else {
 				if jobDB.JobAccessUser {
 					<button
@@ -166,7 +167,7 @@ templ NavigationByJobDB(jobDB *jobschema.JobDB) {
 						hx-post="/api/user"
 						hx-target="#main"
 						hx-swap="innerHTML"
-					>U</button>
+					>Сотрудники</button>
 				}
 				if jobDB.JobAccessJob {
 					<button
@@ -174,7 +175,7 @@ templ NavigationByJobDB(jobDB *jobschema.JobDB) {
 						hx-post="/api/job"
 						hx-target="#main"
 						hx-swap="innerHTML"
-					>J</button>
+					>Должности</button>
 				}
 				if jobDB.JobAccessStudent {
 					<button
@@ -182,7 +183,7 @@ templ NavigationByJobDB(jobDB *jobschema.JobDB) {
 						hx-post="/api/student"
 						hx-target="#main"
 						hx-swap="innerHTML"
-					>St</button>
+					>Студенты</button>
 				}
 				if jobDB.JobAccessGroup {
 					<button
@@ -190,7 +191,7 @@ templ NavigationByJobDB(jobDB *jobschema.JobDB) {
 						hx-post="/api/group"
 						hx-target="#main"
 						hx-swap="innerHTML"
-					>Gr</button>
+					>Группы</button>
 				}
 				if jobDB.JobAccessFinhelpCtg {
 					<button
@@ -198,7 +199,7 @@ templ NavigationByJobDB(jobDB *jobschema.JobDB) {
 						hx-post="/api/finhelpctg"
 						hx-target="#main"
 						hx-swap="innerHTML"
-					>FCtg</button>
+					>Мат. помощь Категории</button>
 				}
 				if jobDB.JobAccessFinhelpStage {
 					<button
@@ -206,7 +207,7 @@ templ NavigationByJobDB(jobDB *jobschema.JobDB) {
 						hx-post="/api/finhelpstage"
 						hx-target="#main"
 						hx-swap="innerHTML"
-					>FSt</button>
+					>Мат. помощь Этапы</button>
 				}
 				if jobDB.JobAccessFinhelpProc {
 					<button
@@ -214,7 +215,7 @@ templ NavigationByJobDB(jobDB *jobschema.JobDB) {
 						hx-post="/api/finhelpproc"
 						hx-target="#main"
 						hx-swap="innerHTML"
-					>FPr</button>
+					>Мат. помощь Процессы</button>
 				}
 				if jobDB.JobAccessBuilding {
 					<button
@@ -222,7 +223,7 @@ templ NavigationByJobDB(jobDB *jobschema.JobDB) {
 						hx-post="/api/building"
 						hx-target="#main"
 						hx-swap="innerHTML"
-					>B</button>
+					>Корпуса</button>
 				}
 				if jobDB.JobAccessCabinetType {
 					<button
@@ -230,7 +231,7 @@ templ NavigationByJobDB(jobDB *jobschema.JobDB) {
 						hx-post="/api/cabinettype"
 						hx-target="#main"
 						hx-swap="innerHTML"
-					>CT</button>
+					>Типы кабинетов</button>
 				}
 				if jobDB.JobAccessCabinet {
 					<button
@@ -238,7 +239,7 @@ templ NavigationByJobDB(jobDB *jobschema.JobDB) {
 						hx-post="/api/cabinet"
 						hx-target="#main"
 						hx-swap="innerHTML"
-					>C</button>
+					>Кабинеты</button>
 				}
 				if jobDB.JobAccessClassType {
 					<button
@@ -246,7 +247,7 @@ templ NavigationByJobDB(jobDB *jobschema.JobDB) {
 						hx-post="/api/classtype"
 						hx-target="#main"
 						hx-swap="innerHTML"
-					>ClT</button>
+					>Типы пар</button>
 				}
 				if jobDB.JobAccessClass {
 					<button
@@ -254,7 +255,7 @@ templ NavigationByJobDB(jobDB *jobschema.JobDB) {
 						hx-post="/api/class"
 						hx-target="#main"
 						hx-swap="innerHTML"
-					>Cl</button>
+					>Расписание</button>
 				}
 				if jobDB.JobAccessProf {
 					<button
@@ -262,7 +263,7 @@ templ NavigationByJobDB(jobDB *jobschema.JobDB) {
 						hx-post="/api/prof"
 						hx-target="#main"
 						hx-swap="innerHTML"
-					>Pr</button>
+					>Профессора</button>
 				}
 				if jobDB.JobAccessCourseType {
 					<button
@@ -270,7 +271,7 @@ templ NavigationByJobDB(jobDB *jobschema.JobDB) {
 						hx-post="/api/coursetype"
 						hx-target="#main"
 						hx-swap="innerHTML"
-					>CoT</button>
+					>Типы дисциплин</button>
 				}
 				if jobDB.JobAccessCourse {
 					<button
@@ -278,7 +279,7 @@ templ NavigationByJobDB(jobDB *jobschema.JobDB) {
 						hx-post="/api/course"
 						hx-target="#main"
 						hx-swap="innerHTML"
-					>Co</button>
+					>Дисциплины</button>
 				}
 				if jobDB.JobAccessPerf {
 					<button
@@ -286,7 +287,7 @@ templ NavigationByJobDB(jobDB *jobschema.JobDB) {
 						hx-post="/api/perf"
 						hx-target="#main"
 						hx-swap="innerHTML"
-					>P</button>
+					>Успеваемость</button>
 				}
 				if jobDB.JobAccessSkip {
 					<button
@@ -294,15 +295,15 @@ templ NavigationByJobDB(jobDB *jobschema.JobDB) {
 						hx-post="/api/skip"
 						hx-target="#main"
 						hx-swap="innerHTML"
-					>Sk</button>
+					>Пропуски</button>
 				}
-				<p>OBD Project</p>
+				<p>КР ОБД</p>
 				<button
 					class="link-button"
 					hx-post="/api/auth/logout"
 					hx-target="#navigation"
 					hx-swap="outerHTML"
-				>L</button>
+				>Выйти</button>
 			}
 		</div>
 	</div>
@@ -322,13 +323,7 @@ templ TableRowEdit(inputs []*schema.Input, bodyVals string, updatePOSTURL string
 				hx-include="closest tr"
 				hx-swap="outerHTML"
 				hx-vals={ bodyVals }
-			>Save</button>
-			<button
-				hx-post={ deletePOSTURL }
-				hx-target="closest tr"
-				hx-swap="outerHTML"
-				hx-vals={ bodyVals }
-			>Delete</button>
+			>Сохранить</button>
 		</th>
 	</tr>
 }
@@ -346,13 +341,19 @@ templ TableRow(inputs []*schema.Input, bodyVals string, editPOSTURL string, dele
 				hx-target="closest tr"
 				hx-swap="outerHTML"
 				hx-vals={ bodyVals }
-			>Edit</button>
+			>Редактировать</button>
 			<button
 				hx-post={ deletePOSTURL }
 				hx-target="closest tr"
 				hx-swap="outerHTML"
 				hx-vals={ bodyVals }
-			>Delete</button>
+			>
+				if strings.Contains(inputs[len(inputs)-1].InputName, "IsHidden") {
+					Скрыть
+				} else {
+					Удалить
+				}
+			</button>
 		</th>
 	</tr>
 }
@@ -364,14 +365,14 @@ templ TableRow(inputs []*schema.Input, bodyVals string, editPOSTURL string, dele
 //}
 templ Table(title string, getPOSTURL string, headers []*schema.TableHeaderColumn) {
 	<div style="width: 100%; display: flex; flex-direction: column;">
-		<h2>{ title } Entries:</h2>
+		<h2>{ title }:</h2>
 		<table>
 			<thead>
-				<tr>
+				<tr id="tableHead">
 					for _, header := range headers {
 						@tableHeader(header)
 					}
-					@tableHeader(schema.NewTableHeaderColumn("Actions", 20))
+					@tableHeader(schema.NewTableHeaderColumn("Действия", 12))
 				</tr>
 			</thead>
 			<tbody id="table" hx-target="closest tr" hx-swap="outerHTML">
@@ -383,7 +384,7 @@ templ Table(title string, getPOSTURL string, headers []*schema.TableHeaderColumn
 
 templ InsertForm(title string, insertPOSTURL string, inputs []*schema.Input) {
 	<div id="insertForm" style="width: 100%; display: flex; flex-direction: column;">
-		<h2>Insert { title } form:</h2>
+		<h2>Форма добавления { title }:</h2>
 		<div>
 			for _, i := range inputs {
 				@Input(i)
@@ -395,6 +396,6 @@ templ InsertForm(title string, insertPOSTURL string, inputs []*schema.Input) {
 			hx-target="#table"
 			hx-include="closest div"
 			hx-swap="afterbegin"
-		>Insert</button>
+		>Добавить</button>
 	</div>
 }

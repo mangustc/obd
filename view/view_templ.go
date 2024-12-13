@@ -12,6 +12,7 @@ import (
 	"fmt"
 	"github.com/mangustc/obd/schema"
 	"github.com/mangustc/obd/schema/jobschema"
+	"strings"
 )
 
 func Navigation() templ.Component {
@@ -100,7 +101,7 @@ func Layout(title string) templ.Component {
 		var templ_7745c5c3_Var4 string
 		templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 25, Col: 16}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 26, Col: 16}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
@@ -331,7 +332,7 @@ func tableHeader(header *schema.TableHeaderColumn) templ.Component {
 		var templ_7745c5c3_Var12 string
 		templ_7745c5c3_Var12, templ_7745c5c3_Err = templ.JoinStringErrs(header.Name)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 100, Col: 70}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 101, Col: 70}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 		if templ_7745c5c3_Err != nil {
@@ -386,14 +387,14 @@ func Input(input *schema.Input) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if input.InputTitle != "" {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<span style=\"width: 152px;\">")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<span style=\"width: 300px;\">")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 			var templ_7745c5c3_Var14 string
 			templ_7745c5c3_Var14, templ_7745c5c3_Err = templ.JoinStringErrs(input.InputTitle)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 121, Col: 49}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 122, Col: 49}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var14))
 			if templ_7745c5c3_Err != nil {
@@ -413,7 +414,7 @@ func Input(input *schema.Input) templ.Component {
 				var templ_7745c5c3_Var15 string
 				templ_7745c5c3_Var15, templ_7745c5c3_Err = templ.JoinStringErrs(input.InputName)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 125, Col: 54}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 126, Col: 54}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var15))
 				if templ_7745c5c3_Err != nil {
@@ -426,7 +427,7 @@ func Input(input *schema.Input) templ.Component {
 				var templ_7745c5c3_Var16 string
 				templ_7745c5c3_Var16, templ_7745c5c3_Err = templ.JoinStringErrs(schema.GetSelectedInputOptionLabel(input))
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 125, Col: 106}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 126, Col: 106}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var16))
 				if templ_7745c5c3_Err != nil {
@@ -439,7 +440,7 @@ func Input(input *schema.Input) templ.Component {
 				var templ_7745c5c3_Var17 string
 				templ_7745c5c3_Var17, templ_7745c5c3_Err = templ.JoinStringErrs(input.InputType)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 125, Col: 131}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 126, Col: 131}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var17))
 				if templ_7745c5c3_Err != nil {
@@ -460,14 +461,14 @@ func Input(input *schema.Input) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<select style=\"width: 100%;\" name=\"")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<select name=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var18 string
 				templ_7745c5c3_Var18, templ_7745c5c3_Err = templ.JoinStringErrs(input.InputName)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 127, Col: 55}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 128, Col: 34}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var18))
 				if templ_7745c5c3_Err != nil {
@@ -485,7 +486,7 @@ func Input(input *schema.Input) templ.Component {
 					var templ_7745c5c3_Var19 string
 					templ_7745c5c3_Var19, templ_7745c5c3_Err = templ.JoinStringErrs(inputOption.InputOptionLabel)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 130, Col: 43}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 131, Col: 43}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var19))
 					if templ_7745c5c3_Err != nil {
@@ -498,7 +499,7 @@ func Input(input *schema.Input) templ.Component {
 					var templ_7745c5c3_Var20 string
 					templ_7745c5c3_Var20, templ_7745c5c3_Err = templ.JoinStringErrs(inputOption.InputOptionValue)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 131, Col: 43}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 132, Col: 43}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var20))
 					if templ_7745c5c3_Err != nil {
@@ -521,7 +522,7 @@ func Input(input *schema.Input) templ.Component {
 					var templ_7745c5c3_Var21 string
 					templ_7745c5c3_Var21, templ_7745c5c3_Err = templ.JoinStringErrs(inputOption.InputOptionLabel)
 					if templ_7745c5c3_Err != nil {
-						return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 133, Col: 37}
+						return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 134, Col: 37}
 					}
 					_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var21))
 					if templ_7745c5c3_Err != nil {
@@ -539,14 +540,14 @@ func Input(input *schema.Input) templ.Component {
 			}
 		} else if input.InputType == "checkbox" {
 			if !input.InputEditable {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<input style=\"width: 100%;\" name=\"")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<input name=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var22 string
 				templ_7745c5c3_Var22, templ_7745c5c3_Err = templ.JoinStringErrs(input.InputName)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 139, Col: 54}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 140, Col: 33}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var22))
 				if templ_7745c5c3_Err != nil {
@@ -559,7 +560,7 @@ func Input(input *schema.Input) templ.Component {
 				var templ_7745c5c3_Var23 string
 				templ_7745c5c3_Var23, templ_7745c5c3_Err = templ.JoinStringErrs(input.InputType)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 139, Col: 79}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 140, Col: 58}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var23))
 				if templ_7745c5c3_Err != nil {
@@ -580,14 +581,14 @@ func Input(input *schema.Input) templ.Component {
 					return templ_7745c5c3_Err
 				}
 			} else {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<input style=\"width: 100%;\" name=\"")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<input name=\"")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 				var templ_7745c5c3_Var24 string
 				templ_7745c5c3_Var24, templ_7745c5c3_Err = templ.JoinStringErrs(input.InputName)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 141, Col: 54}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 142, Col: 33}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var24))
 				if templ_7745c5c3_Err != nil {
@@ -600,7 +601,7 @@ func Input(input *schema.Input) templ.Component {
 				var templ_7745c5c3_Var25 string
 				templ_7745c5c3_Var25, templ_7745c5c3_Err = templ.JoinStringErrs(input.InputType)
 				if templ_7745c5c3_Err != nil {
-					return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 141, Col: 79}
+					return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 142, Col: 58}
 				}
 				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var25))
 				if templ_7745c5c3_Err != nil {
@@ -629,7 +630,7 @@ func Input(input *schema.Input) templ.Component {
 			var templ_7745c5c3_Var26 string
 			templ_7745c5c3_Var26, templ_7745c5c3_Err = templ.JoinStringErrs(input.InputName)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 144, Col: 53}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 145, Col: 53}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var26))
 			if templ_7745c5c3_Err != nil {
@@ -642,7 +643,7 @@ func Input(input *schema.Input) templ.Component {
 			var templ_7745c5c3_Var27 string
 			templ_7745c5c3_Var27, templ_7745c5c3_Err = templ.JoinStringErrs(fmt.Sprint(getInt(input.InputValue)))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 144, Col: 100}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 145, Col: 100}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var27))
 			if templ_7745c5c3_Err != nil {
@@ -655,7 +656,7 @@ func Input(input *schema.Input) templ.Component {
 			var templ_7745c5c3_Var28 string
 			templ_7745c5c3_Var28, templ_7745c5c3_Err = templ.JoinStringErrs(input.InputType)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 144, Col: 125}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 145, Col: 125}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var28))
 			if templ_7745c5c3_Err != nil {
@@ -683,7 +684,7 @@ func Input(input *schema.Input) templ.Component {
 			var templ_7745c5c3_Var29 string
 			templ_7745c5c3_Var29, templ_7745c5c3_Err = templ.JoinStringErrs(input.InputName)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 146, Col: 53}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 147, Col: 53}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var29))
 			if templ_7745c5c3_Err != nil {
@@ -696,7 +697,7 @@ func Input(input *schema.Input) templ.Component {
 			var templ_7745c5c3_Var30 string
 			templ_7745c5c3_Var30, templ_7745c5c3_Err = templ.JoinStringErrs(getString(input.InputValue))
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 146, Col: 91}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 147, Col: 91}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var30))
 			if templ_7745c5c3_Err != nil {
@@ -709,7 +710,7 @@ func Input(input *schema.Input) templ.Component {
 			var templ_7745c5c3_Var31 string
 			templ_7745c5c3_Var31, templ_7745c5c3_Err = templ.JoinStringErrs(input.InputType)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 146, Col: 116}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 147, Col: 116}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var31))
 			if templ_7745c5c3_Err != nil {
@@ -764,13 +765,13 @@ func NavigationByJobDB(jobDB *jobschema.JobDB) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		if jobDB == nil {
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/auth\" hx-target=\"#main\" hx-swap=\"innerHTML\">Au</button><p>OBD Project</p>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/auth\" hx-target=\"#main\" hx-swap=\"innerHTML\">Войти</button><p>КР ОБД</p>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
 		} else {
 			if jobDB.JobAccessUser {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/user\" hx-target=\"#main\" hx-swap=\"innerHTML\">U</button>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/user\" hx-target=\"#main\" hx-swap=\"innerHTML\">Сотрудники</button>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -780,7 +781,7 @@ func NavigationByJobDB(jobDB *jobschema.JobDB) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			if jobDB.JobAccessJob {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/job\" hx-target=\"#main\" hx-swap=\"innerHTML\">J</button>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/job\" hx-target=\"#main\" hx-swap=\"innerHTML\">Должности</button>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -790,7 +791,7 @@ func NavigationByJobDB(jobDB *jobschema.JobDB) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			if jobDB.JobAccessStudent {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/student\" hx-target=\"#main\" hx-swap=\"innerHTML\">St</button>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/student\" hx-target=\"#main\" hx-swap=\"innerHTML\">Студенты</button>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -800,7 +801,7 @@ func NavigationByJobDB(jobDB *jobschema.JobDB) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			if jobDB.JobAccessGroup {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/group\" hx-target=\"#main\" hx-swap=\"innerHTML\">Gr</button>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/group\" hx-target=\"#main\" hx-swap=\"innerHTML\">Группы</button>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -810,7 +811,7 @@ func NavigationByJobDB(jobDB *jobschema.JobDB) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			if jobDB.JobAccessFinhelpCtg {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/finhelpctg\" hx-target=\"#main\" hx-swap=\"innerHTML\">FCtg</button>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/finhelpctg\" hx-target=\"#main\" hx-swap=\"innerHTML\">Мат. помощь Категории</button>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -820,7 +821,7 @@ func NavigationByJobDB(jobDB *jobschema.JobDB) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			if jobDB.JobAccessFinhelpStage {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/finhelpstage\" hx-target=\"#main\" hx-swap=\"innerHTML\">FSt</button>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/finhelpstage\" hx-target=\"#main\" hx-swap=\"innerHTML\">Мат. помощь Этапы</button>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -830,7 +831,7 @@ func NavigationByJobDB(jobDB *jobschema.JobDB) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			if jobDB.JobAccessFinhelpProc {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/finhelpproc\" hx-target=\"#main\" hx-swap=\"innerHTML\">FPr</button>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/finhelpproc\" hx-target=\"#main\" hx-swap=\"innerHTML\">Мат. помощь Процессы</button>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -840,7 +841,7 @@ func NavigationByJobDB(jobDB *jobschema.JobDB) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			if jobDB.JobAccessBuilding {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/building\" hx-target=\"#main\" hx-swap=\"innerHTML\">B</button>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/building\" hx-target=\"#main\" hx-swap=\"innerHTML\">Корпуса</button>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -850,7 +851,7 @@ func NavigationByJobDB(jobDB *jobschema.JobDB) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			if jobDB.JobAccessCabinetType {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/cabinettype\" hx-target=\"#main\" hx-swap=\"innerHTML\">CT</button>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/cabinettype\" hx-target=\"#main\" hx-swap=\"innerHTML\">Типы кабинетов</button>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -860,7 +861,7 @@ func NavigationByJobDB(jobDB *jobschema.JobDB) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			if jobDB.JobAccessCabinet {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/cabinet\" hx-target=\"#main\" hx-swap=\"innerHTML\">C</button>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/cabinet\" hx-target=\"#main\" hx-swap=\"innerHTML\">Кабинеты</button>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -870,7 +871,7 @@ func NavigationByJobDB(jobDB *jobschema.JobDB) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			if jobDB.JobAccessClassType {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/classtype\" hx-target=\"#main\" hx-swap=\"innerHTML\">ClT</button>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/classtype\" hx-target=\"#main\" hx-swap=\"innerHTML\">Типы пар</button>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -880,7 +881,7 @@ func NavigationByJobDB(jobDB *jobschema.JobDB) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			if jobDB.JobAccessClass {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/class\" hx-target=\"#main\" hx-swap=\"innerHTML\">Cl</button>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/class\" hx-target=\"#main\" hx-swap=\"innerHTML\">Расписание</button>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -890,7 +891,7 @@ func NavigationByJobDB(jobDB *jobschema.JobDB) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			if jobDB.JobAccessProf {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/prof\" hx-target=\"#main\" hx-swap=\"innerHTML\">Pr</button>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/prof\" hx-target=\"#main\" hx-swap=\"innerHTML\">Профессора</button>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -900,7 +901,7 @@ func NavigationByJobDB(jobDB *jobschema.JobDB) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			if jobDB.JobAccessCourseType {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/coursetype\" hx-target=\"#main\" hx-swap=\"innerHTML\">CoT</button>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/coursetype\" hx-target=\"#main\" hx-swap=\"innerHTML\">Типы дисциплин</button>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -910,7 +911,7 @@ func NavigationByJobDB(jobDB *jobschema.JobDB) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			if jobDB.JobAccessCourse {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/course\" hx-target=\"#main\" hx-swap=\"innerHTML\">Co</button>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/course\" hx-target=\"#main\" hx-swap=\"innerHTML\">Дисциплины</button>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -920,7 +921,7 @@ func NavigationByJobDB(jobDB *jobschema.JobDB) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			if jobDB.JobAccessPerf {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/perf\" hx-target=\"#main\" hx-swap=\"innerHTML\">P</button>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/perf\" hx-target=\"#main\" hx-swap=\"innerHTML\">Успеваемость</button>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
@@ -930,12 +931,12 @@ func NavigationByJobDB(jobDB *jobschema.JobDB) templ.Component {
 				return templ_7745c5c3_Err
 			}
 			if jobDB.JobAccessSkip {
-				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/skip\" hx-target=\"#main\" hx-swap=\"innerHTML\">Sk</button>")
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<button class=\"link-button\" hx-post=\"/api/skip\" hx-target=\"#main\" hx-swap=\"innerHTML\">Пропуски</button>")
 				if templ_7745c5c3_Err != nil {
 					return templ_7745c5c3_Err
 				}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" <p>OBD Project</p><button class=\"link-button\" hx-post=\"/api/auth/logout\" hx-target=\"#navigation\" hx-swap=\"outerHTML\">L</button>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" <p>КР ОБД</p><button class=\"link-button\" hx-post=\"/api/auth/logout\" hx-target=\"#navigation\" hx-swap=\"outerHTML\">Выйти</button>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -994,7 +995,7 @@ func TableRowEdit(inputs []*schema.Input, bodyVals string, updatePOSTURL string,
 		var templ_7745c5c3_Var34 string
 		templ_7745c5c3_Var34, templ_7745c5c3_Err = templ.JoinStringErrs(updatePOSTURL)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 320, Col: 27}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 321, Col: 27}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var34))
 		if templ_7745c5c3_Err != nil {
@@ -1007,39 +1008,13 @@ func TableRowEdit(inputs []*schema.Input, bodyVals string, updatePOSTURL string,
 		var templ_7745c5c3_Var35 string
 		templ_7745c5c3_Var35, templ_7745c5c3_Err = templ.JoinStringErrs(bodyVals)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 324, Col: 22}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 325, Col: 22}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var35))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\">Save</button> <button hx-post=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var36 string
-		templ_7745c5c3_Var36, templ_7745c5c3_Err = templ.JoinStringErrs(deletePOSTURL)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 327, Col: 27}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var36))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"closest tr\" hx-swap=\"outerHTML\" hx-vals=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var37 string
-		templ_7745c5c3_Var37, templ_7745c5c3_Err = templ.JoinStringErrs(bodyVals)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 330, Col: 22}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var37))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\">Delete</button></th></tr>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\">Сохранить</button></th></tr>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -1063,9 +1038,9 @@ func TableRow(inputs []*schema.Input, bodyVals string, editPOSTURL string, delet
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var38 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var38 == nil {
-			templ_7745c5c3_Var38 = templ.NopComponent
+		templ_7745c5c3_Var36 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var36 == nil {
+			templ_7745c5c3_Var36 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<tr>")
@@ -1090,10 +1065,36 @@ func TableRow(inputs []*schema.Input, bodyVals string, editPOSTURL string, delet
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var39 string
-		templ_7745c5c3_Var39, templ_7745c5c3_Err = templ.JoinStringErrs(editPOSTURL)
+		var templ_7745c5c3_Var37 string
+		templ_7745c5c3_Var37, templ_7745c5c3_Err = templ.JoinStringErrs(editPOSTURL)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 345, Col: 25}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 340, Col: 25}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var37))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"closest tr\" hx-swap=\"outerHTML\" hx-vals=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var38 string
+		templ_7745c5c3_Var38, templ_7745c5c3_Err = templ.JoinStringErrs(bodyVals)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 343, Col: 22}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var38))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\">Редактировать</button> <button hx-post=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var39 string
+		templ_7745c5c3_Var39, templ_7745c5c3_Err = templ.JoinStringErrs(deletePOSTURL)
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 346, Col: 27}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var39))
 		if templ_7745c5c3_Err != nil {
@@ -1106,39 +1107,28 @@ func TableRow(inputs []*schema.Input, bodyVals string, editPOSTURL string, delet
 		var templ_7745c5c3_Var40 string
 		templ_7745c5c3_Var40, templ_7745c5c3_Err = templ.JoinStringErrs(bodyVals)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 348, Col: 22}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 349, Col: 22}
 		}
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var40))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\">Edit</button> <button hx-post=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var41 string
-		templ_7745c5c3_Var41, templ_7745c5c3_Err = templ.JoinStringErrs(deletePOSTURL)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 351, Col: 27}
+		if strings.Contains(inputs[len(inputs)-1].InputName, "IsHidden") {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("Скрыть")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		} else {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("Удалить")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var41))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"closest tr\" hx-swap=\"outerHTML\" hx-vals=\"")
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var42 string
-		templ_7745c5c3_Var42, templ_7745c5c3_Err = templ.JoinStringErrs(bodyVals)
-		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 354, Col: 22}
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var42))
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\">Delete</button></th></tr>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</button></th></tr>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -1167,25 +1157,25 @@ func Table(title string, getPOSTURL string, headers []*schema.TableHeaderColumn)
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var43 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var43 == nil {
-			templ_7745c5c3_Var43 = templ.NopComponent
+		templ_7745c5c3_Var41 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var41 == nil {
+			templ_7745c5c3_Var41 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div style=\"width: 100%; display: flex; flex-direction: column;\"><h2>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var44 string
-		templ_7745c5c3_Var44, templ_7745c5c3_Err = templ.JoinStringErrs(title)
+		var templ_7745c5c3_Var42 string
+		templ_7745c5c3_Var42, templ_7745c5c3_Err = templ.JoinStringErrs(title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 367, Col: 13}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 368, Col: 13}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var44))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var42))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" Entries:</h2><table><thead><tr>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(":</h2><table><thead><tr id=\"tableHead\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -1195,7 +1185,7 @@ func Table(title string, getPOSTURL string, headers []*schema.TableHeaderColumn)
 				return templ_7745c5c3_Err
 			}
 		}
-		templ_7745c5c3_Err = tableHeader(schema.NewTableHeaderColumn("Actions", 20)).Render(ctx, templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = tableHeader(schema.NewTableHeaderColumn("Действия", 12)).Render(ctx, templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -1203,12 +1193,12 @@ func Table(title string, getPOSTURL string, headers []*schema.TableHeaderColumn)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var45 string
-		templ_7745c5c3_Var45, templ_7745c5c3_Err = templ.JoinStringErrs(getPOSTURL)
+		var templ_7745c5c3_Var43 string
+		templ_7745c5c3_Var43, templ_7745c5c3_Err = templ.JoinStringErrs(getPOSTURL)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 378, Col: 66}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 379, Col: 66}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var45))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var43))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -1236,25 +1226,25 @@ func InsertForm(title string, insertPOSTURL string, inputs []*schema.Input) temp
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var46 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var46 == nil {
-			templ_7745c5c3_Var46 = templ.NopComponent
+		templ_7745c5c3_Var44 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var44 == nil {
+			templ_7745c5c3_Var44 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"insertForm\" style=\"width: 100%; display: flex; flex-direction: column;\"><h2>Insert ")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"insertForm\" style=\"width: 100%; display: flex; flex-direction: column;\"><h2>Форма добавления ")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var47 string
-		templ_7745c5c3_Var47, templ_7745c5c3_Err = templ.JoinStringErrs(title)
+		var templ_7745c5c3_Var45 string
+		templ_7745c5c3_Var45, templ_7745c5c3_Err = templ.JoinStringErrs(title)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 386, Col: 20}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 387, Col: 45}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var47))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var45))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" form:</h2><div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(":</h2><div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -1268,16 +1258,16 @@ func InsertForm(title string, insertPOSTURL string, inputs []*schema.Input) temp
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var48 string
-		templ_7745c5c3_Var48, templ_7745c5c3_Err = templ.JoinStringErrs(insertPOSTURL)
+		var templ_7745c5c3_Var46 string
+		templ_7745c5c3_Var46, templ_7745c5c3_Err = templ.JoinStringErrs(insertPOSTURL)
 		if templ_7745c5c3_Err != nil {
-			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 394, Col: 26}
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/view.templ`, Line: 395, Col: 26}
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var48))
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var46))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"#table\" hx-include=\"closest div\" hx-swap=\"afterbegin\">Insert</button></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"#table\" hx-include=\"closest div\" hx-swap=\"afterbegin\">Добавить</button></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

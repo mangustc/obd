@@ -16,9 +16,9 @@ import (
 )
 
 const (
-	pageTitle              = "Financial Help Stage"
+	pageTitle              = "Материальная помощь Этапы"
 	tableTitle             = pageTitle
-	insertFormTitle        = tableTitle
+	insertFormTitle        = "Этапа материальной помощи"
 	getPOSTURL             = "/api/finhelpstage/getfinhelpstages"
 	insertPOSTURL          = "/api/finhelpstage/insertfinhelpstage"
 	editPOSTURL            = "/api/finhelpstage/editfinhelpstage"
@@ -30,16 +30,16 @@ const (
 )
 
 var (
-	taFinhelpStageName        = schema.NewTA(finhelpStageTN+"Name", "Name", schema.StringInput)
-	taFinhelpStageDescription = schema.NewTA(finhelpStageTN+"Description", "Description", schema.StringInput)
-	taFinhelpStageIsHidden    = schema.NewTA(finhelpStageTN+"IsHidden", "Is Hidden", schema.BooleanInput)
+	taFinhelpStageName        = schema.NewTA(finhelpStageTN+"Name", "Название", schema.StringInput)
+	taFinhelpStageDescription = schema.NewTA(finhelpStageTN+"Description", "Описание", schema.StringInput)
+	taFinhelpStageIsHidden    = schema.NewTA(finhelpStageTN+"IsHidden", "Скрыт", schema.BooleanInput)
 )
 
 func getTableHeaders() []*schema.TableHeaderColumn {
 	return []*schema.TableHeaderColumn{
-		schema.NewTableHeaderColumn(taFinhelpStageName.TATitle, 20),
-		schema.NewTableHeaderColumn(taFinhelpStageDescription.TATitle, 70),
-		schema.NewTableHeaderColumn(taFinhelpStageIsHidden.TATitle, 10),
+		schema.NewTableHeaderColumn(taFinhelpStageName.TATitle, 15),
+		schema.NewTableHeaderColumn(taFinhelpStageDescription.TATitle, 65),
+		schema.NewTableHeaderColumn(taFinhelpStageIsHidden.TATitle, 5),
 	}
 }
 

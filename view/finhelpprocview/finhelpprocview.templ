@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	pageTitle             = "FinhelpProc"
+	pageTitle             = "Материальная помощь Процессы"
 	tableTitle            = pageTitle
-	insertFormTitle       = tableTitle
+	insertFormTitle       = "Процесса материальной помощи"
 	getPOSTURL            = "/api/finhelpproc/getfinhelpprocs"
 	insertPOSTURL         = "/api/finhelpproc/insertfinhelpproc"
 	editPOSTURL           = "/api/finhelpproc/editfinhelpproc"
@@ -26,20 +26,20 @@ const (
 )
 
 var (
-	taUserID               = schema.NewTA(userTN+"ID", "User", schema.OptionInput)
-	taStudentID            = schema.NewTA(studentTN+"ID", "Student", schema.OptionInput)
-	taFinhelpCtgID         = schema.NewTA(finhelpCtgTN+"ID", "Category", schema.OptionInput)
-	taFinhelpStageID       = schema.NewTA(finhelpStageTN+"ID", "Stage", schema.OptionInput)
-	taFinhelpProcCreatedAt = schema.NewTA(finhelpProcTN+"CreatedAt", "Created At", schema.StringInput)
+	taUserID               = schema.NewTA(userTN+"ID", "Сотрудник", schema.OptionInput)
+	taStudentID            = schema.NewTA(studentTN+"ID", "Студент", schema.OptionInput)
+	taFinhelpCtgID         = schema.NewTA(finhelpCtgTN+"ID", "Категория", schema.OptionInput)
+	taFinhelpStageID       = schema.NewTA(finhelpStageTN+"ID", "Этап", schema.OptionInput)
+	taFinhelpProcCreatedAt = schema.NewTA(finhelpProcTN+"CreatedAt", "Дата создания", schema.StringInput)
 )
 
 func getTableHeaders() []*schema.TableHeaderColumn {
 	return []*schema.TableHeaderColumn{
-		schema.NewTableHeaderColumn(taUserID.TATitle, 20),
-		schema.NewTableHeaderColumn(taStudentID.TATitle, 20),
-		schema.NewTableHeaderColumn(taFinhelpCtgID.TATitle, 20),
-		schema.NewTableHeaderColumn(taFinhelpStageID.TATitle, 20),
-		schema.NewTableHeaderColumn(taFinhelpProcCreatedAt.TATitle, 20),
+		schema.NewTableHeaderColumn(taUserID.TATitle, 15),
+		schema.NewTableHeaderColumn(taStudentID.TATitle, 15),
+		schema.NewTableHeaderColumn(taFinhelpCtgID.TATitle, 15),
+		schema.NewTableHeaderColumn(taFinhelpStageID.TATitle, 15),
+		schema.NewTableHeaderColumn(taFinhelpProcCreatedAt.TATitle, 10),
 	}
 }
 

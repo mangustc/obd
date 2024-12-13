@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	pageTitle       = "Professors"
+	pageTitle       = "Профессора"
 	tableTitle      = pageTitle
-	insertFormTitle = tableTitle
+	insertFormTitle = "Профессора"
 	getPOSTURL      = "/api/prof/getprofs"
 	insertPOSTURL   = "/api/prof/insertprof"
 	editPOSTURL     = "/api/prof/editprof"
@@ -22,22 +22,22 @@ const (
 )
 
 var (
-	taProfLastname    = schema.NewTA(profTN+"Lastname", "Last name", schema.StringInput)
-	taProfFirstname   = schema.NewTA(profTN+"Firstname", "First name", schema.StringInput)
-	taProfMiddlename  = schema.NewTA(profTN+"Middlename", "Middle name", schema.StringInput)
-	taProfPhoneNumber = schema.NewTA(profTN+"PhoneNumber", "Phone number", schema.StringInput)
-	taProfEmail       = schema.NewTA(profTN+"Email", "Email", schema.StringInput)
-	taProfIsHidden    = schema.NewTA(profTN+"IsHidden", "Is Hidden", schema.BooleanInput)
+	taProfLastname    = schema.NewTA(profTN+"Lastname", "Фамилия", schema.StringInput)
+	taProfFirstname   = schema.NewTA(profTN+"Firstname", "Имя", schema.StringInput)
+	taProfMiddlename  = schema.NewTA(profTN+"Middlename", "Отчество", schema.StringInput)
+	taProfPhoneNumber = schema.NewTA(profTN+"PhoneNumber", "Номер телефона", schema.StringInput)
+	taProfEmail       = schema.NewTA(profTN+"Email", "Почта", schema.StringInput)
+	taProfIsHidden    = schema.NewTA(profTN+"IsHidden", "Скрыт", schema.BooleanInput)
 )
 
 func getTableHeaders() []*schema.TableHeaderColumn {
 	return []*schema.TableHeaderColumn{
-		schema.NewTableHeaderColumn(taProfLastname.TATitle, 20),
-		schema.NewTableHeaderColumn(taProfFirstname.TATitle, 20),
-		schema.NewTableHeaderColumn(taProfMiddlename.TATitle, 20),
-		schema.NewTableHeaderColumn(taProfPhoneNumber.TATitle, 15),
-		schema.NewTableHeaderColumn(taProfEmail.TATitle, 15),
-		schema.NewTableHeaderColumn(taProfIsHidden.TATitle, 10),
+		schema.NewTableHeaderColumn(taProfLastname.TATitle, 15),
+		schema.NewTableHeaderColumn(taProfFirstname.TATitle, 15),
+		schema.NewTableHeaderColumn(taProfMiddlename.TATitle, 15),
+		schema.NewTableHeaderColumn(taProfPhoneNumber.TATitle, 10),
+		schema.NewTableHeaderColumn(taProfEmail.TATitle, 10),
+		schema.NewTableHeaderColumn(taProfIsHidden.TATitle, 5),
 	}
 }
 

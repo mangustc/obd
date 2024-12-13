@@ -16,9 +16,9 @@ import (
 )
 
 const (
-	pageTitle       = "Skip"
+	pageTitle       = "Пропуски"
 	tableTitle      = pageTitle
-	insertFormTitle = tableTitle
+	insertFormTitle = "Пропуска пары студентом"
 	getPOSTURL      = "/api/skip/getskips"
 	insertPOSTURL   = "/api/skip/insertskip"
 	editPOSTURL     = "/api/skip/editskip"
@@ -32,8 +32,8 @@ const (
 )
 
 var (
-	taClassID   = schema.NewTA(classTN+"ID", "Class", schema.OptionInput)
-	taStudentID = schema.NewTA(studentTN+"ID", "Student", schema.OptionInput)
+	taClassID   = schema.NewTA(classTN+"ID", "Пара", schema.OptionInput)
+	taStudentID = schema.NewTA(studentTN+"ID", "Студент", schema.OptionInput)
 )
 
 func getTableHeaders() []*schema.TableHeaderColumn {

@@ -16,9 +16,9 @@ import (
 )
 
 const (
-	pageTitle       = "Job"
+	pageTitle       = "Должность"
 	tableTitle      = pageTitle
-	insertFormTitle = tableTitle
+	insertFormTitle = "Должности"
 	getPOSTURL      = "/api/job/getjobs"
 	insertPOSTURL   = "/api/job/insertjob"
 	editPOSTURL     = "/api/job/editjob"
@@ -30,29 +30,29 @@ const (
 )
 
 var (
-	taJobName               = schema.NewTA(jobTN+"Name", "Job Name", schema.StringInput)
-	taJobAccessUser         = schema.NewTA(jobTN+"AccessUser", "User", schema.BooleanInput)
-	taJobAccessJob          = schema.NewTA(jobTN+"AccessJob", "Job", schema.BooleanInput)
-	taJobAccessStudent      = schema.NewTA(jobTN+"AccessStudent", "Student", schema.BooleanInput)
-	taJobAccessGroup        = schema.NewTA(jobTN+"AccessGroup", "Group", schema.BooleanInput)
-	taJobAccessFinhelpCtg   = schema.NewTA(jobTN+"AccessFinhelpCtg", "FinhelpCtg", schema.BooleanInput)
-	taJobAccessFinhelpStage = schema.NewTA(jobTN+"AccessFinhelpStage", "FinhelpStage", schema.BooleanInput)
-	taJobAccessFinhelpProc  = schema.NewTA(jobTN+"AccessFinhelpProc", "FinhelpProc", schema.BooleanInput)
-	taJobAccessBuilding     = schema.NewTA(jobTN+"AccessBuilding", "Building", schema.BooleanInput)
-	taJobAccessCabinetType  = schema.NewTA(jobTN+"AccessCabinetType", "CabinetType", schema.BooleanInput)
-	taJobAccessCabinet      = schema.NewTA(jobTN+"AccessCabinet", "Cabinet", schema.BooleanInput)
-	taJobAccessClassType    = schema.NewTA(jobTN+"AccessClassType", "ClassType", schema.BooleanInput)
-	taJobAccessProf         = schema.NewTA(jobTN+"AccessProf", "Prof", schema.BooleanInput)
-	taJobAccessCourseType   = schema.NewTA(jobTN+"AccessCourseType", "CourseType", schema.BooleanInput)
-	taJobAccessCourse       = schema.NewTA(jobTN+"AccessCourse", "Course", schema.BooleanInput)
-	taJobAccessPerf         = schema.NewTA(jobTN+"AccessPerf", "Perf", schema.BooleanInput)
-	taJobAccessSkip         = schema.NewTA(jobTN+"AccessSkip", "Skip", schema.BooleanInput)
-	taJobAccessClass        = schema.NewTA(jobTN+"AccessClass", "Class", schema.BooleanInput)
+	taJobName               = schema.NewTA(jobTN+"Name", "Название", schema.StringInput)
+	taJobAccessUser         = schema.NewTA(jobTN+"AccessUser", "Сотрудники", schema.BooleanInput)
+	taJobAccessJob          = schema.NewTA(jobTN+"AccessJob", "Должности", schema.BooleanInput)
+	taJobAccessStudent      = schema.NewTA(jobTN+"AccessStudent", "Студенты", schema.BooleanInput)
+	taJobAccessGroup        = schema.NewTA(jobTN+"AccessGroup", "Группы", schema.BooleanInput)
+	taJobAccessFinhelpCtg   = schema.NewTA(jobTN+"AccessFinhelpCtg", "МП Категории", schema.BooleanInput)
+	taJobAccessFinhelpStage = schema.NewTA(jobTN+"AccessFinhelpStage", "МП Этапы", schema.BooleanInput)
+	taJobAccessFinhelpProc  = schema.NewTA(jobTN+"AccessFinhelpProc", "МП Процессы", schema.BooleanInput)
+	taJobAccessBuilding     = schema.NewTA(jobTN+"AccessBuilding", "Корпуса", schema.BooleanInput)
+	taJobAccessCabinetType  = schema.NewTA(jobTN+"AccessCabinetType", "Типы кабинетов", schema.BooleanInput)
+	taJobAccessCabinet      = schema.NewTA(jobTN+"AccessCabinet", "Кабинеты", schema.BooleanInput)
+	taJobAccessClassType    = schema.NewTA(jobTN+"AccessClassType", "Типы пар", schema.BooleanInput)
+	taJobAccessProf         = schema.NewTA(jobTN+"AccessProf", "Профессора", schema.BooleanInput)
+	taJobAccessCourseType   = schema.NewTA(jobTN+"AccessCourseType", "Типы дисциплин", schema.BooleanInput)
+	taJobAccessCourse       = schema.NewTA(jobTN+"AccessCourse", "Дисциплины", schema.BooleanInput)
+	taJobAccessPerf         = schema.NewTA(jobTN+"AccessPerf", "Успеваемость", schema.BooleanInput)
+	taJobAccessSkip         = schema.NewTA(jobTN+"AccessSkip", "Пропуски", schema.BooleanInput)
+	taJobAccessClass        = schema.NewTA(jobTN+"AccessClass", "Расписание", schema.BooleanInput)
 )
 
 func getTableHeaders() []*schema.TableHeaderColumn {
 	return []*schema.TableHeaderColumn{
-		schema.NewTableHeaderColumn(taJobName.TATitle, 30),
+		schema.NewTableHeaderColumn(taJobName.TATitle, 15),
 		schema.NewTableHeaderColumn(taJobAccessUser.TATitle, 4),
 		schema.NewTableHeaderColumn(taJobAccessJob.TATitle, 4),
 		schema.NewTableHeaderColumn(taJobAccessStudent.TATitle, 4),

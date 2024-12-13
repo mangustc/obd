@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	pageTitle       = "Class"
+	pageTitle       = "Расписание"
 	tableTitle      = pageTitle
-	insertFormTitle = tableTitle
+	insertFormTitle = "Пары"
 	getPOSTURL      = "/api/class/getclasss"
 	insertPOSTURL   = "/api/class/insertclass"
 	editPOSTURL     = "/api/class/editclass"
@@ -27,13 +27,13 @@ const (
 )
 
 var (
-	taClassTypeID = schema.NewTA(classTypeTN+"ID", "Class Type", schema.OptionInput)
-	taProfID      = schema.NewTA(profTN+"ID", "Professor", schema.OptionInput)
-	taCabinetID   = schema.NewTA(cabinetTN+"ID", "Cabinet", schema.OptionInput)
-	taCourseID    = schema.NewTA(courseTN+"ID", "Course", schema.OptionInput)
-	taGroupID     = schema.NewTA(groupTN+"ID", "Group", schema.OptionInput)
-	taClassStart  = schema.NewTA(classTN+"Start", "Class Date", schema.StringInput)
-	taClassNumber = schema.NewTA(classTN+"Number", "Class Number", schema.NumberInput)
+	taClassTypeID = schema.NewTA(classTypeTN+"ID", "Тип пары", schema.OptionInput)
+	taProfID      = schema.NewTA(profTN+"ID", "Профессор", schema.OptionInput)
+	taCabinetID   = schema.NewTA(cabinetTN+"ID", "Кабинет", schema.OptionInput)
+	taCourseID    = schema.NewTA(courseTN+"ID", "Дисциплина", schema.OptionInput)
+	taGroupID     = schema.NewTA(groupTN+"ID", "Группа", schema.OptionInput)
+	taClassStart  = schema.NewTA(classTN+"Start", "Дата пары", schema.StringInput)
+	taClassNumber = schema.NewTA(classTN+"Number", "Номер пары", schema.NumberInput)
 )
 
 func getTableHeaders() []*schema.TableHeaderColumn {
@@ -141,6 +141,14 @@ templ Class(
 	courseInputOptions []*schema.InputOption,
 	groupInputOptions []*schema.InputOption,
 ) {
+	<div id="filterClassContainer">
+		<script src="/js/filterclass.js"></script>
+		<button onclick="toggleUI()">Режим печати</button>
+		<button id="downloadPDF" style="display: none;" onclick="printTable()">Download as PDF</button>
+		<select id="week" style="display: none;">
+			<option></option>
+		</select>
+	</div>
 	@view.InsertForm(insertFormTitle, insertPOSTURL, getInsertFormInputs(
 		classTypeInputOptions,
 		profInputOptions,

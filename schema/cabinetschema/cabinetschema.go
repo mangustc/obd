@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/mangustc/obd/schema"
+	"github.com/mangustc/obd/schema/buildingschema"
 )
 
 type CabinetDB struct {
@@ -37,12 +38,12 @@ type CabinetGet struct {
 
 type CabinetsGet struct{}
 
-func GetCabinetInputOptionsFromCabinetsDB(cabinetsDB []*CabinetDB) []*schema.InputOption {
+func GetCabinetInputOptionsFromCabinetsDB(cabinetsDB []*CabinetDB, buildingsDB []*buildingschema.BuildingDB) []*schema.InputOption {
 	notHiddenCabinetsDB := GetNotHiddenCabinetsDB(cabinetsDB)
 	inputOptions := []*schema.InputOption{}
 	for _, cabinetDB := range notHiddenCabinetsDB {
 		inputOptions = append(inputOptions, &schema.InputOption{
-			InputOptionLabel: fmt.Sprintf("%s %d", cabinetDB.CabinetNumber, cabinetDB.BuildingID),
+			InputOptionLabel: fmt.Sprintf("%s %s", cabinetDB.CabinetNumber, buildingschema.GetBuildingByBuildingID(buildingsDB, cabinetDB.BuildingID).BuildingName),
 			InputOptionValue: fmt.Sprintf("%d", cabinetDB.CabinetID),
 		})
 	}

@@ -8,6 +8,7 @@ import (
 	"github.com/mangustc/obd/logger"
 	"github.com/mangustc/obd/msg"
 	"github.com/mangustc/obd/schema/classschema"
+	"github.com/mangustc/obd/schema/groupschema"
 	"github.com/mangustc/obd/schema/skipschema"
 	"github.com/mangustc/obd/schema/studentschema"
 	"github.com/mangustc/obd/util"
@@ -21,6 +22,7 @@ func NewSkipHandler(
 	sks handler.SkipService,
 	cls handler.ClassService,
 	sts handler.StudentService,
+	grs handler.GroupService,
 ) *SkipHandler {
 	return &SkipHandler{
 		SessionService: ss,
@@ -29,6 +31,7 @@ func NewSkipHandler(
 		SkipService:    sks,
 		ClassService:   cls,
 		StudentService: sts,
+		GroupService:   grs,
 	}
 }
 
@@ -39,6 +42,7 @@ type SkipHandler struct {
 	SkipService    handler.SkipService
 	ClassService   handler.ClassService
 	StudentService handler.StudentService
+	GroupService   handler.GroupService
 }
 
 func (skh *SkipHandler) Skip(w http.ResponseWriter, r *http.Request) {
@@ -49,11 +53,12 @@ func (skh *SkipHandler) Skip(w http.ResponseWriter, r *http.Request) {
 	var out []byte
 	defer util.RespondHTTP(w, r, &message, &out)
 
+	groupsDB, _ := skh.GroupService.GetGroups(&groupschema.GroupsGet{})
 	classsDB, _ := skh.ClassService.GetClasss(&classschema.ClasssGet{})
-	classInputOptions := classschema.GetClassInputOptionsFromClasssDB(classsDB)
+	classInputOptions := classschema.GetClassInputOptionsFromClasssDB(classsDB, groupsDB)
 
 	studentsDB, _ := skh.StudentService.GetStudents(&studentschema.StudentsGet{})
-	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB)
+	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB, groupsDB)
 
 	util.RenderComponent(r, &out, skipview.Skip(
 		classInputOptions,
@@ -95,11 +100,12 @@ func (skh *SkipHandler) GetSkips(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	groupsDB, _ := skh.GroupService.GetGroups(&groupschema.GroupsGet{})
 	classsDB, _ := skh.ClassService.GetClasss(&classschema.ClasssGet{})
-	classInputOptions := classschema.GetClassInputOptionsFromClasssDB(classsDB)
+	classInputOptions := classschema.GetClassInputOptionsFromClasssDB(classsDB, groupsDB)
 
 	studentsDB, _ := skh.StudentService.GetStudents(&studentschema.StudentsGet{})
-	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB)
+	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB, groupsDB)
 
 	util.RenderComponent(r, &out, skipview.SkipTableRows(skipsDB,
 		classInputOptions,
@@ -155,11 +161,12 @@ func (skh *SkipHandler) InsertSkip(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	groupsDB, _ := skh.GroupService.GetGroups(&groupschema.GroupsGet{})
 	classsDB, _ := skh.ClassService.GetClasss(&classschema.ClasssGet{})
-	classInputOptions := classschema.GetClassInputOptionsFromClasssDB(classsDB)
+	classInputOptions := classschema.GetClassInputOptionsFromClasssDB(classsDB, groupsDB)
 
 	studentsDB, _ := skh.StudentService.GetStudents(&studentschema.StudentsGet{})
-	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB)
+	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB, groupsDB)
 
 	util.RenderComponent(r, &out, skipview.SkipTableRow(skipDB,
 		classInputOptions,
@@ -204,11 +211,12 @@ func (skh *SkipHandler) EditSkip(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	groupsDB, _ := skh.GroupService.GetGroups(&groupschema.GroupsGet{})
 	classsDB, _ := skh.ClassService.GetClasss(&classschema.ClasssGet{})
-	classInputOptions := classschema.GetClassInputOptionsFromClasssDB(classsDB)
+	classInputOptions := classschema.GetClassInputOptionsFromClasssDB(classsDB, groupsDB)
 
 	studentsDB, _ := skh.StudentService.GetStudents(&studentschema.StudentsGet{})
-	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB)
+	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB, groupsDB)
 
 	util.RenderComponent(r, &out, skipview.SkipTableRowEdit(skipDB,
 		classInputOptions,
@@ -265,11 +273,12 @@ func (skh *SkipHandler) UpdateSkip(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
+	groupsDB, _ := skh.GroupService.GetGroups(&groupschema.GroupsGet{})
 	classsDB, _ := skh.ClassService.GetClasss(&classschema.ClasssGet{})
-	classInputOptions := classschema.GetClassInputOptionsFromClasssDB(classsDB)
+	classInputOptions := classschema.GetClassInputOptionsFromClasssDB(classsDB, groupsDB)
 
 	studentsDB, _ := skh.StudentService.GetStudents(&studentschema.StudentsGet{})
-	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB)
+	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB, groupsDB)
 
 	util.RenderComponent(r, &out, skipview.SkipTableRow(skipDB,
 		classInputOptions,
@@ -314,11 +323,12 @@ func (skh *SkipHandler) DeleteSkip(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	groupsDB, _ := skh.GroupService.GetGroups(&groupschema.GroupsGet{})
 	classsDB, _ := skh.ClassService.GetClasss(&classschema.ClasssGet{})
-	classInputOptions := classschema.GetClassInputOptionsFromClasssDB(classsDB)
+	classInputOptions := classschema.GetClassInputOptionsFromClasssDB(classsDB, groupsDB)
 
 	studentsDB, _ := skh.StudentService.GetStudents(&studentschema.StudentsGet{})
-	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB)
+	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB, groupsDB)
 
 	util.RenderComponent(r, &out, skipview.SkipTableRow(skipDB,
 		classInputOptions,

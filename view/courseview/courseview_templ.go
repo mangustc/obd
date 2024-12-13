@@ -16,9 +16,9 @@ import (
 )
 
 const (
-	pageTitle        = "Course"
+	pageTitle        = "Дисциплины"
 	tableTitle       = pageTitle
-	insertFormTitle  = tableTitle
+	insertFormTitle  = "Дисциплины"
 	getPOSTURL       = "/api/course/getcourses"
 	insertPOSTURL    = "/api/course/insertcourse"
 	editPOSTURL      = "/api/course/editcourse"
@@ -31,16 +31,16 @@ const (
 )
 
 var (
-	taCourseTypeID   = schema.NewTA(courseTypeTN+"ID", "Course Type", schema.OptionInput)
-	taCourseName     = schema.NewTA(courseTN+"Name", "Course Name", schema.StringInput)
-	taCourseIsHidden = schema.NewTA(courseTN+"IsHidden", "Hidden", schema.BooleanInput)
+	taCourseTypeID   = schema.NewTA(courseTypeTN+"ID", "Тип дисциплины", schema.OptionInput)
+	taCourseName     = schema.NewTA(courseTN+"Name", "Название дисциплины", schema.StringInput)
+	taCourseIsHidden = schema.NewTA(courseTN+"IsHidden", "Скрыт", schema.BooleanInput)
 )
 
 func getTableHeaders() []*schema.TableHeaderColumn {
 	return []*schema.TableHeaderColumn{
 		schema.NewTableHeaderColumn(taCourseTypeID.TATitle, 20),
-		schema.NewTableHeaderColumn(taCourseName.TATitle, 20),
-		schema.NewTableHeaderColumn(taCourseIsHidden.TATitle, 10),
+		schema.NewTableHeaderColumn(taCourseName.TATitle, 40),
+		schema.NewTableHeaderColumn(taCourseIsHidden.TATitle, 5),
 	}
 }
 

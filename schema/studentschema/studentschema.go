@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/mangustc/obd/schema"
+	"github.com/mangustc/obd/schema/groupschema"
 )
 
 type StudentDB struct {
@@ -43,12 +44,12 @@ type StudentGet struct {
 
 type StudentsGet struct{}
 
-func GetStudentInputOptionsFromStudentsDB(studentsDB []*StudentDB) []*schema.InputOption {
+func GetStudentInputOptionsFromStudentsDB(studentsDB []*StudentDB, groupsDB []*groupschema.GroupDB) []*schema.InputOption {
 	notHiddenStudentsDB := GetNotHiddenStudentsDB(studentsDB)
 	inputOptions := []*schema.InputOption{}
 	for _, studentDB := range notHiddenStudentsDB {
 		inputOptions = append(inputOptions, &schema.InputOption{
-			InputOptionLabel: fmt.Sprintf("%s %s %s", studentDB.StudentLastname, studentDB.StudentFirstname, studentDB.StudentMiddlename),
+			InputOptionLabel: fmt.Sprintf("%s %s %s %s", studentDB.StudentLastname, studentDB.StudentFirstname, studentDB.StudentMiddlename, groupschema.GetGroupByGroupID(groupsDB, studentDB.GroupID).GroupNumber),
 			InputOptionValue: fmt.Sprintf("%d", studentDB.StudentID),
 		})
 	}

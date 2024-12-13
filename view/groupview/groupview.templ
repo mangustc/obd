@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	pageTitle       = "Group"
+	pageTitle       = "Группы"
 	tableTitle      = pageTitle
-	insertFormTitle = tableTitle
+	insertFormTitle = "Группы"
 	getPOSTURL      = "/api/group/getgroups"
 	insertPOSTURL   = "/api/group/insertgroup"
 	editPOSTURL     = "/api/group/editgroup"
@@ -22,18 +22,18 @@ const (
 )
 
 var (
-	taGroupNumber     = schema.NewTA(groupTN+"Number", "Group Number", schema.StringInput)
-	taGroupYear       = schema.NewTA(groupTN+"Year", "Year", schema.NumberInput)
-	taGroupCourseName = schema.NewTA(groupTN+"CourseName", "Course Name", schema.StringInput)
-	taGroupIsHidden   = schema.NewTA(groupTN+"IsHidden", "Is Hidden", schema.BooleanInput)
+	taGroupNumber     = schema.NewTA(groupTN+"Number", "Номер группы", schema.StringInput)
+	taGroupYear       = schema.NewTA(groupTN+"Year", "Год поступления", schema.NumberInput)
+	taGroupCourseName = schema.NewTA(groupTN+"CourseName", "Название направления", schema.StringInput)
+	taGroupIsHidden   = schema.NewTA(groupTN+"IsHidden", "Скрыт", schema.BooleanInput)
 )
 
 func getTableHeaders() []*schema.TableHeaderColumn {
 	return []*schema.TableHeaderColumn{
-		schema.NewTableHeaderColumn(taGroupNumber.TATitle, 30),
-		schema.NewTableHeaderColumn(taGroupYear.TATitle, 30),
-		schema.NewTableHeaderColumn(taGroupCourseName.TATitle, 30),
-		schema.NewTableHeaderColumn(taGroupIsHidden.TATitle, 10),
+		schema.NewTableHeaderColumn(taGroupNumber.TATitle, 15),
+		schema.NewTableHeaderColumn(taGroupYear.TATitle, 10),
+		schema.NewTableHeaderColumn(taGroupCourseName.TATitle, 15),
+		schema.NewTableHeaderColumn(taGroupIsHidden.TATitle, 5),
 	}
 }
 

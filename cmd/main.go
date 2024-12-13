@@ -420,6 +420,7 @@ func main() {
 		fctgs,
 		fsts,
 		fprs,
+		grs,
 	)
 	router.HandleFunc("GET /finhelpproc", fprh.FinhelpProcPage)
 	router.HandleFunc("POST /api/finhelpproc", fprh.FinhelpProc)
@@ -555,6 +556,7 @@ func main() {
 		cs,
 		cos,
 		grs,
+		bs,
 	)
 	router.HandleFunc("GET /class", clh.ClassPage)
 	router.HandleFunc("POST /api/class", clh.Class)
@@ -571,6 +573,7 @@ func main() {
 		ps,
 		cos,
 		sts,
+		grs,
 	)
 	router.HandleFunc("GET /perf", ph.PerfPage)
 	router.HandleFunc("POST /api/perf", ph.Perf)
@@ -587,6 +590,7 @@ func main() {
 		sks,
 		cls,
 		sts,
+		grs,
 	)
 	router.HandleFunc("GET /skip", skh.SkipPage)
 	router.HandleFunc("POST /api/skip", skh.Skip)

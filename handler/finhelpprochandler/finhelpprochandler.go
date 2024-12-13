@@ -10,6 +10,7 @@ import (
 	"github.com/mangustc/obd/schema/finhelpctgschema"
 	"github.com/mangustc/obd/schema/finhelpprocschema"
 	"github.com/mangustc/obd/schema/finhelpstageschema"
+	"github.com/mangustc/obd/schema/groupschema"
 	"github.com/mangustc/obd/schema/studentschema"
 	"github.com/mangustc/obd/schema/userschema"
 	"github.com/mangustc/obd/util"
@@ -24,6 +25,7 @@ func NewFinhelpProcHandler(
 	fctgs handler.FinhelpCtgService,
 	fsts handler.FinhelpStageService,
 	fprs handler.FinhelpProcService,
+	grs handler.GroupService,
 ) *FinhelpProcHandler {
 	return &FinhelpProcHandler{
 		SessionService:      ss,
@@ -33,6 +35,7 @@ func NewFinhelpProcHandler(
 		FinhelpCtgService:   fctgs,
 		FinhelpStageService: fsts,
 		FinhelpProcService:  fprs,
+		GroupService:        grs,
 	}
 }
 
@@ -44,6 +47,7 @@ type FinhelpProcHandler struct {
 	FinhelpCtgService   handler.FinhelpCtgService
 	FinhelpStageService handler.FinhelpStageService
 	FinhelpProcService  handler.FinhelpProcService
+	GroupService        handler.GroupService
 }
 
 func (fprh *FinhelpProcHandler) FinhelpProc(w http.ResponseWriter, r *http.Request) {
@@ -54,8 +58,9 @@ func (fprh *FinhelpProcHandler) FinhelpProc(w http.ResponseWriter, r *http.Reque
 	var out []byte
 	defer util.RespondHTTP(w, r, &message, &out)
 
+	groupsDB, _ := fprh.GroupService.GetGroups(&groupschema.GroupsGet{})
 	studentsDB, _ := fprh.StudentService.GetStudents(&studentschema.StudentsGet{})
-	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB)
+	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB, groupsDB)
 
 	finhelpCtgsDB, _ := fprh.FinhelpCtgService.GetFinhelpCtgs(&finhelpctgschema.FinhelpCtgsGet{})
 	finhelpCtgInputOptions := finhelpctgschema.GetFinhelpCtgInputOptionsFromFinhelpCtgsDB(finhelpCtgsDB)
@@ -120,8 +125,9 @@ func (fprh *FinhelpProcHandler) GetFinhelpProcs(w http.ResponseWriter, r *http.R
 	usersDB, _ := fprh.UserService.GetUsers(&userschema.UsersGet{})
 	userInputOptions := userschema.GetUserInputOptionsFromUsersDB(usersDB)
 
+	groupsDB, _ := fprh.GroupService.GetGroups(&groupschema.GroupsGet{})
 	studentsDB, _ := fprh.StudentService.GetStudents(&studentschema.StudentsGet{})
-	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB)
+	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB, groupsDB)
 
 	finhelpCtgsDB, _ := fprh.FinhelpCtgService.GetFinhelpCtgs(&finhelpctgschema.FinhelpCtgsGet{})
 	finhelpCtgInputOptions := finhelpctgschema.GetFinhelpCtgInputOptionsFromFinhelpCtgsDB(finhelpCtgsDB)
@@ -189,8 +195,9 @@ func (fprh *FinhelpProcHandler) InsertFinhelpProc(w http.ResponseWriter, r *http
 	usersDB, _ := fprh.UserService.GetUsers(&userschema.UsersGet{})
 	userInputOptions := userschema.GetUserInputOptionsFromUsersDB(usersDB)
 
+	groupsDB, _ := fprh.GroupService.GetGroups(&groupschema.GroupsGet{})
 	studentsDB, _ := fprh.StudentService.GetStudents(&studentschema.StudentsGet{})
-	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB)
+	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB, groupsDB)
 
 	finhelpCtgsDB, _ := fprh.FinhelpCtgService.GetFinhelpCtgs(&finhelpctgschema.FinhelpCtgsGet{})
 	finhelpCtgInputOptions := finhelpctgschema.GetFinhelpCtgInputOptionsFromFinhelpCtgsDB(finhelpCtgsDB)
@@ -246,8 +253,9 @@ func (fprh *FinhelpProcHandler) EditFinhelpProc(w http.ResponseWriter, r *http.R
 	usersDB, _ := fprh.UserService.GetUsers(&userschema.UsersGet{})
 	userInputOptions := userschema.GetUserInputOptionsFromUsersDB(usersDB)
 
+	groupsDB, _ := fprh.GroupService.GetGroups(&groupschema.GroupsGet{})
 	studentsDB, _ := fprh.StudentService.GetStudents(&studentschema.StudentsGet{})
-	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB)
+	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB, groupsDB)
 
 	finhelpCtgsDB, _ := fprh.FinhelpCtgService.GetFinhelpCtgs(&finhelpctgschema.FinhelpCtgsGet{})
 	finhelpCtgInputOptions := finhelpctgschema.GetFinhelpCtgInputOptionsFromFinhelpCtgsDB(finhelpCtgsDB)
@@ -315,8 +323,9 @@ func (fprh *FinhelpProcHandler) UpdateFinhelpProc(w http.ResponseWriter, r *http
 	usersDB, _ := fprh.UserService.GetUsers(&userschema.UsersGet{})
 	userInputOptions := userschema.GetUserInputOptionsFromUsersDB(usersDB)
 
+	groupsDB, _ := fprh.GroupService.GetGroups(&groupschema.GroupsGet{})
 	studentsDB, _ := fprh.StudentService.GetStudents(&studentschema.StudentsGet{})
-	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB)
+	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB, groupsDB)
 
 	finhelpCtgsDB, _ := fprh.FinhelpCtgService.GetFinhelpCtgs(&finhelpctgschema.FinhelpCtgsGet{})
 	finhelpCtgInputOptions := finhelpctgschema.GetFinhelpCtgInputOptionsFromFinhelpCtgsDB(finhelpCtgsDB)
@@ -372,8 +381,9 @@ func (fprh *FinhelpProcHandler) DeleteFinhelpProc(w http.ResponseWriter, r *http
 	usersDB, _ := fprh.UserService.GetUsers(&userschema.UsersGet{})
 	userInputOptions := userschema.GetUserInputOptionsFromUsersDB(usersDB)
 
+	groupsDB, _ := fprh.GroupService.GetGroups(&groupschema.GroupsGet{})
 	studentsDB, _ := fprh.StudentService.GetStudents(&studentschema.StudentsGet{})
-	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB)
+	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB, groupsDB)
 
 	finhelpCtgsDB, _ := fprh.FinhelpCtgService.GetFinhelpCtgs(&finhelpctgschema.FinhelpCtgsGet{})
 	finhelpCtgInputOptions := finhelpctgschema.GetFinhelpCtgInputOptionsFromFinhelpCtgsDB(finhelpCtgsDB)

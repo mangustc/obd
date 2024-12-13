@@ -8,9 +8,9 @@ import (
 )
 
 const (
-	pageTitle       = "Perf"
+	pageTitle       = "Успеваемость"
 	tableTitle      = pageTitle
-	insertFormTitle = tableTitle
+	insertFormTitle = "Успеваемости студента по дисциплине"
 	getPOSTURL      = "/api/perf/getperfs"
 	insertPOSTURL   = "/api/perf/insertperf"
 	editPOSTURL     = "/api/perf/editperf"
@@ -24,9 +24,9 @@ const (
 )
 
 var (
-	taCourseID  = schema.NewTA(courseTN+"ID", "Course", schema.OptionInput)
-	taStudentID = schema.NewTA(studentTN+"ID", "Student", schema.OptionInput)
-	taPerfGrade = schema.NewTA(perfTN+"Grade", "Grade", schema.NumberInput)
+	taCourseID  = schema.NewTA(courseTN+"ID", "Дисциплина", schema.OptionInput)
+	taStudentID = schema.NewTA(studentTN+"ID", "Студент", schema.OptionInput)
+	taPerfGrade = schema.NewTA(perfTN+"Grade", "Оценка", schema.NumberInput)
 )
 
 func getTableHeaders() []*schema.TableHeaderColumn {

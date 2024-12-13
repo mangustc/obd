@@ -16,9 +16,9 @@ import (
 )
 
 const (
-	pageTitle          = "Buildings"
+	pageTitle          = "Корпуса"
 	tableTitle         = pageTitle
-	insertFormTitle    = tableTitle
+	insertFormTitle    = "Корпуса"
 	getPOSTURL         = "/api/building/getbuildings"
 	insertPOSTURL      = "/api/building/insertbuilding"
 	editPOSTURL        = "/api/building/editbuilding"
@@ -30,16 +30,16 @@ const (
 )
 
 var (
-	taBuildingName     = schema.NewTA(buildingTN+"Name", "Name", schema.StringInput)
-	taBuildingAddress  = schema.NewTA(buildingTN+"Address", "Address", schema.StringInput)
-	taBuildingIsHidden = schema.NewTA(buildingTN+"IsHidden", "Is Hidden", schema.BooleanInput)
+	taBuildingName     = schema.NewTA(buildingTN+"Name", "Название", schema.StringInput)
+	taBuildingAddress  = schema.NewTA(buildingTN+"Address", "Адрес", schema.StringInput)
+	taBuildingIsHidden = schema.NewTA(buildingTN+"IsHidden", "Скрыт", schema.BooleanInput)
 )
 
 func getTableHeaders() []*schema.TableHeaderColumn {
 	return []*schema.TableHeaderColumn{
 		schema.NewTableHeaderColumn(taBuildingName.TATitle, 20),
-		schema.NewTableHeaderColumn(taBuildingAddress.TATitle, 70),
-		schema.NewTableHeaderColumn(taBuildingIsHidden.TATitle, 10),
+		schema.NewTableHeaderColumn(taBuildingAddress.TATitle, 60),
+		schema.NewTableHeaderColumn(taBuildingIsHidden.TATitle, 5),
 	}
 }
 

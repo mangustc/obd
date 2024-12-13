@@ -8,6 +8,7 @@ import (
 	"github.com/mangustc/obd/logger"
 	"github.com/mangustc/obd/msg"
 	"github.com/mangustc/obd/schema/courseschema"
+	"github.com/mangustc/obd/schema/groupschema"
 	"github.com/mangustc/obd/schema/perfschema"
 	"github.com/mangustc/obd/schema/studentschema"
 	"github.com/mangustc/obd/util"
@@ -21,6 +22,7 @@ func NewPerfHandler(
 	ps handler.PerfService,
 	cos handler.CourseService,
 	sts handler.StudentService,
+	grs handler.GroupService,
 ) *PerfHandler {
 	return &PerfHandler{
 		SessionService: ss,
@@ -29,6 +31,7 @@ func NewPerfHandler(
 		PerfService:    ps,
 		CourseService:  cos,
 		StudentService: sts,
+		GroupService:   grs,
 	}
 }
 
@@ -39,6 +42,7 @@ type PerfHandler struct {
 	PerfService    handler.PerfService
 	CourseService  handler.CourseService
 	StudentService handler.StudentService
+	GroupService   handler.GroupService
 }
 
 func (ph *PerfHandler) Perf(w http.ResponseWriter, r *http.Request) {
@@ -52,8 +56,9 @@ func (ph *PerfHandler) Perf(w http.ResponseWriter, r *http.Request) {
 	coursesDB, _ := ph.CourseService.GetCourses(&courseschema.CoursesGet{})
 	courseInputOptions := courseschema.GetCourseInputOptionsFromCoursesDB(coursesDB)
 
+	groupsDB, _ := ph.GroupService.GetGroups(&groupschema.GroupsGet{})
 	studentsDB, _ := ph.StudentService.GetStudents(&studentschema.StudentsGet{})
-	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB)
+	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB, groupsDB)
 
 	util.RenderComponent(r, &out, perfview.Perf(
 		courseInputOptions,
@@ -98,8 +103,9 @@ func (ph *PerfHandler) GetPerfs(w http.ResponseWriter, r *http.Request) {
 	coursesDB, _ := ph.CourseService.GetCourses(&courseschema.CoursesGet{})
 	courseInputOptions := courseschema.GetCourseInputOptionsFromCoursesDB(coursesDB)
 
+	groupsDB, _ := ph.GroupService.GetGroups(&groupschema.GroupsGet{})
 	studentsDB, _ := ph.StudentService.GetStudents(&studentschema.StudentsGet{})
-	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB)
+	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB, groupsDB)
 
 	util.RenderComponent(r, &out, perfview.PerfTableRows(perfsDB,
 		courseInputOptions,
@@ -158,8 +164,9 @@ func (ph *PerfHandler) InsertPerf(w http.ResponseWriter, r *http.Request) {
 	coursesDB, _ := ph.CourseService.GetCourses(&courseschema.CoursesGet{})
 	courseInputOptions := courseschema.GetCourseInputOptionsFromCoursesDB(coursesDB)
 
+	groupsDB, _ := ph.GroupService.GetGroups(&groupschema.GroupsGet{})
 	studentsDB, _ := ph.StudentService.GetStudents(&studentschema.StudentsGet{})
-	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB)
+	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB, groupsDB)
 
 	util.RenderComponent(r, &out, perfview.PerfTableRow(perfDB,
 		courseInputOptions,
@@ -207,8 +214,9 @@ func (ph *PerfHandler) EditPerf(w http.ResponseWriter, r *http.Request) {
 	coursesDB, _ := ph.CourseService.GetCourses(&courseschema.CoursesGet{})
 	courseInputOptions := courseschema.GetCourseInputOptionsFromCoursesDB(coursesDB)
 
+	groupsDB, _ := ph.GroupService.GetGroups(&groupschema.GroupsGet{})
 	studentsDB, _ := ph.StudentService.GetStudents(&studentschema.StudentsGet{})
-	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB)
+	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB, groupsDB)
 
 	util.RenderComponent(r, &out, perfview.PerfTableRowEdit(perfDB,
 		courseInputOptions,
@@ -268,8 +276,9 @@ func (ph *PerfHandler) UpdatePerf(w http.ResponseWriter, r *http.Request) {
 	coursesDB, _ := ph.CourseService.GetCourses(&courseschema.CoursesGet{})
 	courseInputOptions := courseschema.GetCourseInputOptionsFromCoursesDB(coursesDB)
 
+	groupsDB, _ := ph.GroupService.GetGroups(&groupschema.GroupsGet{})
 	studentsDB, _ := ph.StudentService.GetStudents(&studentschema.StudentsGet{})
-	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB)
+	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB, groupsDB)
 
 	util.RenderComponent(r, &out, perfview.PerfTableRow(perfDB,
 		courseInputOptions,
@@ -317,8 +326,9 @@ func (ph *PerfHandler) DeletePerf(w http.ResponseWriter, r *http.Request) {
 	coursesDB, _ := ph.CourseService.GetCourses(&courseschema.CoursesGet{})
 	courseInputOptions := courseschema.GetCourseInputOptionsFromCoursesDB(coursesDB)
 
+	groupsDB, _ := ph.GroupService.GetGroups(&groupschema.GroupsGet{})
 	studentsDB, _ := ph.StudentService.GetStudents(&studentschema.StudentsGet{})
-	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB)
+	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB, groupsDB)
 
 	util.RenderComponent(r, &out, perfview.PerfTableRow(perfDB,
 		courseInputOptions,

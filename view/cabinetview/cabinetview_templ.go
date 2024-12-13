@@ -16,9 +16,9 @@ import (
 )
 
 const (
-	pageTitle         = "Cabinet"
+	pageTitle         = "Кабинеты"
 	tableTitle        = pageTitle
-	insertFormTitle   = tableTitle
+	insertFormTitle   = "Кабинета"
 	getPOSTURL        = "/api/cabinet/getcabinets"
 	insertPOSTURL     = "/api/cabinet/insertcabinet"
 	editPOSTURL       = "/api/cabinet/editcabinet"
@@ -32,10 +32,10 @@ const (
 )
 
 var (
-	taBuildingID      = schema.NewTA(buildingTN+"ID", "Building", schema.OptionInput)
-	taCabinetTypeID   = schema.NewTA(cabinetTypeTN+"ID", "Cabinet Type", schema.OptionInput)
-	taCabinetNumber   = schema.NewTA(cabinetTN+"Number", "Cabinet Number", schema.StringInput)
-	taCabinetIsHidden = schema.NewTA(cabinetTN+"IsHidden", "Hidden", schema.BooleanInput)
+	taBuildingID      = schema.NewTA(buildingTN+"ID", "Корпус", schema.OptionInput)
+	taCabinetTypeID   = schema.NewTA(cabinetTypeTN+"ID", "Тип кабинета", schema.OptionInput)
+	taCabinetNumber   = schema.NewTA(cabinetTN+"Number", "Номер кабинета", schema.StringInput)
+	taCabinetIsHidden = schema.NewTA(cabinetTN+"IsHidden", "Скрыт", schema.BooleanInput)
 )
 
 func getTableHeaders() []*schema.TableHeaderColumn {
@@ -43,7 +43,7 @@ func getTableHeaders() []*schema.TableHeaderColumn {
 		schema.NewTableHeaderColumn(taBuildingID.TATitle, 20),
 		schema.NewTableHeaderColumn(taCabinetTypeID.TATitle, 20),
 		schema.NewTableHeaderColumn(taCabinetNumber.TATitle, 20),
-		schema.NewTableHeaderColumn(taCabinetIsHidden.TATitle, 10),
+		schema.NewTableHeaderColumn(taCabinetIsHidden.TATitle, 5),
 	}
 }
 

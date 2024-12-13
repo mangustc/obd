@@ -16,9 +16,9 @@ import (
 )
 
 const (
-	pageTitle       = "Class"
+	pageTitle       = "Расписание"
 	tableTitle      = pageTitle
-	insertFormTitle = tableTitle
+	insertFormTitle = "Пары"
 	getPOSTURL      = "/api/class/getclasss"
 	insertPOSTURL   = "/api/class/insertclass"
 	editPOSTURL     = "/api/class/editclass"
@@ -35,13 +35,13 @@ const (
 )
 
 var (
-	taClassTypeID = schema.NewTA(classTypeTN+"ID", "Class Type", schema.OptionInput)
-	taProfID      = schema.NewTA(profTN+"ID", "Professor", schema.OptionInput)
-	taCabinetID   = schema.NewTA(cabinetTN+"ID", "Cabinet", schema.OptionInput)
-	taCourseID    = schema.NewTA(courseTN+"ID", "Course", schema.OptionInput)
-	taGroupID     = schema.NewTA(groupTN+"ID", "Group", schema.OptionInput)
-	taClassStart  = schema.NewTA(classTN+"Start", "Class Date", schema.StringInput)
-	taClassNumber = schema.NewTA(classTN+"Number", "Class Number", schema.NumberInput)
+	taClassTypeID = schema.NewTA(classTypeTN+"ID", "Тип пары", schema.OptionInput)
+	taProfID      = schema.NewTA(profTN+"ID", "Профессор", schema.OptionInput)
+	taCabinetID   = schema.NewTA(cabinetTN+"ID", "Кабинет", schema.OptionInput)
+	taCourseID    = schema.NewTA(courseTN+"ID", "Дисциплина", schema.OptionInput)
+	taGroupID     = schema.NewTA(groupTN+"ID", "Группа", schema.OptionInput)
+	taClassStart  = schema.NewTA(classTN+"Start", "Дата пары", schema.StringInput)
+	taClassNumber = schema.NewTA(classTN+"Number", "Номер пары", schema.NumberInput)
 )
 
 func getTableHeaders() []*schema.TableHeaderColumn {
@@ -244,6 +244,10 @@ func Class(
 			templ_7745c5c3_Var4 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"filterClassContainer\"><script src=\"/js/filterclass.js\"></script><button onclick=\"toggleUI()\">Режим печати</button> <button id=\"downloadPDF\" style=\"display: none;\" onclick=\"printTable()\">Download as PDF</button> <select id=\"week\" style=\"display: none;\"><option></option></select></div>")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
 		templ_7745c5c3_Err = view.InsertForm(insertFormTitle, insertPOSTURL, getInsertFormInputs(
 			classTypeInputOptions,
 			profInputOptions,
@@ -302,7 +306,7 @@ func ClassPage() templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(getclassPOSTURL)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/classview/classview.templ`, Line: 157, Col: 28}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/classview/classview.templ`, Line: 165, Col: 28}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {

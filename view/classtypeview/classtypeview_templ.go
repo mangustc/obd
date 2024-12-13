@@ -16,9 +16,9 @@ import (
 )
 
 const (
-	pageTitle           = "Class Types"
+	pageTitle           = "Типы пар"
 	tableTitle          = pageTitle
-	insertFormTitle     = tableTitle
+	insertFormTitle     = "Типа пары"
 	getPOSTURL          = "/api/classtype/getclasstypes"
 	insertPOSTURL       = "/api/classtype/insertclasstype"
 	editPOSTURL         = "/api/classtype/editclasstype"
@@ -30,14 +30,14 @@ const (
 )
 
 var (
-	taClassTypeName     = schema.NewTA(classTypeTN+"Name", "Name", schema.StringInput)
-	taClassTypeIsHidden = schema.NewTA(classTypeTN+"IsHidden", "Is Hidden", schema.BooleanInput)
+	taClassTypeName     = schema.NewTA(classTypeTN+"Name", "Название", schema.StringInput)
+	taClassTypeIsHidden = schema.NewTA(classTypeTN+"IsHidden", "Скрыт", schema.BooleanInput)
 )
 
 func getTableHeaders() []*schema.TableHeaderColumn {
 	return []*schema.TableHeaderColumn{
-		schema.NewTableHeaderColumn(taClassTypeName.TATitle, 90),
-		schema.NewTableHeaderColumn(taClassTypeIsHidden.TATitle, 10),
+		schema.NewTableHeaderColumn(taClassTypeName.TATitle, 80),
+		schema.NewTableHeaderColumn(taClassTypeIsHidden.TATitle, 5),
 	}
 }
 

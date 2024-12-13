@@ -16,9 +16,9 @@ import (
 )
 
 const (
-	pageTitle       = "User"
+	pageTitle       = "Сотрудники"
 	tableTitle      = pageTitle
-	insertFormTitle = tableTitle
+	insertFormTitle = "Сотрудника"
 	getPOSTURL      = "/api/user/getusers"
 	insertPOSTURL   = "/api/user/insertuser"
 	editPOSTURL     = "/api/user/edituser"
@@ -31,12 +31,12 @@ const (
 )
 
 var (
-	taUserLastname   = schema.NewTA(userTN+"Lastname", "Last Name", schema.StringInput)
-	taUserFirstname  = schema.NewTA(userTN+"Firstname", "First Name", schema.StringInput)
-	taUserMiddlename = schema.NewTA(userTN+"Middlename", "Middle Name", schema.StringInput)
-	taUserPassword   = schema.NewTA(userTN+"Password", "Password", schema.StringInput)
-	taJobID          = schema.NewTA(jobTN+"ID", "Job", schema.OptionInput)
-	taUserIsHidden   = schema.NewTA(userTN+"IsHidden", "Is Hidden", schema.BooleanInput)
+	taUserLastname   = schema.NewTA(userTN+"Lastname", "Фамилия", schema.StringInput)
+	taUserFirstname  = schema.NewTA(userTN+"Firstname", "Имя", schema.StringInput)
+	taUserMiddlename = schema.NewTA(userTN+"Middlename", "Отчество", schema.StringInput)
+	taUserPassword   = schema.NewTA(userTN+"Password", "Пароль", schema.StringInput)
+	taJobID          = schema.NewTA(jobTN+"ID", "Должность", schema.OptionInput)
+	taUserIsHidden   = schema.NewTA(userTN+"IsHidden", "Скрыт", schema.BooleanInput)
 )
 
 func getTableHeaders() []*schema.TableHeaderColumn {
@@ -44,9 +44,9 @@ func getTableHeaders() []*schema.TableHeaderColumn {
 		schema.NewTableHeaderColumn(taUserLastname.TATitle, 15),
 		schema.NewTableHeaderColumn(taUserFirstname.TATitle, 15),
 		schema.NewTableHeaderColumn(taUserMiddlename.TATitle, 15),
-		schema.NewTableHeaderColumn(taUserPassword.TATitle, 20),
-		schema.NewTableHeaderColumn(taJobID.TATitle, 20),
-		schema.NewTableHeaderColumn(taUserIsHidden.TATitle, 10),
+		schema.NewTableHeaderColumn(taUserPassword.TATitle, 10),
+		schema.NewTableHeaderColumn(taJobID.TATitle, 10),
+		schema.NewTableHeaderColumn(taUserIsHidden.TATitle, 5),
 	}
 }
 

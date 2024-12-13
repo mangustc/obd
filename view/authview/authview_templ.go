@@ -12,7 +12,7 @@ import "github.com/mangustc/obd/view"
 import "github.com/mangustc/obd/schema"
 
 const (
-	pageTitle        = "Auth"
+	pageTitle        = "Вход"
 	userTN           = "User"
 	loginPOSTURL     = "/api/auth/login"
 	userinputPOSTURL = "/api/auth/userinput"
@@ -20,8 +20,8 @@ const (
 )
 
 var (
-	taUserID       = schema.NewTA(userTN+"ID", "User", schema.OptionInput)
-	taUserPassword = schema.NewTA(userTN+"Password", "User Password", schema.StringInput)
+	taUserID       = schema.NewTA(userTN+"ID", "Сотрудник", schema.OptionInput)
+	taUserPassword = schema.NewTA(userTN+"Password", "Пароль", schema.StringInput)
 )
 
 func UserInput(userInputOptions []*schema.InputOption) templ.Component {
@@ -74,7 +74,7 @@ func Auth() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div><h3>Login</h3><div style=\"display: flex; flex-direction: column;\" id=\"auth-form\"><label>Choose User:</label> <span hx-post=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div><h3>Login</h3><div style=\"display: flex; flex-direction: column;\" id=\"auth-form\"><label>Выберите сотрудника:</label> <span hx-post=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -87,7 +87,7 @@ func Auth() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"this\" hx-swap=\"outerHTML\" hx-trigger=\"load\">Loading...</span> <label>Password:</label> <input type=\"password\" name=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-target=\"this\" hx-swap=\"outerHTML\" hx-trigger=\"load\">Загрузка...</span> <label>Пароль:</label> <input type=\"password\" name=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -100,7 +100,7 @@ func Auth() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" placeholder=\"Enter your Password\" required value=\"\"></div><div><button hx-post=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" placeholder=\"Введите свой пароль\" required value=\"\"></div><div><button hx-post=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -113,7 +113,7 @@ func Auth() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-include=\"#auth-form\" hx-swap=\"outerHTML\" hx-target=\"#navigation\">Login</button></div></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-include=\"#auth-form\" hx-swap=\"outerHTML\" hx-target=\"#navigation\">Вход</button></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -8,6 +8,7 @@ import (
 	"github.com/mangustc/obd/handler"
 	"github.com/mangustc/obd/logger"
 	"github.com/mangustc/obd/msg"
+	"github.com/mangustc/obd/schema/buildingschema"
 	"github.com/mangustc/obd/schema/cabinetschema"
 	"github.com/mangustc/obd/schema/classschema"
 	"github.com/mangustc/obd/schema/classtypeschema"
@@ -28,6 +29,7 @@ func NewClassHandler(
 	cs handler.CabinetService,
 	cos handler.CourseService,
 	grs handler.GroupService,
+	bs handler.BuildingService,
 ) *ClassHandler {
 	return &ClassHandler{
 		SessionService:   ss,
@@ -39,6 +41,7 @@ func NewClassHandler(
 		CabinetService:   cs,
 		CourseService:    cos,
 		GroupService:     grs,
+		BuildingService:  bs,
 	}
 }
 
@@ -52,6 +55,7 @@ type ClassHandler struct {
 	CabinetService   handler.CabinetService
 	CourseService    handler.CourseService
 	GroupService     handler.GroupService
+	BuildingService  handler.BuildingService
 }
 
 func (clh *ClassHandler) Class(w http.ResponseWriter, r *http.Request) {
@@ -68,8 +72,9 @@ func (clh *ClassHandler) Class(w http.ResponseWriter, r *http.Request) {
 	profsDB, _ := clh.ProfService.GetProfs(&profschema.ProfsGet{})
 	profInputOptions := profschema.GetProfInputOptionsFromProfsDB(profsDB)
 
+	buildingsDB, _ := clh.BuildingService.GetBuildings(&buildingschema.BuildingsGet{})
 	cabinetsDB, _ := clh.CabinetService.GetCabinets(&cabinetschema.CabinetsGet{})
-	cabinetInputOptions := cabinetschema.GetCabinetInputOptionsFromCabinetsDB(cabinetsDB)
+	cabinetInputOptions := cabinetschema.GetCabinetInputOptionsFromCabinetsDB(cabinetsDB, buildingsDB)
 
 	coursesDB, _ := clh.CourseService.GetCourses(&courseschema.CoursesGet{})
 	courseInputOptions := courseschema.GetCourseInputOptionsFromCoursesDB(coursesDB)
@@ -130,8 +135,9 @@ func (clh *ClassHandler) GetClasss(w http.ResponseWriter, r *http.Request) {
 	profsDB, _ := clh.ProfService.GetProfs(&profschema.ProfsGet{})
 	profInputOptions := profschema.GetProfInputOptionsFromProfsDB(profsDB)
 
+	buildingsDB, _ := clh.BuildingService.GetBuildings(&buildingschema.BuildingsGet{})
 	cabinetsDB, _ := clh.CabinetService.GetCabinets(&cabinetschema.CabinetsGet{})
-	cabinetInputOptions := cabinetschema.GetCabinetInputOptionsFromCabinetsDB(cabinetsDB)
+	cabinetInputOptions := cabinetschema.GetCabinetInputOptionsFromCabinetsDB(cabinetsDB, buildingsDB)
 
 	coursesDB, _ := clh.CourseService.GetCourses(&courseschema.CoursesGet{})
 	courseInputOptions := courseschema.GetCourseInputOptionsFromCoursesDB(coursesDB)
@@ -203,8 +209,9 @@ func (clh *ClassHandler) InsertClass(w http.ResponseWriter, r *http.Request) {
 	profsDB, _ := clh.ProfService.GetProfs(&profschema.ProfsGet{})
 	profInputOptions := profschema.GetProfInputOptionsFromProfsDB(profsDB)
 
+	buildingsDB, _ := clh.BuildingService.GetBuildings(&buildingschema.BuildingsGet{})
 	cabinetsDB, _ := clh.CabinetService.GetCabinets(&cabinetschema.CabinetsGet{})
-	cabinetInputOptions := cabinetschema.GetCabinetInputOptionsFromCabinetsDB(cabinetsDB)
+	cabinetInputOptions := cabinetschema.GetCabinetInputOptionsFromCabinetsDB(cabinetsDB, buildingsDB)
 
 	coursesDB, _ := clh.CourseService.GetCourses(&courseschema.CoursesGet{})
 	courseInputOptions := courseschema.GetCourseInputOptionsFromCoursesDB(coursesDB)
@@ -265,8 +272,9 @@ func (clh *ClassHandler) EditClass(w http.ResponseWriter, r *http.Request) {
 	profsDB, _ := clh.ProfService.GetProfs(&profschema.ProfsGet{})
 	profInputOptions := profschema.GetProfInputOptionsFromProfsDB(profsDB)
 
+	buildingsDB, _ := clh.BuildingService.GetBuildings(&buildingschema.BuildingsGet{})
 	cabinetsDB, _ := clh.CabinetService.GetCabinets(&cabinetschema.CabinetsGet{})
-	cabinetInputOptions := cabinetschema.GetCabinetInputOptionsFromCabinetsDB(cabinetsDB)
+	cabinetInputOptions := cabinetschema.GetCabinetInputOptionsFromCabinetsDB(cabinetsDB, buildingsDB)
 
 	coursesDB, _ := clh.CourseService.GetCourses(&courseschema.CoursesGet{})
 	courseInputOptions := courseschema.GetCourseInputOptionsFromCoursesDB(coursesDB)
@@ -339,8 +347,9 @@ func (clh *ClassHandler) UpdateClass(w http.ResponseWriter, r *http.Request) {
 	profsDB, _ := clh.ProfService.GetProfs(&profschema.ProfsGet{})
 	profInputOptions := profschema.GetProfInputOptionsFromProfsDB(profsDB)
 
+	buildingsDB, _ := clh.BuildingService.GetBuildings(&buildingschema.BuildingsGet{})
 	cabinetsDB, _ := clh.CabinetService.GetCabinets(&cabinetschema.CabinetsGet{})
-	cabinetInputOptions := cabinetschema.GetCabinetInputOptionsFromCabinetsDB(cabinetsDB)
+	cabinetInputOptions := cabinetschema.GetCabinetInputOptionsFromCabinetsDB(cabinetsDB, buildingsDB)
 
 	coursesDB, _ := clh.CourseService.GetCourses(&courseschema.CoursesGet{})
 	courseInputOptions := courseschema.GetCourseInputOptionsFromCoursesDB(coursesDB)
@@ -401,8 +410,9 @@ func (clh *ClassHandler) DeleteClass(w http.ResponseWriter, r *http.Request) {
 	profsDB, _ := clh.ProfService.GetProfs(&profschema.ProfsGet{})
 	profInputOptions := profschema.GetProfInputOptionsFromProfsDB(profsDB)
 
+	buildingsDB, _ := clh.BuildingService.GetBuildings(&buildingschema.BuildingsGet{})
 	cabinetsDB, _ := clh.CabinetService.GetCabinets(&cabinetschema.CabinetsGet{})
-	cabinetInputOptions := cabinetschema.GetCabinetInputOptionsFromCabinetsDB(cabinetsDB)
+	cabinetInputOptions := cabinetschema.GetCabinetInputOptionsFromCabinetsDB(cabinetsDB, buildingsDB)
 
 	coursesDB, _ := clh.CourseService.GetCourses(&courseschema.CoursesGet{})
 	courseInputOptions := courseschema.GetCourseInputOptionsFromCoursesDB(coursesDB)

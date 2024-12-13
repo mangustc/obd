@@ -16,9 +16,9 @@ import (
 )
 
 const (
-	pageTitle            = "Financial Help Category"
+	pageTitle            = "Материальная помощь Категории"
 	tableTitle           = pageTitle
-	insertFormTitle      = tableTitle
+	insertFormTitle      = "Категории материальной помощи"
 	getPOSTURL           = "/api/finhelpctg/getfinhelpctgs"
 	insertPOSTURL        = "/api/finhelpctg/insertfinhelpctg"
 	editPOSTURL          = "/api/finhelpctg/editfinhelpctg"
@@ -30,18 +30,18 @@ const (
 )
 
 var (
-	taFinhelpCtgID          = schema.NewTA(finhelpCtgTN+"ID", "ID", schema.NumberInput)
-	taFinhelpCtgDescription = schema.NewTA(finhelpCtgTN+"Description", "Description", schema.StringInput)
-	taFinhelpCtgPayment     = schema.NewTA(finhelpCtgTN+"Payment", "Payment", schema.NumberInput)
-	taFinhelpCtgIsHidden    = schema.NewTA(finhelpCtgTN+"IsHidden", "Is Hidden", schema.BooleanInput)
+	taFinhelpCtgID          = schema.NewTA(finhelpCtgTN+"ID", "Номер", schema.NumberInput)
+	taFinhelpCtgDescription = schema.NewTA(finhelpCtgTN+"Description", "Описание", schema.StringInput)
+	taFinhelpCtgPayment     = schema.NewTA(finhelpCtgTN+"Payment", "Выплата", schema.NumberInput)
+	taFinhelpCtgIsHidden    = schema.NewTA(finhelpCtgTN+"IsHidden", "Скрыт", schema.BooleanInput)
 )
 
 func getTableHeaders() []*schema.TableHeaderColumn {
 	return []*schema.TableHeaderColumn{
 		schema.NewTableHeaderColumn(taFinhelpCtgID.TATitle, 5),
-		schema.NewTableHeaderColumn(taFinhelpCtgDescription.TATitle, 75),
-		schema.NewTableHeaderColumn(taFinhelpCtgPayment.TATitle, 10),
-		schema.NewTableHeaderColumn(taFinhelpCtgIsHidden.TATitle, 10),
+		schema.NewTableHeaderColumn(taFinhelpCtgDescription.TATitle, 63),
+		schema.NewTableHeaderColumn(taFinhelpCtgPayment.TATitle, 7),
+		schema.NewTableHeaderColumn(taFinhelpCtgIsHidden.TATitle, 5),
 	}
 }
 

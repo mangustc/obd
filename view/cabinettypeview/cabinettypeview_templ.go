@@ -16,9 +16,9 @@ import (
 )
 
 const (
-	pageTitle             = "Cabinet Types"
+	pageTitle             = "Типы кабинетов"
 	tableTitle            = pageTitle
-	insertFormTitle       = tableTitle
+	insertFormTitle       = "Типа кабинета"
 	getPOSTURL            = "/api/cabinettype/getcabinettypes"
 	insertPOSTURL         = "/api/cabinettype/insertcabinettype"
 	editPOSTURL           = "/api/cabinettype/editcabinettype"
@@ -30,14 +30,14 @@ const (
 )
 
 var (
-	taCabinetTypeName     = schema.NewTA(cabinetTypeTN+"Name", "Name", schema.StringInput)
-	taCabinetTypeIsHidden = schema.NewTA(cabinetTypeTN+"IsHidden", "Is Hidden", schema.BooleanInput)
+	taCabinetTypeName     = schema.NewTA(cabinetTypeTN+"Name", "Название", schema.StringInput)
+	taCabinetTypeIsHidden = schema.NewTA(cabinetTypeTN+"IsHidden", "Скрыт", schema.BooleanInput)
 )
 
 func getTableHeaders() []*schema.TableHeaderColumn {
 	return []*schema.TableHeaderColumn{
-		schema.NewTableHeaderColumn(taCabinetTypeName.TATitle, 90),
-		schema.NewTableHeaderColumn(taCabinetTypeIsHidden.TATitle, 10),
+		schema.NewTableHeaderColumn(taCabinetTypeName.TATitle, 80),
+		schema.NewTableHeaderColumn(taCabinetTypeIsHidden.TATitle, 5),
 	}
 }
 
