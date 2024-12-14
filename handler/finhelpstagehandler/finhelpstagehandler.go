@@ -80,7 +80,7 @@ func (fsth *FinhelpStageHandler) InsertFinhelpStage(w http.ResponseWriter, r *ht
 	var err error
 
 	util.InitHTMLHandler(w, r)
-	var message *msg.Msg = msg.Nothing
+	var message *msg.Msg = msg.OK
 	var out []byte
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &finhelpstageschema.FinhelpStageInsert{}
@@ -171,7 +171,7 @@ func (fsth *FinhelpStageHandler) UpdateFinhelpStage(w http.ResponseWriter, r *ht
 	var err error
 
 	util.InitHTMLHandler(w, r)
-	var message *msg.Msg = msg.Nothing
+	var message *msg.Msg = msg.OK
 	var out []byte
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &finhelpstageschema.FinhelpStageUpdate{}

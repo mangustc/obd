@@ -80,7 +80,7 @@ func (fsth *BuildingHandler) InsertBuilding(w http.ResponseWriter, r *http.Reque
 	var err error
 
 	util.InitHTMLHandler(w, r)
-	var message *msg.Msg = msg.Nothing
+	var message *msg.Msg = msg.OK
 	var out []byte
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &buildingschema.BuildingInsert{}
@@ -171,7 +171,7 @@ func (fsth *BuildingHandler) UpdateBuilding(w http.ResponseWriter, r *http.Reque
 	var err error
 
 	util.InitHTMLHandler(w, r)
-	var message *msg.Msg = msg.Nothing
+	var message *msg.Msg = msg.OK
 	var out []byte
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &buildingschema.BuildingUpdate{}

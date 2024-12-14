@@ -117,7 +117,7 @@ func (ph *PerfHandler) InsertPerf(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	util.InitHTMLHandler(w, r)
-	var message *msg.Msg = msg.Nothing
+	var message *msg.Msg = msg.OK
 	var out []byte
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &perfschema.PerfInsert{}
@@ -228,7 +228,7 @@ func (ph *PerfHandler) UpdatePerf(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	util.InitHTMLHandler(w, r)
-	var message *msg.Msg = msg.Nothing
+	var message *msg.Msg = msg.OK
 	var out []byte
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &perfschema.PerfUpdate{}

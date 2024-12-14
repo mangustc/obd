@@ -147,7 +147,7 @@ func (fprh *FinhelpProcHandler) InsertFinhelpProc(w http.ResponseWriter, r *http
 	var err error
 
 	util.InitHTMLHandler(w, r)
-	var message *msg.Msg = msg.Nothing
+	var message *msg.Msg = msg.OK
 	var out []byte
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &finhelpprocschema.FinhelpProcInsert{}
@@ -275,7 +275,7 @@ func (fprh *FinhelpProcHandler) UpdateFinhelpProc(w http.ResponseWriter, r *http
 	var err error
 
 	util.InitHTMLHandler(w, r)
-	var message *msg.Msg = msg.Nothing
+	var message *msg.Msg = msg.OK
 	var out []byte
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &finhelpprocschema.FinhelpProcUpdate{}

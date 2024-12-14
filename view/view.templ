@@ -94,11 +94,16 @@ templ ErrorIndexOOB(notificationType schema.NotificationType, msg string) {
 }
 
 css widthCSS(str string) {
-	width: { str };
+	min-width: { str };
+	max-width: { str };
 }
 
 templ tableHeader(header *schema.TableHeaderColumn) {
-	<th class={ widthCSS(fmt.Sprint(header.Percent, "%")) }>{ header.Name }</th>
+	if header.Percent == 0 {
+		<th class={ widthCSS(fmt.Sprint(header.Pixels, "px")) }>{ header.Name }</th>
+	} else {
+		<th class={ widthCSS(fmt.Sprint(header.Percent, "%")) }>{ header.Name }</th>
+	}
 }
 
 func getBool(v any) bool {
@@ -123,7 +128,7 @@ templ Input(input *schema.Input) {
 		}
 		if input.InputOptions != nil {
 			if !input.InputEditable {
-				<input style="width: 100%;" name={ input.InputName } value={ schema.GetSelectedInputOptionLabel(input) } type={ input.InputType } readonly?={ !input.InputEditable }/>
+				<input style="width: 100%; border: 0px;" name={ input.InputName } value={ schema.GetSelectedInputOptionLabel(input) } type={ input.InputType } readonly?={ !input.InputEditable }/>
 			} else {
 				<select name={ input.InputName }>
 					for _, inputOption := range input.InputOptions {
@@ -142,9 +147,17 @@ templ Input(input *schema.Input) {
 				<input name={ input.InputName } type={ input.InputType } checked?={ getBool(input.InputValue) }/>
 			}
 		} else if input.InputType == "number" {
-			<input style="width: 100%;" name={ input.InputName } value={ fmt.Sprint(getInt(input.InputValue)) } type={ input.InputType } readonly?={ !input.InputEditable }/>
+			if input.InputEditable {
+				<input style="width: 100%;" name={ input.InputName } value={ fmt.Sprint(getInt(input.InputValue)) } type={ input.InputType } readonly?={ !input.InputEditable }/>
+			} else {
+				<input style="width: 100%; border: 0px;" name={ input.InputName } value={ fmt.Sprint(getInt(input.InputValue)) } type={ input.InputType } readonly?={ !input.InputEditable }/>
+			}
 		} else {
-			<input style="width: 100%;" name={ input.InputName } value={ getString(input.InputValue) } type={ input.InputType } readonly?={ !input.InputEditable }/>
+			if input.InputEditable {
+				<input style="width: 100%;" name={ input.InputName } value={ getString(input.InputValue) } type={ input.InputType } readonly?={ !input.InputEditable }/>
+			} else {
+				<input style="width: 100%; border: 0px;" name={ input.InputName } value={ getString(input.InputValue) } type={ input.InputType } readonly?={ !input.InputEditable }/>
+			}
 		}
 	</div>
 }
@@ -372,7 +385,7 @@ templ Table(title string, getPOSTURL string, headers []*schema.TableHeaderColumn
 					for _, header := range headers {
 						@tableHeader(header)
 					}
-					@tableHeader(schema.NewTableHeaderColumn("Действия", 12))
+					@tableHeader(schema.NewTableHeaderColumnPixels("Действия", 172))
 				</tr>
 			</thead>
 			<tbody id="table" hx-target="closest tr" hx-swap="outerHTML">

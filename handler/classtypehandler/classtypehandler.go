@@ -80,7 +80,7 @@ func (clth *ClassTypeHandler) InsertClassType(w http.ResponseWriter, r *http.Req
 	var err error
 
 	util.InitHTMLHandler(w, r)
-	var message *msg.Msg = msg.Nothing
+	var message *msg.Msg = msg.OK
 	var out []byte
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &classtypeschema.ClassTypeInsert{}
@@ -171,7 +171,7 @@ func (clth *ClassTypeHandler) UpdateClassType(w http.ResponseWriter, r *http.Req
 	var err error
 
 	util.InitHTMLHandler(w, r)
-	var message *msg.Msg = msg.Nothing
+	var message *msg.Msg = msg.OK
 	var out []byte
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &classtypeschema.ClassTypeUpdate{}

@@ -30,6 +30,7 @@ type TA struct {
 type TableHeaderColumn struct {
 	Name    string
 	Percent int
+	Pixels  int
 }
 
 type InputOption struct {
@@ -72,6 +73,16 @@ func NewTableHeaderColumn(name string, percent int) *TableHeaderColumn {
 	return &TableHeaderColumn{
 		Name:    name,
 		Percent: percent,
+	}
+}
+
+func NewTableHeaderColumnPixels(name string, pixels int) *TableHeaderColumn {
+	if name == "" {
+		panic("Header name can't be zero")
+	}
+	return &TableHeaderColumn{
+		Name:   name,
+		Pixels: pixels,
 	}
 }
 

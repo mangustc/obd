@@ -74,7 +74,7 @@ func Auth() templ.Component {
 			templ_7745c5c3_Var2 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div><h3>Login</h3><div style=\"display: flex; flex-direction: column;\" id=\"auth-form\"><label>Выберите сотрудника:</label> <span hx-post=\"")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div><h3>Вход</h3><div style=\"display: flex; flex-direction: column;\" id=\"auth-form\"><label>Выберите сотрудника:</label> <span hx-post=\"")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -113,7 +113,7 @@ func Auth() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-include=\"#auth-form\" hx-swap=\"outerHTML\" hx-target=\"#navigation\">Вход</button></div></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" hx-include=\"#auth-form\" hx-swap=\"outerHTML\" hx-target=\"#navigation\">Войти</button></div></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

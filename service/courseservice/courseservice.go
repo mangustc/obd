@@ -38,21 +38,25 @@ func (cos *CourseService) InsertCourse(data *courseschema.CourseInsert) (courseD
 	query := fmt.Sprintf(`
 INSERT INTO %[1]s (
 		%[2]sID,
-		%[1]sName
+		%[1]sName,
+		%[1]sYear
 	)
 	VALUES (
 		%[3]d,
-		"%[4]s"
+		"%[4]s",
+		%[5]d
 	)
 RETURNING
 	%[1]sID,
 	%[2]sID,
 	%[1]sName,
+	%[1]sYear,
 	%[1]sIsHidden`,
 		cos.courseTN,
 		cos.courseTypeTN,
 		data.CourseTypeID,
 		data.CourseName,
+		data.CourseYear,
 	)
 
 	stmt, err := cos.db.Prepare(query)
@@ -67,6 +71,7 @@ RETURNING
 		&courseDB.CourseID,
 		&courseDB.CourseTypeID,
 		&courseDB.CourseName,
+		&courseDB.CourseYear,
 		&courseDB.CourseIsHidden,
 	)
 	if err != nil {
@@ -84,18 +89,21 @@ func (cos *CourseService) UpdateCourse(data *courseschema.CourseUpdate) (courseD
 	query := fmt.Sprintf(`
 UPDATE %[1]s SET
 	%[2]sID = %[4]d,
-	%[1]sName = "%[5]s"
+	%[1]sName = "%[5]s",
+	%[1]sYear = %[6]d,
 WHERE %[1]sID = %[3]d
 RETURNING
 	%[1]sID,
 	%[2]sID,
 	%[1]sName,
+	%[1]sYear,
 	%[1]sIsHidden`,
 		cos.courseTN,
 		cos.courseTypeTN,
 		data.CourseID,
 		data.CourseTypeID,
 		data.CourseName,
+		data.CourseYear,
 	)
 
 	stmt, err := cos.db.Prepare(query)
@@ -110,6 +118,7 @@ RETURNING
 		&courseDB.CourseID,
 		&courseDB.CourseTypeID,
 		&courseDB.CourseName,
+		&courseDB.CourseYear,
 		&courseDB.CourseIsHidden,
 	)
 	if err != nil {
@@ -136,6 +145,7 @@ RETURNING
 	%[1]sID,
 	%[2]sID,
 	%[1]sName,
+	%[1]sYear,
 	%[1]sIsHidden`,
 		cos.courseTN,
 		cos.courseTypeTN,
@@ -154,6 +164,7 @@ RETURNING
 		&courseDB.CourseID,
 		&courseDB.CourseTypeID,
 		&courseDB.CourseName,
+		&courseDB.CourseYear,
 		&courseDB.CourseIsHidden,
 	)
 	if err != nil {
@@ -176,6 +187,7 @@ SELECT
 	%[1]sID,
 	%[2]sID,
 	%[1]sName,
+	%[1]sYear,
 	%[1]sIsHidden
 FROM %[1]s
 WHERE %[1]sID = %[3]d`,
@@ -196,6 +208,7 @@ WHERE %[1]sID = %[3]d`,
 		&courseDB.CourseID,
 		&courseDB.CourseTypeID,
 		&courseDB.CourseName,
+		&courseDB.CourseYear,
 		&courseDB.CourseIsHidden,
 	)
 	if err != nil {
@@ -218,6 +231,7 @@ SELECT
 	%[1]sID,
 	%[2]sID,
 	%[1]sName,
+	%[1]sYear,
 	%[1]sIsHidden
 FROM %[1]s
 ORDER BY %[1]sID DESC`,
@@ -245,6 +259,7 @@ ORDER BY %[1]sID DESC`,
 			&courseDB.CourseID,
 			&courseDB.CourseTypeID,
 			&courseDB.CourseName,
+			&courseDB.CourseYear,
 			&courseDB.CourseIsHidden,
 		)
 		if err != nil {

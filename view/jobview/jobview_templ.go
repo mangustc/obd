@@ -42,7 +42,7 @@ var (
 	taJobAccessCabinetType  = schema.NewTA(jobTN+"AccessCabinetType", "Типы кабинетов", schema.BooleanInput)
 	taJobAccessCabinet      = schema.NewTA(jobTN+"AccessCabinet", "Кабинеты", schema.BooleanInput)
 	taJobAccessClassType    = schema.NewTA(jobTN+"AccessClassType", "Типы пар", schema.BooleanInput)
-	taJobAccessProf         = schema.NewTA(jobTN+"AccessProf", "Профессора", schema.BooleanInput)
+	taJobAccessProf         = schema.NewTA(jobTN+"AccessProf", "Преподаватели", schema.BooleanInput)
 	taJobAccessCourseType   = schema.NewTA(jobTN+"AccessCourseType", "Типы дисциплин", schema.BooleanInput)
 	taJobAccessCourse       = schema.NewTA(jobTN+"AccessCourse", "Дисциплины", schema.BooleanInput)
 	taJobAccessPerf         = schema.NewTA(jobTN+"AccessPerf", "Успеваемость", schema.BooleanInput)
@@ -52,7 +52,7 @@ var (
 
 func getTableHeaders() []*schema.TableHeaderColumn {
 	return []*schema.TableHeaderColumn{
-		schema.NewTableHeaderColumn(taJobName.TATitle, 15),
+		schema.NewTableHeaderColumnPixels(taJobName.TATitle, 300),
 		schema.NewTableHeaderColumn(taJobAccessUser.TATitle, 4),
 		schema.NewTableHeaderColumn(taJobAccessJob.TATitle, 4),
 		schema.NewTableHeaderColumn(taJobAccessStudent.TATitle, 4),

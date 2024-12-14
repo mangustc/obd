@@ -10,18 +10,21 @@ type CourseDB struct {
 	CourseID       int    `json:"CourseID" server:"y"`
 	CourseTypeID   int    `json:"CourseTypeID" server:"y"`
 	CourseName     string `json:"CourseName"`
+	CourseYear     int    `json:"CourseYear"`
 	CourseIsHidden bool   `json:"CourseIsHidden"`
 }
 
 type CourseInsert struct {
 	CourseTypeID int    `json:"CourseTypeID" server:"y"`
 	CourseName   string `json:"CourseName"`
+	CourseYear   int    `json:"CourseYear"`
 }
 
 type CourseUpdate struct {
 	CourseID     int    `json:"CourseID" server:"y"`
 	CourseTypeID int    `json:"CourseTypeID" server:"y"`
 	CourseName   string `json:"CourseName"`
+	CourseYear   int    `json:"CourseYear"`
 }
 
 type CourseDelete struct {

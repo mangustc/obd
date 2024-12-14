@@ -33,6 +33,7 @@ const (
 var (
 	taCourseTypeID   = schema.NewTA(courseTypeTN+"ID", "Тип дисциплины", schema.OptionInput)
 	taCourseName     = schema.NewTA(courseTN+"Name", "Название дисциплины", schema.StringInput)
+	taCourseYear     = schema.NewTA(courseTN+"Year", "Год набора", schema.NumberInput)
 	taCourseIsHidden = schema.NewTA(courseTN+"IsHidden", "Скрыт", schema.BooleanInput)
 )
 
@@ -40,6 +41,7 @@ func getTableHeaders() []*schema.TableHeaderColumn {
 	return []*schema.TableHeaderColumn{
 		schema.NewTableHeaderColumn(taCourseTypeID.TATitle, 20),
 		schema.NewTableHeaderColumn(taCourseName.TATitle, 40),
+		schema.NewTableHeaderColumn(taCourseYear.TATitle, 7),
 		schema.NewTableHeaderColumn(taCourseIsHidden.TATitle, 5),
 	}
 }
@@ -50,6 +52,7 @@ func getInsertFormInputs(
 	return []*schema.Input{
 		schema.NewInput(taCourseTypeID.TATitle, taCourseTypeID.TAName, taCourseTypeID.TAInputType, "", nil, courseTypeInputOptions, ""),
 		schema.NewInput(taCourseName.TATitle, taCourseName.TAName, taCourseName.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taCourseYear.TATitle, taCourseYear.TAName, taCourseYear.TAInputType, "", nil, nil, ""),
 	}
 }
 
@@ -59,6 +62,7 @@ func getInputsFromCourseDB(courseDB *courseschema.CourseDB,
 	return []*schema.Input{
 		schema.NewInput("", taCourseTypeID.TAName, taCourseTypeID.TAInputType, nil, nil, courseTypeInputOptions, fmt.Sprint(courseDB.CourseTypeID)),
 		schema.NewInput("", taCourseName.TAName, taCourseName.TAInputType, courseDB.CourseName, nil, nil, ""),
+		schema.NewInput("", taCourseYear.TAName, taCourseYear.TAInputType, courseDB.CourseYear, nil, nil, ""),
 		schema.NewInput("", taCourseIsHidden.TAName, taCourseIsHidden.TAInputType, courseDB.CourseIsHidden, nil, nil, ""),
 	}
 }
@@ -241,7 +245,7 @@ func CoursePage() templ.Component {
 			var templ_7745c5c3_Var7 string
 			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(getcoursePOSTURL)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/courseview/courseview.templ`, Line: 96, Col: 29}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/courseview/courseview.templ`, Line: 100, Col: 29}
 			}
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 			if templ_7745c5c3_Err != nil {

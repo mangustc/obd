@@ -80,7 +80,7 @@ func (cth *CabinetTypeHandler) InsertCabinetType(w http.ResponseWriter, r *http.
 	var err error
 
 	util.InitHTMLHandler(w, r)
-	var message *msg.Msg = msg.Nothing
+	var message *msg.Msg = msg.OK
 	var out []byte
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &cabinettypeschema.CabinetTypeInsert{}
@@ -171,7 +171,7 @@ func (cth *CabinetTypeHandler) UpdateCabinetType(w http.ResponseWriter, r *http.
 	var err error
 
 	util.InitHTMLHandler(w, r)
-	var message *msg.Msg = msg.Nothing
+	var message *msg.Msg = msg.OK
 	var out []byte
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &cabinettypeschema.CabinetTypeUpdate{}

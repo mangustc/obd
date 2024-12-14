@@ -80,7 +80,7 @@ func (fctgh *FinhelpCtgHandler) InsertFinhelpCtg(w http.ResponseWriter, r *http.
 	var err error
 
 	util.InitHTMLHandler(w, r)
-	var message *msg.Msg = msg.Nothing
+	var message *msg.Msg = msg.OK
 	var out []byte
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &finhelpctgschema.FinhelpCtgInsert{}
@@ -171,7 +171,7 @@ func (fctgh *FinhelpCtgHandler) UpdateFinhelpCtg(w http.ResponseWriter, r *http.
 	var err error
 
 	util.InitHTMLHandler(w, r)
-	var message *msg.Msg = msg.Nothing
+	var message *msg.Msg = msg.OK
 	var out []byte
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &finhelpctgschema.FinhelpCtgUpdate{}

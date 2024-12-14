@@ -80,7 +80,7 @@ func (coth *CourseTypeHandler) InsertCourseType(w http.ResponseWriter, r *http.R
 	var err error
 
 	util.InitHTMLHandler(w, r)
-	var message *msg.Msg = msg.Nothing
+	var message *msg.Msg = msg.OK
 	var out []byte
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &coursetypeschema.CourseTypeInsert{}
@@ -171,7 +171,7 @@ func (coth *CourseTypeHandler) UpdateCourseType(w http.ResponseWriter, r *http.R
 	var err error
 
 	util.InitHTMLHandler(w, r)
-	var message *msg.Msg = msg.Nothing
+	var message *msg.Msg = msg.OK
 	var out []byte
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &coursetypeschema.CourseTypeUpdate{}
