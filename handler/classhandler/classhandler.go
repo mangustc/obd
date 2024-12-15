@@ -370,7 +370,7 @@ func (clh *ClassHandler) DeleteClass(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	util.InitHTMLHandler(w, r)
-	var message *msg.Msg = msg.Nothing
+	var message *msg.Msg = msg.OK
 	var out []byte
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &classschema.ClassDelete{}
@@ -396,35 +396,10 @@ func (clh *ClassHandler) DeleteClass(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	classDB, err := clh.ClassService.DeleteClass(in)
+	_, err = clh.ClassService.DeleteClass(in)
 	if err != nil {
 		message = msg.InternalServerError
 		logger.Error.Print(err.Error())
 		return
 	}
-	classDB.ClassStart = fmt.Sprintf("%.10s", classDB.ClassStart)
-
-	classTypesDB, _ := clh.ClassTypeService.GetClassTypes(&classtypeschema.ClassTypesGet{})
-	classTypeInputOptions := classtypeschema.GetClassTypeInputOptionsFromClassTypesDB(classTypesDB)
-
-	profsDB, _ := clh.ProfService.GetProfs(&profschema.ProfsGet{})
-	profInputOptions := profschema.GetProfInputOptionsFromProfsDB(profsDB)
-
-	buildingsDB, _ := clh.BuildingService.GetBuildings(&buildingschema.BuildingsGet{})
-	cabinetsDB, _ := clh.CabinetService.GetCabinets(&cabinetschema.CabinetsGet{})
-	cabinetInputOptions := cabinetschema.GetCabinetInputOptionsFromCabinetsDB(cabinetsDB, buildingsDB)
-
-	coursesDB, _ := clh.CourseService.GetCourses(&courseschema.CoursesGet{})
-	courseInputOptions := courseschema.GetCourseInputOptionsFromCoursesDB(coursesDB)
-
-	groupsDB, _ := clh.GroupService.GetGroups(&groupschema.GroupsGet{})
-	groupInputOptions := groupschema.GetGroupInputOptionsFromGroupsDB(groupsDB)
-
-	util.RenderComponent(r, &out, classview.ClassTableRow(classDB,
-		classTypeInputOptions,
-		profInputOptions,
-		cabinetInputOptions,
-		courseInputOptions,
-		groupInputOptions,
-	))
 }

@@ -290,7 +290,7 @@ func (skh *SkipHandler) DeleteSkip(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	util.InitHTMLHandler(w, r)
-	var message *msg.Msg = msg.Nothing
+	var message *msg.Msg = msg.OK
 	var out []byte
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &skipschema.SkipDelete{}
@@ -316,22 +316,10 @@ func (skh *SkipHandler) DeleteSkip(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	skipDB, err := skh.SkipService.DeleteSkip(in)
+	_, err = skh.SkipService.DeleteSkip(in)
 	if err != nil {
 		message = msg.InternalServerError
 		logger.Error.Print(err.Error())
 		return
 	}
-
-	groupsDB, _ := skh.GroupService.GetGroups(&groupschema.GroupsGet{})
-	classsDB, _ := skh.ClassService.GetClasss(&classschema.ClasssGet{})
-	classInputOptions := classschema.GetClassInputOptionsFromClasssDB(classsDB, groupsDB)
-
-	studentsDB, _ := skh.StudentService.GetStudents(&studentschema.StudentsGet{})
-	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB, groupsDB)
-
-	util.RenderComponent(r, &out, skipview.SkipTableRow(skipDB,
-		classInputOptions,
-		studentInputOptions,
-	))
 }

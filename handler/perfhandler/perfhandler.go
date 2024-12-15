@@ -290,7 +290,7 @@ func (ph *PerfHandler) DeletePerf(w http.ResponseWriter, r *http.Request) {
 	var err error
 
 	util.InitHTMLHandler(w, r)
-	var message *msg.Msg = msg.Nothing
+	var message *msg.Msg = msg.OK
 	var out []byte
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &perfschema.PerfDelete{}
@@ -316,22 +316,10 @@ func (ph *PerfHandler) DeletePerf(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	perfDB, err := ph.PerfService.DeletePerf(in)
+	_, err = ph.PerfService.DeletePerf(in)
 	if err != nil {
 		message = msg.InternalServerError
 		logger.Error.Print(err.Error())
 		return
 	}
-
-	coursesDB, _ := ph.CourseService.GetCourses(&courseschema.CoursesGet{})
-	courseInputOptions := courseschema.GetCourseInputOptionsFromCoursesDB(coursesDB)
-
-	groupsDB, _ := ph.GroupService.GetGroups(&groupschema.GroupsGet{})
-	studentsDB, _ := ph.StudentService.GetStudents(&studentschema.StudentsGet{})
-	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB, groupsDB)
-
-	util.RenderComponent(r, &out, perfview.PerfTableRow(perfDB,
-		courseInputOptions,
-		studentInputOptions,
-	))
 }

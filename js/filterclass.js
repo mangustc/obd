@@ -36,9 +36,22 @@ function filterTable() {
 
 	let searchTerm = searchTermInput.value;
 
+	let tableHead = document.getElementById("tableHead");
+	let headers = getTHArrayFromElement(tableHead);
+	headers[columns["group"]].style.display = "";
+	headers[columns["cabinet"]].style.display = "";
+	headers[columns["prof"]].style.display = "";
+	headers[thInd].style.display = "none";
+
 	let trArr = getTRArrayFromTable();
 	for (tr of trArr) {
 		let trTHArr = getTHArrayFromElement(tr);
+
+		trTHArr[columns["group"]].style.display = "";
+		trTHArr[columns["cabinet"]].style.display = "";
+		trTHArr[columns["prof"]].style.display = "";
+		trTHArr[thInd].style.display = "none";
+
 		let trDate = new Date(trTHArr[dateInd].getElementsByTagName("input")[0].value);
 		if (trDate < dateStart || trDate > dateEnd || !trTHArr[thInd].getElementsByTagName("input")[0].value.includes(searchTerm)) {
 			tr.style.display = "none";
@@ -49,8 +62,23 @@ function filterTable() {
 }
 
 function returnTableRows() {
+	let columns = new Object();
+	columns["group"] = 4;
+	columns["cabinet"] = 2;
+	columns["prof"] = 1;
+
+	let tableHead = document.getElementById("tableHead");
+	let headers = getTHArrayFromElement(tableHead);
+	headers[columns["group"]].style.display = "";
+	headers[columns["cabinet"]].style.display = "";
+	headers[columns["prof"]].style.display = "";
+
 	let trArr = getTRArrayFromTable();
 	for (tr of trArr) {
+		let trTHArr = getTHArrayFromElement(tr)
+		trTHArr[columns["group"]].style.display = "";
+		trTHArr[columns["cabinet"]].style.display = "";
+		trTHArr[columns["prof"]].style.display = "";
 		tr.style.display = "";
 	}
 }
@@ -82,8 +110,24 @@ function toggleUI() {
 
 function printTable() {
 	let filterClassContainer = document.getElementById("filterClassContainer");
+	let classFiltersTitle = document.getElementById("classFiltersTitle");
+	let tableTitle = document.getElementById("tableTitle");
+	let dateStartInput = document.getElementById("dateStart");
+	let dateEndInput = document.getElementById("dateEnd");
+	let searchTermInput = document.getElementById("searchTerm");
+
+	let dateStart = dateStartInput.value;
+	let dateEnd = dateEndInput.value;
+
+	let searchTerm = searchTermInput.value;
+
+	classFiltersTitle.innerHTML = "Расписание для " + searchTerm + " на " + dateStart + " по " + dateEnd + ":"
 
 	filterClassContainer.style.display = "none";
+	tableTitle.style.display = "none";
+	classFiltersTitle.style.display = "";
 	window.print()
+	classFiltersTitle.style.display = "none";
+	tableTitle.style.display = "";
 	filterClassContainer.style.display = "";
 }

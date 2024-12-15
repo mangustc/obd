@@ -54,7 +54,7 @@ func GetClassInputOptionsFromClasssDB(classsDB []*ClassDB, groupsDB []*groupsche
 	inputOptions := []*schema.InputOption{}
 	for _, classDB := range classsDB {
 		inputOptions = append(inputOptions, &schema.InputOption{
-			InputOptionLabel: fmt.Sprintf("%s %.10s Number %d", groupschema.GetGroupByGroupID(groupsDB, classDB.GroupID).GroupNumber, classDB.ClassStart, classDB.ClassNumber),
+			InputOptionLabel: fmt.Sprintf("%s %.10s Пара %d", groupschema.GetGroupByGroupID(groupsDB, classDB.GroupID).GroupNumber, classDB.ClassStart, classDB.ClassNumber),
 			InputOptionValue: fmt.Sprintf("%d", classDB.ClassID),
 		})
 	}

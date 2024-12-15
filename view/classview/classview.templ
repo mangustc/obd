@@ -5,6 +5,7 @@ import (
 	"github.com/mangustc/obd/schema"
 	"github.com/mangustc/obd/schema/classschema"
 	"fmt"
+	"time"
 )
 
 const (
@@ -142,15 +143,15 @@ templ Class(
 	groupInputOptions []*schema.InputOption,
 ) {
 	<div id="filterClassContainer" style="display: flex; flex-direction: column;">
-		<script src="/js/filterclass.js"></script>
+		<script src={ "/js/filterclass.js?date=" + time.Now().String() }></script>
 		<div>
 			<button onclick="toggleUI()">Режим печати</button>
 			<button id="downloadPDF" style="display: none;" onclick="printTable()">Экспортировать PDF</button>
 		</div>
 		<div id="filterContainer" style="display: none;">
 			<div>
-				<input id="dateStart" name="dateStart" placeholder="2024-12-10" value="2024-12-10" type="text"/>
-				<input id="dateEnd" name="dateEnd" placeholder="2024-12-13" value="2024-12-13" type="text"/>
+				<input id="dateStart" name="dateStart" placeholder="2024-12-09" value="2024-12-09" type="text"/>
+				<input id="dateEnd" name="dateEnd" placeholder="2024-12-15" value="2024-12-15" type="text"/>
 			</div>
 			<div>
 				<select id="column" name="column">
@@ -166,6 +167,7 @@ templ Class(
 			</div>
 		</div>
 	</div>
+	<h3 style="display: none;" id="classFiltersTitle"></h3>
 	@view.InsertForm(insertFormTitle, insertPOSTURL, getInsertFormInputs(
 		classTypeInputOptions,
 		profInputOptions,

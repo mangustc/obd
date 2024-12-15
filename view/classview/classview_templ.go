@@ -13,6 +13,7 @@ import (
 	"github.com/mangustc/obd/schema"
 	"github.com/mangustc/obd/schema/classschema"
 	"github.com/mangustc/obd/view"
+	"time"
 )
 
 const (
@@ -244,7 +245,20 @@ func Class(
 			templ_7745c5c3_Var4 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"filterClassContainer\" style=\"display: flex; flex-direction: column;\"><script src=\"/js/filterclass.js\"></script><div><button onclick=\"toggleUI()\">Режим печати</button> <button id=\"downloadPDF\" style=\"display: none;\" onclick=\"printTable()\">Экспортировать PDF</button></div><div id=\"filterContainer\" style=\"display: none;\"><div><input id=\"dateStart\" name=\"dateStart\" placeholder=\"2024-12-10\" value=\"2024-12-10\" type=\"text\"> <input id=\"dateEnd\" name=\"dateEnd\" placeholder=\"2024-12-13\" value=\"2024-12-13\" type=\"text\"></div><div><select id=\"column\" name=\"column\"><option label=\"Группа\" value=\"group\"></option> <option label=\"Кабинет\" value=\"cabinet\"></option> <option label=\"Преподаватель\" value=\"prof\"></option></select> <input id=\"searchTerm\" name=\"searchTerm\" placeholder=\"Поиск\" value=\"422-3\" type=\"text\"></div><div><button onclick=\"filterTable()\">Отфильтровать</button> <button onclick=\"returnTableRows()\">Сбросить</button></div></div></div>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"filterClassContainer\" style=\"display: flex; flex-direction: column;\"><script src=\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var5 string
+		templ_7745c5c3_Var5, templ_7745c5c3_Err = templ.JoinStringErrs("/js/filterclass.js?date=" + time.Now().String())
+		if templ_7745c5c3_Err != nil {
+			return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/classview/classview.templ`, Line: 146, Col: 64}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\"></script><div><button onclick=\"toggleUI()\">Режим печати</button> <button id=\"downloadPDF\" style=\"display: none;\" onclick=\"printTable()\">Экспортировать PDF</button></div><div id=\"filterContainer\" style=\"display: none;\"><div><input id=\"dateStart\" name=\"dateStart\" placeholder=\"2024-12-09\" value=\"2024-12-09\" type=\"text\"> <input id=\"dateEnd\" name=\"dateEnd\" placeholder=\"2024-12-15\" value=\"2024-12-15\" type=\"text\"></div><div><select id=\"column\" name=\"column\"><option label=\"Группа\" value=\"group\"></option> <option label=\"Кабинет\" value=\"cabinet\"></option> <option label=\"Преподаватель\" value=\"prof\"></option></select> <input id=\"searchTerm\" name=\"searchTerm\" placeholder=\"Поиск\" value=\"422-3\" type=\"text\"></div><div><button onclick=\"filterTable()\">Отфильтровать</button> <button onclick=\"returnTableRows()\">Сбросить</button></div></div></div><h3 style=\"display: none;\" id=\"classFiltersTitle\"></h3>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -282,12 +296,12 @@ func ClassPage() templ.Component {
 			}()
 		}
 		ctx = templ.InitializeContext(ctx)
-		templ_7745c5c3_Var5 := templ.GetChildren(ctx)
-		if templ_7745c5c3_Var5 == nil {
-			templ_7745c5c3_Var5 = templ.NopComponent
+		templ_7745c5c3_Var6 := templ.GetChildren(ctx)
+		if templ_7745c5c3_Var6 == nil {
+			templ_7745c5c3_Var6 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		templ_7745c5c3_Var6 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
+		templ_7745c5c3_Var7 := templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 			templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 			templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
 			if !templ_7745c5c3_IsBuffer {
@@ -303,12 +317,12 @@ func ClassPage() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var7 string
-			templ_7745c5c3_Var7, templ_7745c5c3_Err = templ.JoinStringErrs(getclassPOSTURL)
+			var templ_7745c5c3_Var8 string
+			templ_7745c5c3_Var8, templ_7745c5c3_Err = templ.JoinStringErrs(getclassPOSTURL)
 			if templ_7745c5c3_Err != nil {
-				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/classview/classview.templ`, Line: 182, Col: 28}
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `view/classview/classview.templ`, Line: 184, Col: 28}
 			}
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var8))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -318,7 +332,7 @@ func ClassPage() templ.Component {
 			}
 			return templ_7745c5c3_Err
 		})
-		templ_7745c5c3_Err = view.Layout(pageTitle).Render(templ.WithChildren(ctx, templ_7745c5c3_Var6), templ_7745c5c3_Buffer)
+		templ_7745c5c3_Err = view.Layout(pageTitle).Render(templ.WithChildren(ctx, templ_7745c5c3_Var7), templ_7745c5c3_Buffer)
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

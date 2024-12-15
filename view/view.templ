@@ -378,7 +378,7 @@ templ TableRow(inputs []*schema.Input, bodyVals string, editPOSTURL string, dele
 //}
 templ Table(title string, getPOSTURL string, headers []*schema.TableHeaderColumn) {
 	<div style="width: 100%; display: flex; flex-direction: column;">
-		<h2>{ title }:</h2>
+		<h2 id="tableTitle">{ title }:</h2>
 		<table>
 			<thead>
 				<tr id="tableHead">

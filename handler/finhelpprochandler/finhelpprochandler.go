@@ -345,7 +345,7 @@ func (fprh *FinhelpProcHandler) DeleteFinhelpProc(w http.ResponseWriter, r *http
 	var err error
 
 	util.InitHTMLHandler(w, r)
-	var message *msg.Msg = msg.Nothing
+	var message *msg.Msg = msg.OK
 	var out []byte
 	defer util.RespondHTTP(w, r, &message, &out)
 	in := &finhelpprocschema.FinhelpProcDelete{}
@@ -371,30 +371,10 @@ func (fprh *FinhelpProcHandler) DeleteFinhelpProc(w http.ResponseWriter, r *http
 		return
 	}
 
-	finhelpProcDB, err := fprh.FinhelpProcService.DeleteFinhelpProc(in)
+	_, err = fprh.FinhelpProcService.DeleteFinhelpProc(in)
 	if err != nil {
 		message = msg.InternalServerError
 		logger.Error.Print(err.Error())
 		return
 	}
-
-	usersDB, _ := fprh.UserService.GetUsers(&userschema.UsersGet{})
-	userInputOptions := userschema.GetUserInputOptionsFromUsersDB(usersDB)
-
-	groupsDB, _ := fprh.GroupService.GetGroups(&groupschema.GroupsGet{})
-	studentsDB, _ := fprh.StudentService.GetStudents(&studentschema.StudentsGet{})
-	studentInputOptions := studentschema.GetStudentInputOptionsFromStudentsDB(studentsDB, groupsDB)
-
-	finhelpCtgsDB, _ := fprh.FinhelpCtgService.GetFinhelpCtgs(&finhelpctgschema.FinhelpCtgsGet{})
-	finhelpCtgInputOptions := finhelpctgschema.GetFinhelpCtgInputOptionsFromFinhelpCtgsDB(finhelpCtgsDB)
-
-	finhelpStagesDB, _ := fprh.FinhelpStageService.GetFinhelpStages(&finhelpstageschema.FinhelpStagesGet{})
-	finhelpStageInputOptions := finhelpstageschema.GetFinhelpStageInputOptionsFromFinhelpStagesDB(finhelpStagesDB)
-
-	util.RenderComponent(r, &out, finhelpprocview.FinhelpProcTableRow(finhelpProcDB,
-		userInputOptions,
-		studentInputOptions,
-		finhelpCtgInputOptions,
-		finhelpStageInputOptions,
-	))
 }

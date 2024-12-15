@@ -227,7 +227,7 @@ CREATE TABLE IF NOT EXISTS %[1]s (
 	FOREIGN KEY (%[4]sID) REFERENCES %[4]s (%[4]sID) ON DELETE CASCADE,
 	FOREIGN KEY (%[5]sID) REFERENCES %[5]s (%[5]sID) ON DELETE CASCADE,
 	FOREIGN KEY (%[6]sID) REFERENCES %[6]s (%[6]sID) ON DELETE CASCADE,
-	UNIQUE(%[1]sStart, %[1]sNumber)
+	UNIQUE(%[1]sStart, %[1]sNumber, %[6]sID)
 );`, classTN, classTypeTN, profTN, cabinetTN, courseTN, groupTN)
 	skipCT = fmt.Sprintf(`
 CREATE TABLE IF NOT EXISTS %[1]s (
