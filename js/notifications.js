@@ -1,3 +1,18 @@
+/**
+ * 
+ * flatNotify.js v0.1
+ * @screenshake
+ *
+ * Inspired by :
+ * https://tympanus.net/codrops/2014/07/23/notification-styles-inspiration/
+ * 
+ * Animation courtesy :
+ * bounce.js - http://bouncejs.com/
+ * 
+ * Class manipulation
+ * classie.js https://github.com/desandro/classie
+ * 
+ */
 ; (function(window) {
 
 	var proto_methods = {
