@@ -1,0 +1,150 @@
+package jobview
+
+import (
+	"github.com/mangustc/obd/view"
+	"github.com/mangustc/obd/schema"
+	"github.com/mangustc/obd/schema/jobschema"
+	"fmt"
+)
+
+const (
+	pageTitle       = "Должность"
+	tableTitle      = pageTitle
+	insertFormTitle = "Должности"
+	getPOSTURL      = "/api/job/getjobs"
+	insertPOSTURL   = "/api/job/insertjob"
+	editPOSTURL     = "/api/job/editjob"
+	updatePOSTURL   = "/api/job/updatejob"
+	deletePOSTURL   = "/api/job/deletejob"
+	jobTN           = "Job"
+	bodyVals        = `{"` + jobTN + `ID": %d}`
+	getjobPOSTURL   = "/api/job"
+)
+
+var (
+	taJobName               = schema.NewTA(jobTN+"Name", "Название", schema.StringInput)
+	taJobAccessUser         = schema.NewTA(jobTN+"AccessUser", "Сотрудники", schema.BooleanInput)
+	taJobAccessJob          = schema.NewTA(jobTN+"AccessJob", "Должности", schema.BooleanInput)
+	taJobAccessStudent      = schema.NewTA(jobTN+"AccessStudent", "Студенты", schema.BooleanInput)
+	taJobAccessGroup        = schema.NewTA(jobTN+"AccessGroup", "Группы", schema.BooleanInput)
+	taJobAccessFinhelpCtg   = schema.NewTA(jobTN+"AccessFinhelpCtg", "МП Категории", schema.BooleanInput)
+	taJobAccessFinhelpStage = schema.NewTA(jobTN+"AccessFinhelpStage", "МП Этапы", schema.BooleanInput)
+	taJobAccessFinhelpProc  = schema.NewTA(jobTN+"AccessFinhelpProc", "МП Процессы", schema.BooleanInput)
+	taJobAccessBuilding     = schema.NewTA(jobTN+"AccessBuilding", "Корпуса", schema.BooleanInput)
+	taJobAccessCabinetType  = schema.NewTA(jobTN+"AccessCabinetType", "Типы кабинетов", schema.BooleanInput)
+	taJobAccessCabinet      = schema.NewTA(jobTN+"AccessCabinet", "Кабинеты", schema.BooleanInput)
+	taJobAccessClassType    = schema.NewTA(jobTN+"AccessClassType", "Типы пар", schema.BooleanInput)
+	taJobAccessProf         = schema.NewTA(jobTN+"AccessProf", "Преподаватели", schema.BooleanInput)
+	taJobAccessCourseType   = schema.NewTA(jobTN+"AccessCourseType", "Типы дисциплин", schema.BooleanInput)
+	taJobAccessCourse       = schema.NewTA(jobTN+"AccessCourse", "Дисциплины", schema.BooleanInput)
+	taJobAccessPerf         = schema.NewTA(jobTN+"AccessPerf", "Успеваемость", schema.BooleanInput)
+	taJobAccessSkip         = schema.NewTA(jobTN+"AccessSkip", "Пропуски", schema.BooleanInput)
+	taJobAccessClass        = schema.NewTA(jobTN+"AccessClass", "Расписание", schema.BooleanInput)
+)
+
+func getTableHeaders() []*schema.TableHeaderColumn {
+	return []*schema.TableHeaderColumn{
+		schema.NewTableHeaderColumnPixels(taJobName.TATitle, 300),
+		schema.NewTableHeaderColumn(taJobAccessUser.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessJob.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessStudent.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessGroup.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessFinhelpCtg.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessFinhelpStage.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessFinhelpProc.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessBuilding.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessCabinetType.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessCabinet.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessClassType.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessProf.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessCourseType.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessCourse.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessPerf.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessSkip.TATitle, 4),
+		schema.NewTableHeaderColumn(taJobAccessClass.TATitle, 4),
+	}
+}
+
+func getInsertFormInputs() []*schema.Input {
+	return []*schema.Input{
+		schema.NewInput(taJobName.TATitle, taJobName.TAName, taJobName.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessUser.TATitle, taJobAccessUser.TAName, taJobAccessUser.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessJob.TATitle, taJobAccessJob.TAName, taJobAccessJob.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessStudent.TATitle, taJobAccessStudent.TAName, taJobAccessStudent.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessGroup.TATitle, taJobAccessGroup.TAName, taJobAccessGroup.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessFinhelpCtg.TATitle, taJobAccessFinhelpCtg.TAName, taJobAccessFinhelpCtg.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessFinhelpStage.TATitle, taJobAccessFinhelpStage.TAName, taJobAccessFinhelpStage.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessFinhelpProc.TATitle, taJobAccessFinhelpProc.TAName, taJobAccessFinhelpProc.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessBuilding.TATitle, taJobAccessBuilding.TAName, taJobAccessBuilding.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessCabinetType.TATitle, taJobAccessCabinetType.TAName, taJobAccessCabinetType.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessCabinet.TATitle, taJobAccessCabinet.TAName, taJobAccessCabinet.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessClassType.TATitle, taJobAccessClassType.TAName, taJobAccessClassType.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessProf.TATitle, taJobAccessProf.TAName, taJobAccessProf.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessCourseType.TATitle, taJobAccessCourseType.TAName, taJobAccessCourseType.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessCourse.TATitle, taJobAccessCourse.TAName, taJobAccessCourse.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessPerf.TATitle, taJobAccessPerf.TAName, taJobAccessPerf.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessSkip.TATitle, taJobAccessSkip.TAName, taJobAccessSkip.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taJobAccessClass.TATitle, taJobAccessClass.TAName, taJobAccessClass.TAInputType, "", nil, nil, ""),
+	}
+}
+
+func getInputsFromJobDB(jobDB *jobschema.JobDB) []*schema.Input {
+	return []*schema.Input{
+		schema.NewInput("", taJobName.TAName, taJobName.TAInputType, jobDB.JobName, nil, nil, ""),
+		schema.NewInput("", taJobAccessUser.TAName, taJobAccessUser.TAInputType, jobDB.JobAccessUser, nil, nil, ""),
+		schema.NewInput("", taJobAccessJob.TAName, taJobAccessJob.TAInputType, jobDB.JobAccessJob, nil, nil, ""),
+		schema.NewInput("", taJobAccessStudent.TAName, taJobAccessStudent.TAInputType, jobDB.JobAccessStudent, nil, nil, ""),
+		schema.NewInput("", taJobAccessGroup.TAName, taJobAccessGroup.TAInputType, jobDB.JobAccessGroup, nil, nil, ""),
+		schema.NewInput("", taJobAccessFinhelpCtg.TAName, taJobAccessFinhelpCtg.TAInputType, jobDB.JobAccessFinhelpCtg, nil, nil, ""),
+		schema.NewInput("", taJobAccessFinhelpStage.TAName, taJobAccessFinhelpStage.TAInputType, jobDB.JobAccessFinhelpStage, nil, nil, ""),
+		schema.NewInput("", taJobAccessFinhelpProc.TAName, taJobAccessFinhelpProc.TAInputType, jobDB.JobAccessFinhelpProc, nil, nil, ""),
+		schema.NewInput("", taJobAccessBuilding.TAName, taJobAccessBuilding.TAInputType, jobDB.JobAccessBuilding, nil, nil, ""),
+		schema.NewInput("", taJobAccessCabinetType.TAName, taJobAccessCabinetType.TAInputType, jobDB.JobAccessCabinetType, nil, nil, ""),
+		schema.NewInput("", taJobAccessCabinet.TAName, taJobAccessCabinet.TAInputType, jobDB.JobAccessCabinet, nil, nil, ""),
+		schema.NewInput("", taJobAccessClassType.TAName, taJobAccessClassType.TAInputType, jobDB.JobAccessClassType, nil, nil, ""),
+		schema.NewInput("", taJobAccessProf.TAName, taJobAccessProf.TAInputType, jobDB.JobAccessProf, nil, nil, ""),
+		schema.NewInput("", taJobAccessCourseType.TAName, taJobAccessCourseType.TAInputType, jobDB.JobAccessCourseType, nil, nil, ""),
+		schema.NewInput("", taJobAccessCourse.TAName, taJobAccessCourse.TAInputType, jobDB.JobAccessCourse, nil, nil, ""),
+		schema.NewInput("", taJobAccessPerf.TAName, taJobAccessPerf.TAInputType, jobDB.JobAccessPerf, nil, nil, ""),
+		schema.NewInput("", taJobAccessSkip.TAName, taJobAccessSkip.TAInputType, jobDB.JobAccessSkip, nil, nil, ""),
+		schema.NewInput("", taJobAccessClass.TAName, taJobAccessClass.TAInputType, jobDB.JobAccessClass, nil, nil, ""),
+	}
+}
+
+templ JobTableRowEdit(jobDB *jobschema.JobDB) {
+	@view.TableRowEdit(getInputsFromJobDB(jobDB), fmt.Sprintf(bodyVals, jobDB.JobID), updatePOSTURL, deletePOSTURL)
+}
+
+templ JobTableRow(jobDB *jobschema.JobDB) {
+	@view.TableRow(getInputsFromJobDB(jobDB), fmt.Sprintf(bodyVals, jobDB.JobID), editPOSTURL, deletePOSTURL)
+}
+
+templ JobTableRows(jobsDB []*jobschema.JobDB) {
+	for _, jobDB := range jobsDB {
+		@JobTableRow(jobDB)
+	}
+}
+
+templ JobAddForm() {
+	@view.InsertForm(insertFormTitle, insertPOSTURL, getInsertFormInputs())
+}
+
+templ JobTable() {
+	@view.Table(tableTitle, getPOSTURL, getTableHeaders())
+}
+
+templ Job() {
+	@JobAddForm()
+	@JobTable()
+}
+
+templ JobPage() {
+	@view.Layout(pageTitle) {
+		<div
+			hx-post={ getjobPOSTURL }
+			hx-target="this"
+			hx-swap="outerHTML"
+			hx-trigger="load"
+		></div>
+	}
+}

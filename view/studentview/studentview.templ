@@ -1,0 +1,94 @@
+package studentview
+
+import (
+	"github.com/mangustc/obd/view"
+	"github.com/mangustc/obd/schema"
+	"github.com/mangustc/obd/schema/studentschema"
+	"fmt"
+)
+
+const (
+	pageTitle         = "Студенты"
+	tableTitle        = pageTitle
+	insertFormTitle   = "Студента"
+	getPOSTURL        = "/api/student/getstudents"
+	insertPOSTURL     = "/api/student/insertstudent"
+	editPOSTURL       = "/api/student/editstudent"
+	updatePOSTURL     = "/api/student/updatestudent"
+	deletePOSTURL     = "/api/student/deletestudent"
+	studentTN         = "Student"
+	groupTN           = "Group"
+	bodyVals          = `{"` + studentTN + `ID": %d}`
+	getstudentPOSTURL = "/api/student"
+)
+
+var (
+	taStudentLastname    = schema.NewTA(studentTN+"Lastname", "Фамилия", schema.StringInput)
+	taStudentFirstname   = schema.NewTA(studentTN+"Firstname", "Имя", schema.StringInput)
+	taStudentMiddlename  = schema.NewTA(studentTN+"Middlename", "Отчество", schema.StringInput)
+	taStudentPhoneNumber = schema.NewTA(studentTN+"PhoneNumber", "Номер телефона", schema.StringInput)
+	taGroupID            = schema.NewTA(groupTN+"ID", "Группа", schema.OptionInput)
+	taStudentIsHidden    = schema.NewTA(studentTN+"IsHidden", "Скрыт", schema.BooleanInput)
+)
+
+func getTableHeaders() []*schema.TableHeaderColumn {
+	return []*schema.TableHeaderColumn{
+		schema.NewTableHeaderColumn(taStudentLastname.TATitle, 15),
+		schema.NewTableHeaderColumn(taStudentFirstname.TATitle, 15),
+		schema.NewTableHeaderColumn(taStudentMiddlename.TATitle, 15),
+		schema.NewTableHeaderColumn(taStudentPhoneNumber.TATitle, 10),
+		schema.NewTableHeaderColumn(taGroupID.TATitle, 10),
+		schema.NewTableHeaderColumn(taStudentIsHidden.TATitle, 5),
+	}
+}
+
+func getInsertFormInputs(groupInputOptions []*schema.InputOption) []*schema.Input {
+	return []*schema.Input{
+		schema.NewInput(taStudentLastname.TATitle, taStudentLastname.TAName, taStudentLastname.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taStudentFirstname.TATitle, taStudentFirstname.TAName, taStudentFirstname.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taStudentMiddlename.TATitle, taStudentMiddlename.TAName, taStudentMiddlename.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taStudentPhoneNumber.TATitle, taStudentPhoneNumber.TAName, taStudentPhoneNumber.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taGroupID.TATitle, taGroupID.TAName, taGroupID.TAInputType, "", nil, groupInputOptions, ""),
+	}
+}
+
+func getInputsFromStudentDB(studentDB *studentschema.StudentDB, groupInputOptions []*schema.InputOption) []*schema.Input {
+	return []*schema.Input{
+		schema.NewInput("", taStudentLastname.TAName, taStudentLastname.TAInputType, studentDB.StudentLastname, nil, nil, ""),
+		schema.NewInput("", taStudentFirstname.TAName, taStudentFirstname.TAInputType, studentDB.StudentFirstname, nil, nil, ""),
+		schema.NewInput("", taStudentMiddlename.TAName, taStudentMiddlename.TAInputType, studentDB.StudentMiddlename, nil, nil, ""),
+		schema.NewInput("", taStudentPhoneNumber.TAName, taStudentPhoneNumber.TAInputType, studentDB.StudentPhoneNumber, nil, nil, ""),
+		schema.NewInput("", taGroupID.TAName, taGroupID.TAInputType, nil, nil, groupInputOptions, fmt.Sprint(studentDB.GroupID)),
+		schema.NewInput("", taStudentIsHidden.TAName, taStudentIsHidden.TAInputType, studentDB.StudentIsHidden, nil, nil, ""),
+	}
+}
+
+templ StudentTableRowEdit(studentDB *studentschema.StudentDB, groupInputOptions []*schema.InputOption) {
+	@view.TableRowEdit(getInputsFromStudentDB(studentDB, groupInputOptions), fmt.Sprintf(bodyVals, studentDB.StudentID), updatePOSTURL, deletePOSTURL)
+}
+
+templ StudentTableRow(studentDB *studentschema.StudentDB, groupInputOptions []*schema.InputOption) {
+	@view.TableRow(getInputsFromStudentDB(studentDB, groupInputOptions), fmt.Sprintf(bodyVals, studentDB.StudentID), editPOSTURL, deletePOSTURL)
+}
+
+templ StudentTableRows(studentsDB []*studentschema.StudentDB, groupInputOptions []*schema.InputOption) {
+	for _, studentDB := range studentsDB {
+		@StudentTableRow(studentDB, groupInputOptions)
+	}
+}
+
+templ Student(groupInputOptions []*schema.InputOption) {
+	@view.InsertForm(insertFormTitle, insertPOSTURL, getInsertFormInputs(groupInputOptions))
+	@view.Table(tableTitle, getPOSTURL, getTableHeaders())
+}
+
+templ StudentPage() {
+	@view.Layout(pageTitle) {
+		<div
+			hx-post={ getstudentPOSTURL }
+			hx-target="this"
+			hx-swap="outerHTML"
+			hx-trigger="load"
+		></div>
+	}
+}

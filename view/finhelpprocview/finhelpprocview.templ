@@ -1,0 +1,139 @@
+package finhelpprocview
+
+import (
+	"github.com/mangustc/obd/view"
+	"github.com/mangustc/obd/schema"
+	"github.com/mangustc/obd/schema/finhelpprocschema"
+	"fmt"
+)
+
+const (
+	pageTitle             = "Материальная помощь Процессы"
+	tableTitle            = pageTitle
+	insertFormTitle       = "Процесса материальной помощи"
+	getPOSTURL            = "/api/finhelpproc/getfinhelpprocs"
+	insertPOSTURL         = "/api/finhelpproc/insertfinhelpproc"
+	editPOSTURL           = "/api/finhelpproc/editfinhelpproc"
+	updatePOSTURL         = "/api/finhelpproc/updatefinhelpproc"
+	deletePOSTURL         = "/api/finhelpproc/deletefinhelpproc"
+	finhelpProcTN         = "FinhelpProc"
+	userTN                = "User"
+	studentTN             = "Student"
+	finhelpCtgTN          = "FinhelpCtg"
+	finhelpStageTN        = "FinhelpStage"
+	bodyVals              = `{"` + finhelpProcTN + `ID": %d}`
+	getfinhelpProcPOSTURL = "/api/finhelpproc"
+)
+
+var (
+	taUserID               = schema.NewTA(userTN+"ID", "Сотрудник", schema.OptionInput)
+	taStudentID            = schema.NewTA(studentTN+"ID", "Студент", schema.OptionInput)
+	taFinhelpCtgID         = schema.NewTA(finhelpCtgTN+"ID", "Категория", schema.OptionInput)
+	taFinhelpStageID       = schema.NewTA(finhelpStageTN+"ID", "Этап", schema.OptionInput)
+	taFinhelpProcCreatedAt = schema.NewTA(finhelpProcTN+"CreatedAt", "Дата создания", schema.StringInput)
+)
+
+func getTableHeaders() []*schema.TableHeaderColumn {
+	return []*schema.TableHeaderColumn{
+		schema.NewTableHeaderColumn(taUserID.TATitle, 15),
+		schema.NewTableHeaderColumn(taStudentID.TATitle, 15),
+		schema.NewTableHeaderColumn(taFinhelpCtgID.TATitle, 15),
+		schema.NewTableHeaderColumn(taFinhelpStageID.TATitle, 15),
+		schema.NewTableHeaderColumn(taFinhelpProcCreatedAt.TATitle, 10),
+	}
+}
+
+func getInsertFormInputs(
+	studentInputOptions []*schema.InputOption,
+	finhelpCtgInputOptions []*schema.InputOption,
+	finhelpStageInputOptions []*schema.InputOption,
+) []*schema.Input {
+	return []*schema.Input{
+		schema.NewInput(taStudentID.TATitle, taStudentID.TAName, taStudentID.TAInputType, "", nil, studentInputOptions, ""),
+		schema.NewInput(taFinhelpCtgID.TATitle, taFinhelpCtgID.TAName, taFinhelpCtgID.TAInputType, "", nil, finhelpCtgInputOptions, ""),
+		schema.NewInput(taFinhelpStageID.TATitle, taFinhelpStageID.TAName, taFinhelpStageID.TAInputType, "", nil, finhelpStageInputOptions, ""),
+	}
+}
+
+func getInputsFromFinhelpProcDB(finhelpProcDB *finhelpprocschema.FinhelpProcDB,
+	userInputOptions []*schema.InputOption,
+	studentInputOptions []*schema.InputOption,
+	finhelpCtgInputOptions []*schema.InputOption,
+	finhelpStageInputOptions []*schema.InputOption,
+) []*schema.Input {
+	return []*schema.Input{
+		schema.NewInput("", taUserID.TAName, taUserID.TAInputType, nil, nil, userInputOptions, fmt.Sprint(finhelpProcDB.UserID)),
+		schema.NewInput("", taStudentID.TAName, taStudentID.TAInputType, nil, nil, studentInputOptions, fmt.Sprint(finhelpProcDB.StudentID)),
+		schema.NewInput("", taFinhelpCtgID.TAName, taFinhelpCtgID.TAInputType, nil, nil, finhelpCtgInputOptions, fmt.Sprint(finhelpProcDB.FinhelpCtgID)),
+		schema.NewInput("", taFinhelpStageID.TAName, taFinhelpStageID.TAInputType, nil, nil, finhelpStageInputOptions, fmt.Sprint(finhelpProcDB.FinhelpStageID)),
+		schema.NewInput("", taFinhelpProcCreatedAt.TAName, taFinhelpProcCreatedAt.TAInputType, finhelpProcDB.FinhelpProcCreatedAt, nil, nil, ""),
+	}
+}
+
+templ FinhelpProcTableRowEdit(finhelpProcDB *finhelpprocschema.FinhelpProcDB,
+	userInputOptions []*schema.InputOption,
+	studentInputOptions []*schema.InputOption,
+	finhelpCtgInputOptions []*schema.InputOption,
+	finhelpStageInputOptions []*schema.InputOption,
+) {
+	@view.TableRowEdit(getInputsFromFinhelpProcDB(finhelpProcDB,
+		userInputOptions,
+		studentInputOptions,
+		finhelpCtgInputOptions,
+		finhelpStageInputOptions,
+	), fmt.Sprintf(bodyVals, finhelpProcDB.FinhelpProcID), updatePOSTURL, deletePOSTURL)
+}
+
+templ FinhelpProcTableRow(finhelpProcDB *finhelpprocschema.FinhelpProcDB,
+	userInputOptions []*schema.InputOption,
+	studentInputOptions []*schema.InputOption,
+	finhelpCtgInputOptions []*schema.InputOption,
+	finhelpStageInputOptions []*schema.InputOption,
+) {
+	@view.TableRow(getInputsFromFinhelpProcDB(finhelpProcDB,
+		userInputOptions,
+		studentInputOptions,
+		finhelpCtgInputOptions,
+		finhelpStageInputOptions,
+	), fmt.Sprintf(bodyVals, finhelpProcDB.FinhelpProcID), editPOSTURL, deletePOSTURL)
+}
+
+templ FinhelpProcTableRows(finhelpProcsDB []*finhelpprocschema.FinhelpProcDB,
+	userInputOptions []*schema.InputOption,
+	studentInputOptions []*schema.InputOption,
+	finhelpCtgInputOptions []*schema.InputOption,
+	finhelpStageInputOptions []*schema.InputOption,
+) {
+	for _, finhelpProcDB := range finhelpProcsDB {
+		@FinhelpProcTableRow(finhelpProcDB,
+			userInputOptions,
+			studentInputOptions,
+			finhelpCtgInputOptions,
+			finhelpStageInputOptions,
+		)
+	}
+}
+
+templ FinhelpProc(
+	studentInputOptions []*schema.InputOption,
+	finhelpCtgInputOptions []*schema.InputOption,
+	finhelpStageInputOptions []*schema.InputOption,
+) {
+	@view.InsertForm(insertFormTitle, insertPOSTURL, getInsertFormInputs(
+		studentInputOptions,
+		finhelpCtgInputOptions,
+		finhelpStageInputOptions,
+	))
+	@view.Table(tableTitle, getPOSTURL, getTableHeaders())
+}
+
+templ FinhelpProcPage() {
+	@view.Layout(pageTitle) {
+		<div
+			hx-post={ getfinhelpProcPOSTURL }
+			hx-target="this"
+			hx-swap="outerHTML"
+			hx-trigger="load"
+		></div>
+	}
+}

@@ -1,0 +1,77 @@
+package coursetypeview
+
+import (
+	"github.com/mangustc/obd/view"
+	"github.com/mangustc/obd/schema"
+	"github.com/mangustc/obd/schema/coursetypeschema"
+	"fmt"
+)
+
+const (
+	pageTitle            = "Типы дисциплин"
+	tableTitle           = pageTitle
+	insertFormTitle      = "Типа дисциплины"
+	getPOSTURL           = "/api/coursetype/getcoursetypes"
+	insertPOSTURL        = "/api/coursetype/insertcoursetype"
+	editPOSTURL          = "/api/coursetype/editcoursetype"
+	updatePOSTURL        = "/api/coursetype/updatecoursetype"
+	deletePOSTURL        = "/api/coursetype/deletecoursetype"
+	courseTypeTN         = "CourseType"
+	bodyVals             = `{"` + courseTypeTN + `ID": %d}`
+	getcourseTypePOSTURL = "/api/coursetype"
+)
+
+var (
+	taCourseTypeName     = schema.NewTA(courseTypeTN+"Name", "Название", schema.StringInput)
+	taCourseTypeIsHidden = schema.NewTA(courseTypeTN+"IsHidden", "Скрыт", schema.BooleanInput)
+)
+
+func getTableHeaders() []*schema.TableHeaderColumn {
+	return []*schema.TableHeaderColumn{
+		schema.NewTableHeaderColumn(taCourseTypeName.TATitle, 80),
+		schema.NewTableHeaderColumn(taCourseTypeIsHidden.TATitle, 5),
+	}
+}
+
+func getInsertFormInputs() []*schema.Input {
+	return []*schema.Input{
+		schema.NewInput(taCourseTypeName.TATitle, taCourseTypeName.TAName, taCourseTypeName.TAInputType, "", nil, nil, ""),
+	}
+}
+
+func getInputsFromCourseTypeDB(courseTypeDB *coursetypeschema.CourseTypeDB) []*schema.Input {
+	return []*schema.Input{
+		schema.NewInput("", taCourseTypeName.TAName, taCourseTypeName.TAInputType, courseTypeDB.CourseTypeName, nil, nil, ""),
+		schema.NewInput("", taCourseTypeIsHidden.TAName, taCourseTypeIsHidden.TAInputType, courseTypeDB.CourseTypeIsHidden, nil, nil, ""),
+	}
+}
+
+templ CourseTypeTableRowEdit(courseTypeDB *coursetypeschema.CourseTypeDB) {
+	@view.TableRowEdit(getInputsFromCourseTypeDB(courseTypeDB), fmt.Sprintf(bodyVals, courseTypeDB.CourseTypeID), updatePOSTURL, deletePOSTURL)
+}
+
+templ CourseTypeTableRow(courseTypeDB *coursetypeschema.CourseTypeDB) {
+	@view.TableRow(getInputsFromCourseTypeDB(courseTypeDB), fmt.Sprintf(bodyVals, courseTypeDB.CourseTypeID), editPOSTURL, deletePOSTURL)
+}
+
+templ CourseTypeTableRows(courseTypesDB []*coursetypeschema.CourseTypeDB) {
+	for _, courseTypeDB := range courseTypesDB {
+		@CourseTypeTableRow(courseTypeDB)
+	}
+}
+
+templ CourseType() {
+	@view.InsertForm(insertFormTitle, insertPOSTURL, getInsertFormInputs())
+	@view.Table(tableTitle, getPOSTURL, getTableHeaders())
+}
+
+templ CourseTypePage() {
+	@view.Layout(pageTitle) {
+		<div
+			hx-post={ getcourseTypePOSTURL }
+			hx-target="this"
+			hx-swap="outerHTML"
+			hx-trigger="load"
+		></div>
+	}
+}

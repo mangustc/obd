@@ -1,0 +1,414 @@
+package view
+
+import (
+	"github.com/mangustc/obd/schema"
+	"fmt"
+	"github.com/mangustc/obd/schema/jobschema"
+	"strings"
+)
+
+templ Navigation() {
+	<span
+		hx-post="/api/navigation"
+		hx-target="this"
+		hx-swap="outerHTML"
+		hx-trigger="load"
+	>Loading...</span>
+}
+
+templ ClearMain() {
+	<div id="main" class="outlet-container" hx-swap-oob="innerHTML"></div>
+}
+
+templ Layout(title string) {
+	<!DOCTYPE html>
+	<head>
+		<title>{ title }</title>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		<meta charset="utf-8"/>
+		<script src="https://unpkg.com/htmx.org@1.9.12" integrity="sha384-ujb1lZYygJmzgSwoxRggbCHcjc0rB2XoQrxeTUQyRjrOnlCoYta87iKBWq3EsdM2" crossorigin="anonymous"></script>
+		<meta name="htmx-config" content='{"useTemplateFragments":"true"}'/>
+		<link rel="stylesheet" href="/css/index.css" media="screen"/>
+	</head>
+	<body>
+		<script>
+document.addEventListener("DOMContentLoaded", (event) => {
+	document.body.addEventListener('htmx:beforeSwap', function(evt) {
+		if (evt.detail.xhr.status == 422 || evt.detail.xhr.status == 404 || evt.detail.xhr.status == 401 || evt.detail.xhr.status == 500) {
+			evt.detail.shouldSwap = true;
+			evt.detail.isError = false;
+		}
+	});
+});
+		</script>
+		<div class="root-container" id="root">
+			@Navigation()
+			@Notifications()
+			<div id="main" class="outlet-container">
+				{ children... }
+			</div>
+		</div>
+	</body>
+}
+
+templ Notifications() {
+	<script src="/js/notifications.js"></script>
+	<div style="display:none;" id="notifications"></div>
+}
+
+templ NewNotification(notificationType schema.NotificationType, msg string) {
+	@templ.JSONScript("notification-data", msg)
+	switch (notificationType) {
+		case schema.AlertNotification:
+			<script>
+				(() => {
+					const msg = JSON.parse(document.getElementById('notification-data').textContent);
+					flatNotify().alert(msg,3000)
+				})()
+			</script>
+		case schema.SuccessNotification:
+			<script>
+				(() => {
+					const msg = JSON.parse(document.getElementById('notification-data').textContent);
+					flatNotify().success(msg,3000)
+				})()
+			</script>
+		case schema.ErrorNotification:
+			<script>
+				(() => {
+					const msg = JSON.parse(document.getElementById('notification-data').textContent);
+					flatNotify().error(msg,3000)
+				})()
+			</script>
+	}
+}
+
+templ ErrorIndex(notificationType schema.NotificationType, msg string) {
+	@NewNotification(notificationType, msg)
+}
+
+templ ErrorIndexOOB(notificationType schema.NotificationType, msg string) {
+	<div id="notifications" hx-swap-oob="innerHTML">
+		@NewNotification(notificationType, msg)
+	</div>
+}
+
+css widthCSS(str string) {
+	min-width: { str };
+	max-width: { str };
+}
+
+templ tableHeader(header *schema.TableHeaderColumn) {
+	if header.Percent == 0 {
+		<th class={ widthCSS(fmt.Sprint(header.Pixels, "px")) }>{ header.Name }</th>
+	} else {
+		<th class={ widthCSS(fmt.Sprint(header.Percent, "%")) }>{ header.Name }</th>
+	}
+}
+
+func getBool(v any) bool {
+	value, _ := v.(bool)
+	return value
+}
+
+func getString(v any) string {
+	value, _ := v.(string)
+	return value
+}
+
+func getInt(v any) int {
+	value, _ := v.(int)
+	return value
+}
+
+templ Input(input *schema.Input) {
+	<div style="display: flex; flex-direction: row;">
+		if input.InputTitle != "" {
+			<span style="width: 300px;">{ input.InputTitle }: </span>
+		}
+		if input.InputOptions != nil {
+			if !input.InputEditable {
+				<input style="width: 100%; border: 0px;" name={ input.InputName } value={ schema.GetSelectedInputOptionLabel(input) } type={ input.InputType } readonly?={ !input.InputEditable }/>
+			} else {
+				<select name={ input.InputName }>
+					for _, inputOption := range input.InputOptions {
+						<option
+							label={ inputOption.InputOptionLabel }
+							value={ inputOption.InputOptionValue }
+							selected?={ inputOption.InputOptionValue == input.InputOptionValueSelected }
+						>{ inputOption.InputOptionLabel }</option>
+					}
+				</select>
+			}
+		} else if input.InputType == "checkbox" {
+			if !input.InputEditable {
+				<input name={ input.InputName } type={ input.InputType } checked?={ getBool(input.InputValue) } onclick="return false;"/>
+			} else {
+				<input name={ input.InputName } type={ input.InputType } checked?={ getBool(input.InputValue) }/>
+			}
+		} else if input.InputType == "number" {
+			if input.InputEditable {
+				<input style="width: 100%;" name={ input.InputName } value={ fmt.Sprint(getInt(input.InputValue)) } type={ input.InputType } readonly?={ !input.InputEditable }/>
+			} else {
+				<input style="width: 100%; border: 0px;" name={ input.InputName } value={ fmt.Sprint(getInt(input.InputValue)) } type={ input.InputType } readonly?={ !input.InputEditable }/>
+			}
+		} else {
+			if input.InputEditable {
+				<input style="width: 100%;" name={ input.InputName } value={ getString(input.InputValue) } type={ input.InputType } readonly?={ !input.InputEditable }/>
+			} else {
+				<input style="width: 100%; border: 0px;" name={ input.InputName } value={ getString(input.InputValue) } type={ input.InputType } readonly?={ !input.InputEditable }/>
+			}
+		}
+	</div>
+}
+
+templ NavigationByJobDB(jobDB *jobschema.JobDB) {
+	<div class="navigation-container" id="navigation">
+		<div class="link-container">
+			if jobDB == nil {
+				<button
+					class="link-button"
+					hx-post="/api/auth"
+					hx-target="#main"
+					hx-swap="innerHTML"
+				>Войти</button>
+				<p>КР ОБД</p>
+			} else {
+				if jobDB.JobAccessUser {
+					<button
+						class="link-button"
+						hx-post="/api/user"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>Сотрудники</button>
+				}
+				if jobDB.JobAccessJob {
+					<button
+						class="link-button"
+						hx-post="/api/job"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>Должности</button>
+				}
+				if jobDB.JobAccessStudent {
+					<button
+						class="link-button"
+						hx-post="/api/student"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>Студенты</button>
+				}
+				if jobDB.JobAccessGroup {
+					<button
+						class="link-button"
+						hx-post="/api/group"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>Группы</button>
+				}
+				if jobDB.JobAccessFinhelpCtg {
+					<button
+						class="link-button"
+						hx-post="/api/finhelpctg"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>Мат. помощь Категории</button>
+				}
+				if jobDB.JobAccessFinhelpStage {
+					<button
+						class="link-button"
+						hx-post="/api/finhelpstage"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>Мат. помощь Этапы</button>
+				}
+				if jobDB.JobAccessFinhelpProc {
+					<button
+						class="link-button"
+						hx-post="/api/finhelpproc"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>Мат. помощь Процессы</button>
+				}
+				if jobDB.JobAccessBuilding {
+					<button
+						class="link-button"
+						hx-post="/api/building"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>Корпуса</button>
+				}
+				if jobDB.JobAccessCabinetType {
+					<button
+						class="link-button"
+						hx-post="/api/cabinettype"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>Типы кабинетов</button>
+				}
+				if jobDB.JobAccessCabinet {
+					<button
+						class="link-button"
+						hx-post="/api/cabinet"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>Кабинеты</button>
+				}
+				if jobDB.JobAccessClassType {
+					<button
+						class="link-button"
+						hx-post="/api/classtype"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>Типы пар</button>
+				}
+				if jobDB.JobAccessClass {
+					<button
+						class="link-button"
+						hx-post="/api/class"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>Расписание</button>
+				}
+				if jobDB.JobAccessProf {
+					<button
+						class="link-button"
+						hx-post="/api/prof"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>Преподаватели</button>
+				}
+				if jobDB.JobAccessCourseType {
+					<button
+						class="link-button"
+						hx-post="/api/coursetype"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>Типы дисциплин</button>
+				}
+				if jobDB.JobAccessCourse {
+					<button
+						class="link-button"
+						hx-post="/api/course"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>Дисциплины</button>
+				}
+				if jobDB.JobAccessPerf {
+					<button
+						class="link-button"
+						hx-post="/api/perf"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>Успеваемость</button>
+				}
+				if jobDB.JobAccessSkip {
+					<button
+						class="link-button"
+						hx-post="/api/skip"
+						hx-target="#main"
+						hx-swap="innerHTML"
+					>Пропуски</button>
+				}
+				<p>КР ОБД</p>
+				<button
+					class="link-button"
+					hx-post="/api/auth/logout"
+					hx-target="#navigation"
+					hx-swap="outerHTML"
+				>Выйти</button>
+			}
+		</div>
+	</div>
+}
+
+templ TableRowEdit(inputs []*schema.Input, bodyVals string, updatePOSTURL string, deletePOSTURL string) {
+	<tr>
+		for _, i := range inputs {
+			<th>
+				@Input(i)
+			</th>
+		}
+		<th>
+			<button
+				hx-post={ updatePOSTURL }
+				hx-target="closest tr"
+				hx-include="closest tr"
+				hx-swap="outerHTML"
+				hx-vals={ bodyVals }
+			>Сохранить</button>
+		</th>
+	</tr>
+}
+
+templ TableRow(inputs []*schema.Input, bodyVals string, editPOSTURL string, deletePOSTURL string) {
+	<tr>
+		for _, i := range inputs {
+			<th>
+				@Input(schema.NewInputNotEditable(i))
+			</th>
+		}
+		<th>
+			<button
+				hx-post={ editPOSTURL }
+				hx-target="closest tr"
+				hx-swap="outerHTML"
+				hx-vals={ bodyVals }
+			>Редактировать</button>
+			<button
+				hx-post={ deletePOSTURL }
+				hx-target="closest tr"
+				hx-swap="outerHTML"
+				hx-vals={ bodyVals }
+			>
+				if strings.Contains(inputs[len(inputs)-1].InputName, "IsHidden") {
+					Скрыть
+				} else {
+					Удалить
+				}
+			</button>
+		</th>
+	</tr>
+}
+
+//templ TableRowOOB(alist []any, bodyVals string, editPOSTURL string, deletePOSTURL string) {
+//	<tbody hx-swap-oob="afterbegin:#table">
+//		@TableRow(alist, bodyVals, editPOSTURL, deletePOSTURL)
+//	</tbody>
+//}
+templ Table(title string, getPOSTURL string, headers []*schema.TableHeaderColumn) {
+	<div style="width: 100%; display: flex; flex-direction: column;">
+		<h2 id="tableTitle">{ title }:</h2>
+		<table>
+			<thead>
+				<tr id="tableHead">
+					for _, header := range headers {
+						@tableHeader(header)
+					}
+					@tableHeader(schema.NewTableHeaderColumnPixels("Действия", 172))
+				</tr>
+			</thead>
+			<tbody id="table" hx-target="closest tr" hx-swap="outerHTML">
+				<tr hx-swap="outerHTML" hx-trigger="load" hx-post={ getPOSTURL }></tr>
+			</tbody>
+		</table>
+	</div>
+}
+
+templ InsertForm(title string, insertPOSTURL string, inputs []*schema.Input) {
+	<div id="insertForm" style="width: 100%; display: flex; flex-direction: column;">
+		<h2>Форма добавления { title }:</h2>
+		<div>
+			for _, i := range inputs {
+				@Input(i)
+			}
+			<th></th>
+		</div>
+		<button
+			hx-post={ insertPOSTURL }
+			hx-target="#table"
+			hx-include="closest div"
+			hx-swap="afterbegin"
+		>Добавить</button>
+	</div>
+}

@@ -1,0 +1,117 @@
+package cabinetview
+
+import (
+	"github.com/mangustc/obd/view"
+	"github.com/mangustc/obd/schema"
+	"github.com/mangustc/obd/schema/cabinetschema"
+	"fmt"
+)
+
+const (
+	pageTitle         = "Кабинеты"
+	tableTitle        = pageTitle
+	insertFormTitle   = "Кабинета"
+	getPOSTURL        = "/api/cabinet/getcabinets"
+	insertPOSTURL     = "/api/cabinet/insertcabinet"
+	editPOSTURL       = "/api/cabinet/editcabinet"
+	updatePOSTURL     = "/api/cabinet/updatecabinet"
+	deletePOSTURL     = "/api/cabinet/deletecabinet"
+	cabinetTN         = "Cabinet"
+	buildingTN        = "Building"
+	cabinetTypeTN     = "CabinetType"
+	bodyVals          = `{"` + cabinetTN + `ID": %d}`
+	getcabinetPOSTURL = "/api/cabinet"
+)
+
+var (
+	taBuildingID      = schema.NewTA(buildingTN+"ID", "Корпус", schema.OptionInput)
+	taCabinetTypeID   = schema.NewTA(cabinetTypeTN+"ID", "Тип кабинета", schema.OptionInput)
+	taCabinetNumber   = schema.NewTA(cabinetTN+"Number", "Номер кабинета", schema.StringInput)
+	taCabinetIsHidden = schema.NewTA(cabinetTN+"IsHidden", "Скрыт", schema.BooleanInput)
+)
+
+func getTableHeaders() []*schema.TableHeaderColumn {
+	return []*schema.TableHeaderColumn{
+		schema.NewTableHeaderColumn(taBuildingID.TATitle, 20),
+		schema.NewTableHeaderColumn(taCabinetTypeID.TATitle, 20),
+		schema.NewTableHeaderColumn(taCabinetNumber.TATitle, 20),
+		schema.NewTableHeaderColumn(taCabinetIsHidden.TATitle, 5),
+	}
+}
+
+func getInsertFormInputs(
+	buildingInputOptions []*schema.InputOption,
+	cabinetTypeInputOptions []*schema.InputOption,
+) []*schema.Input {
+	return []*schema.Input{
+		schema.NewInput(taBuildingID.TATitle, taBuildingID.TAName, taBuildingID.TAInputType, "", nil, buildingInputOptions, ""),
+		schema.NewInput(taCabinetTypeID.TATitle, taCabinetTypeID.TAName, taCabinetTypeID.TAInputType, "", nil, cabinetTypeInputOptions, ""),
+		schema.NewInput(taCabinetNumber.TATitle, taCabinetNumber.TAName, taCabinetNumber.TAInputType, "", nil, nil, ""),
+	}
+}
+
+func getInputsFromCabinetDB(cabinetDB *cabinetschema.CabinetDB,
+	buildingInputOptions []*schema.InputOption,
+	cabinetTypeInputOptions []*schema.InputOption,
+) []*schema.Input {
+	return []*schema.Input{
+		schema.NewInput("", taBuildingID.TAName, taBuildingID.TAInputType, nil, nil, buildingInputOptions, fmt.Sprint(cabinetDB.BuildingID)),
+		schema.NewInput("", taCabinetTypeID.TAName, taCabinetTypeID.TAInputType, nil, nil, cabinetTypeInputOptions, fmt.Sprint(cabinetDB.CabinetTypeID)),
+		schema.NewInput("", taCabinetNumber.TAName, taCabinetNumber.TAInputType, cabinetDB.CabinetNumber, nil, nil, ""),
+		schema.NewInput("", taCabinetIsHidden.TAName, taCabinetIsHidden.TAInputType, cabinetDB.CabinetIsHidden, nil, nil, ""),
+	}
+}
+
+templ CabinetTableRowEdit(cabinetDB *cabinetschema.CabinetDB,
+	buildingInputOptions []*schema.InputOption,
+	cabinetTypeInputOptions []*schema.InputOption,
+) {
+	@view.TableRowEdit(getInputsFromCabinetDB(cabinetDB,
+		buildingInputOptions,
+		cabinetTypeInputOptions,
+	), fmt.Sprintf(bodyVals, cabinetDB.CabinetID), updatePOSTURL, deletePOSTURL)
+}
+
+templ CabinetTableRow(cabinetDB *cabinetschema.CabinetDB,
+	buildingInputOptions []*schema.InputOption,
+	cabinetTypeInputOptions []*schema.InputOption,
+) {
+	@view.TableRow(getInputsFromCabinetDB(cabinetDB,
+		buildingInputOptions,
+		cabinetTypeInputOptions,
+	), fmt.Sprintf(bodyVals, cabinetDB.CabinetID), editPOSTURL, deletePOSTURL)
+}
+
+templ CabinetTableRows(cabinetsDB []*cabinetschema.CabinetDB,
+	buildingInputOptions []*schema.InputOption,
+	cabinetTypeInputOptions []*schema.InputOption,
+) {
+	for _, cabinetDB := range cabinetsDB {
+		@CabinetTableRow(cabinetDB,
+			buildingInputOptions,
+			cabinetTypeInputOptions,
+		)
+	}
+}
+
+templ Cabinet(
+	buildingInputOptions []*schema.InputOption,
+	cabinetTypeInputOptions []*schema.InputOption,
+) {
+	@view.InsertForm(insertFormTitle, insertPOSTURL, getInsertFormInputs(
+		buildingInputOptions,
+		cabinetTypeInputOptions,
+	))
+	@view.Table(tableTitle, getPOSTURL, getTableHeaders())
+}
+
+templ CabinetPage() {
+	@view.Layout(pageTitle) {
+		<div
+			hx-post={ getcabinetPOSTURL }
+			hx-target="this"
+			hx-swap="outerHTML"
+			hx-trigger="load"
+		></div>
+	}
+}

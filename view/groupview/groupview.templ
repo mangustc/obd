@@ -1,0 +1,85 @@
+package groupview
+
+import (
+	"github.com/mangustc/obd/view"
+	"github.com/mangustc/obd/schema"
+	"github.com/mangustc/obd/schema/groupschema"
+	"fmt"
+)
+
+const (
+	pageTitle       = "Группы"
+	tableTitle      = pageTitle
+	insertFormTitle = "Группы"
+	getPOSTURL      = "/api/group/getgroups"
+	insertPOSTURL   = "/api/group/insertgroup"
+	editPOSTURL     = "/api/group/editgroup"
+	updatePOSTURL   = "/api/group/updategroup"
+	deletePOSTURL   = "/api/group/deletegroup"
+	groupTN         = "Group"
+	bodyVals        = `{"` + groupTN + `ID": %d}`
+	getgroupPOSTURL = "/api/group"
+)
+
+var (
+	taGroupNumber     = schema.NewTA(groupTN+"Number", "Номер группы", schema.StringInput)
+	taGroupYear       = schema.NewTA(groupTN+"Year", "Год поступления", schema.NumberInput)
+	taGroupCourseName = schema.NewTA(groupTN+"CourseName", "Название направления", schema.StringInput)
+	taGroupIsHidden   = schema.NewTA(groupTN+"IsHidden", "Скрыт", schema.BooleanInput)
+)
+
+func getTableHeaders() []*schema.TableHeaderColumn {
+	return []*schema.TableHeaderColumn{
+		schema.NewTableHeaderColumn(taGroupNumber.TATitle, 15),
+		schema.NewTableHeaderColumn(taGroupYear.TATitle, 10),
+		schema.NewTableHeaderColumn(taGroupCourseName.TATitle, 50),
+		schema.NewTableHeaderColumn(taGroupIsHidden.TATitle, 5),
+	}
+}
+
+func getInsertFormInputs() []*schema.Input {
+	return []*schema.Input{
+		schema.NewInput(taGroupNumber.TATitle, taGroupNumber.TAName, taGroupNumber.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taGroupYear.TATitle, taGroupYear.TAName, taGroupYear.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taGroupCourseName.TATitle, taGroupCourseName.TAName, taGroupCourseName.TAInputType, "", nil, nil, ""),
+	}
+}
+
+func getInputsFromGroupDB(groupDB *groupschema.GroupDB) []*schema.Input {
+	return []*schema.Input{
+		schema.NewInput("", taGroupNumber.TAName, taGroupNumber.TAInputType, groupDB.GroupNumber, nil, nil, ""),
+		schema.NewInput("", taGroupYear.TAName, taGroupYear.TAInputType, groupDB.GroupYear, nil, nil, ""),
+		schema.NewInput("", taGroupCourseName.TAName, taGroupCourseName.TAInputType, groupDB.GroupCourseName, nil, nil, ""),
+		schema.NewInput("", taGroupIsHidden.TAName, taGroupIsHidden.TAInputType, groupDB.GroupIsHidden, nil, nil, ""),
+	}
+}
+
+templ GroupTableRowEdit(groupDB *groupschema.GroupDB) {
+	@view.TableRowEdit(getInputsFromGroupDB(groupDB), fmt.Sprintf(bodyVals, groupDB.GroupID), updatePOSTURL, deletePOSTURL)
+}
+
+templ GroupTableRow(groupDB *groupschema.GroupDB) {
+	@view.TableRow(getInputsFromGroupDB(groupDB), fmt.Sprintf(bodyVals, groupDB.GroupID), editPOSTURL, deletePOSTURL)
+}
+
+templ GroupTableRows(groupsDB []*groupschema.GroupDB) {
+	for _, groupDB := range groupsDB {
+		@GroupTableRow(groupDB)
+	}
+}
+
+templ Group() {
+	@view.InsertForm(insertFormTitle, insertPOSTURL, getInsertFormInputs())
+	@view.Table(tableTitle, getPOSTURL, getTableHeaders())
+}
+
+templ GroupPage() {
+	@view.Layout(pageTitle) {
+		<div
+			hx-post={ getgroupPOSTURL }
+			hx-target="this"
+			hx-swap="outerHTML"
+			hx-trigger="load"
+		></div>
+	}
+}

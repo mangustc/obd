@@ -1,0 +1,81 @@
+package buildingview
+
+import (
+	"github.com/mangustc/obd/view"
+	"github.com/mangustc/obd/schema"
+	"github.com/mangustc/obd/schema/buildingschema"
+	"fmt"
+)
+
+const (
+	pageTitle          = "Корпуса"
+	tableTitle         = pageTitle
+	insertFormTitle    = "Корпуса"
+	getPOSTURL         = "/api/building/getbuildings"
+	insertPOSTURL      = "/api/building/insertbuilding"
+	editPOSTURL        = "/api/building/editbuilding"
+	updatePOSTURL      = "/api/building/updatebuilding"
+	deletePOSTURL      = "/api/building/deletebuilding"
+	buildingTN         = "Building"
+	bodyVals           = `{"` + buildingTN + `ID": %d}`
+	getbuildingPOSTURL = "/api/building"
+)
+
+var (
+	taBuildingName     = schema.NewTA(buildingTN+"Name", "Название", schema.StringInput)
+	taBuildingAddress  = schema.NewTA(buildingTN+"Address", "Адрес", schema.StringInput)
+	taBuildingIsHidden = schema.NewTA(buildingTN+"IsHidden", "Скрыт", schema.BooleanInput)
+)
+
+func getTableHeaders() []*schema.TableHeaderColumn {
+	return []*schema.TableHeaderColumn{
+		schema.NewTableHeaderColumn(taBuildingName.TATitle, 20),
+		schema.NewTableHeaderColumn(taBuildingAddress.TATitle, 60),
+		schema.NewTableHeaderColumn(taBuildingIsHidden.TATitle, 5),
+	}
+}
+
+func getInsertFormInputs() []*schema.Input {
+	return []*schema.Input{
+		schema.NewInput(taBuildingName.TATitle, taBuildingName.TAName, taBuildingName.TAInputType, "", nil, nil, ""),
+		schema.NewInput(taBuildingAddress.TATitle, taBuildingAddress.TAName, taBuildingAddress.TAInputType, "", nil, nil, ""),
+	}
+}
+
+func getInputsFromBuildingDB(buildingDB *buildingschema.BuildingDB) []*schema.Input {
+	return []*schema.Input{
+		schema.NewInput("", taBuildingName.TAName, taBuildingName.TAInputType, buildingDB.BuildingName, nil, nil, ""),
+		schema.NewInput("", taBuildingAddress.TAName, taBuildingAddress.TAInputType, buildingDB.BuildingAddress, nil, nil, ""),
+		schema.NewInput("", taBuildingIsHidden.TAName, taBuildingIsHidden.TAInputType, buildingDB.BuildingIsHidden, nil, nil, ""),
+	}
+}
+
+templ BuildingTableRowEdit(buildingDB *buildingschema.BuildingDB) {
+	@view.TableRowEdit(getInputsFromBuildingDB(buildingDB), fmt.Sprintf(bodyVals, buildingDB.BuildingID), updatePOSTURL, deletePOSTURL)
+}
+
+templ BuildingTableRow(buildingDB *buildingschema.BuildingDB) {
+	@view.TableRow(getInputsFromBuildingDB(buildingDB), fmt.Sprintf(bodyVals, buildingDB.BuildingID), editPOSTURL, deletePOSTURL)
+}
+
+templ BuildingTableRows(buildingsDB []*buildingschema.BuildingDB) {
+	for _, buildingDB := range buildingsDB {
+		@BuildingTableRow(buildingDB)
+	}
+}
+
+templ Building() {
+	@view.InsertForm(insertFormTitle, insertPOSTURL, getInsertFormInputs())
+	@view.Table(tableTitle, getPOSTURL, getTableHeaders())
+}
+
+templ BuildingPage() {
+	@view.Layout(pageTitle) {
+		<div
+			hx-post={ getbuildingPOSTURL }
+			hx-target="this"
+			hx-swap="outerHTML"
+			hx-trigger="load"
+		></div>
+	}
+}

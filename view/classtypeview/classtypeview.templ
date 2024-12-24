@@ -1,0 +1,77 @@
+package classtypeview
+
+import (
+	"github.com/mangustc/obd/view"
+	"github.com/mangustc/obd/schema"
+	"github.com/mangustc/obd/schema/classtypeschema"
+	"fmt"
+)
+
+const (
+	pageTitle           = "Типы пар"
+	tableTitle          = pageTitle
+	insertFormTitle     = "Типа пары"
+	getPOSTURL          = "/api/classtype/getclasstypes"
+	insertPOSTURL       = "/api/classtype/insertclasstype"
+	editPOSTURL         = "/api/classtype/editclasstype"
+	updatePOSTURL       = "/api/classtype/updateclasstype"
+	deletePOSTURL       = "/api/classtype/deleteclasstype"
+	classTypeTN         = "ClassType"
+	bodyVals            = `{"` + classTypeTN + `ID": %d}`
+	getclassTypePOSTURL = "/api/classtype"
+)
+
+var (
+	taClassTypeName     = schema.NewTA(classTypeTN+"Name", "Название", schema.StringInput)
+	taClassTypeIsHidden = schema.NewTA(classTypeTN+"IsHidden", "Скрыт", schema.BooleanInput)
+)
+
+func getTableHeaders() []*schema.TableHeaderColumn {
+	return []*schema.TableHeaderColumn{
+		schema.NewTableHeaderColumn(taClassTypeName.TATitle, 80),
+		schema.NewTableHeaderColumn(taClassTypeIsHidden.TATitle, 5),
+	}
+}
+
+func getInsertFormInputs() []*schema.Input {
+	return []*schema.Input{
+		schema.NewInput(taClassTypeName.TATitle, taClassTypeName.TAName, taClassTypeName.TAInputType, "", nil, nil, ""),
+	}
+}
+
+func getInputsFromClassTypeDB(classTypeDB *classtypeschema.ClassTypeDB) []*schema.Input {
+	return []*schema.Input{
+		schema.NewInput("", taClassTypeName.TAName, taClassTypeName.TAInputType, classTypeDB.ClassTypeName, nil, nil, ""),
+		schema.NewInput("", taClassTypeIsHidden.TAName, taClassTypeIsHidden.TAInputType, classTypeDB.ClassTypeIsHidden, nil, nil, ""),
+	}
+}
+
+templ ClassTypeTableRowEdit(classTypeDB *classtypeschema.ClassTypeDB) {
+	@view.TableRowEdit(getInputsFromClassTypeDB(classTypeDB), fmt.Sprintf(bodyVals, classTypeDB.ClassTypeID), updatePOSTURL, deletePOSTURL)
+}
+
+templ ClassTypeTableRow(classTypeDB *classtypeschema.ClassTypeDB) {
+	@view.TableRow(getInputsFromClassTypeDB(classTypeDB), fmt.Sprintf(bodyVals, classTypeDB.ClassTypeID), editPOSTURL, deletePOSTURL)
+}
+
+templ ClassTypeTableRows(classTypesDB []*classtypeschema.ClassTypeDB) {
+	for _, classTypeDB := range classTypesDB {
+		@ClassTypeTableRow(classTypeDB)
+	}
+}
+
+templ ClassType() {
+	@view.InsertForm(insertFormTitle, insertPOSTURL, getInsertFormInputs())
+	@view.Table(tableTitle, getPOSTURL, getTableHeaders())
+}
+
+templ ClassTypePage() {
+	@view.Layout(pageTitle) {
+		<div
+			hx-post={ getclassTypePOSTURL }
+			hx-target="this"
+			hx-swap="outerHTML"
+			hx-trigger="load"
+		></div>
+	}
+}

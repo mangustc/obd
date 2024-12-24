@@ -1,0 +1,77 @@
+package cabinettypeview
+
+import (
+	"github.com/mangustc/obd/view"
+	"github.com/mangustc/obd/schema"
+	"github.com/mangustc/obd/schema/cabinettypeschema"
+	"fmt"
+)
+
+const (
+	pageTitle             = "Типы кабинетов"
+	tableTitle            = pageTitle
+	insertFormTitle       = "Типа кабинета"
+	getPOSTURL            = "/api/cabinettype/getcabinettypes"
+	insertPOSTURL         = "/api/cabinettype/insertcabinettype"
+	editPOSTURL           = "/api/cabinettype/editcabinettype"
+	updatePOSTURL         = "/api/cabinettype/updatecabinettype"
+	deletePOSTURL         = "/api/cabinettype/deletecabinettype"
+	cabinetTypeTN         = "CabinetType"
+	bodyVals              = `{"` + cabinetTypeTN + `ID": %d}`
+	getcabinetTypePOSTURL = "/api/cabinettype"
+)
+
+var (
+	taCabinetTypeName     = schema.NewTA(cabinetTypeTN+"Name", "Название", schema.StringInput)
+	taCabinetTypeIsHidden = schema.NewTA(cabinetTypeTN+"IsHidden", "Скрыт", schema.BooleanInput)
+)
+
+func getTableHeaders() []*schema.TableHeaderColumn {
+	return []*schema.TableHeaderColumn{
+		schema.NewTableHeaderColumn(taCabinetTypeName.TATitle, 80),
+		schema.NewTableHeaderColumn(taCabinetTypeIsHidden.TATitle, 5),
+	}
+}
+
+func getInsertFormInputs() []*schema.Input {
+	return []*schema.Input{
+		schema.NewInput(taCabinetTypeName.TATitle, taCabinetTypeName.TAName, taCabinetTypeName.TAInputType, "", nil, nil, ""),
+	}
+}
+
+func getInputsFromCabinetTypeDB(cabinetTypeDB *cabinettypeschema.CabinetTypeDB) []*schema.Input {
+	return []*schema.Input{
+		schema.NewInput("", taCabinetTypeName.TAName, taCabinetTypeName.TAInputType, cabinetTypeDB.CabinetTypeName, nil, nil, ""),
+		schema.NewInput("", taCabinetTypeIsHidden.TAName, taCabinetTypeIsHidden.TAInputType, cabinetTypeDB.CabinetTypeIsHidden, nil, nil, ""),
+	}
+}
+
+templ CabinetTypeTableRowEdit(cabinetTypeDB *cabinettypeschema.CabinetTypeDB) {
+	@view.TableRowEdit(getInputsFromCabinetTypeDB(cabinetTypeDB), fmt.Sprintf(bodyVals, cabinetTypeDB.CabinetTypeID), updatePOSTURL, deletePOSTURL)
+}
+
+templ CabinetTypeTableRow(cabinetTypeDB *cabinettypeschema.CabinetTypeDB) {
+	@view.TableRow(getInputsFromCabinetTypeDB(cabinetTypeDB), fmt.Sprintf(bodyVals, cabinetTypeDB.CabinetTypeID), editPOSTURL, deletePOSTURL)
+}
+
+templ CabinetTypeTableRows(cabinetTypesDB []*cabinettypeschema.CabinetTypeDB) {
+	for _, cabinetTypeDB := range cabinetTypesDB {
+		@CabinetTypeTableRow(cabinetTypeDB)
+	}
+}
+
+templ CabinetType() {
+	@view.InsertForm(insertFormTitle, insertPOSTURL, getInsertFormInputs())
+	@view.Table(tableTitle, getPOSTURL, getTableHeaders())
+}
+
+templ CabinetTypePage() {
+	@view.Layout(pageTitle) {
+		<div
+			hx-post={ getcabinetTypePOSTURL }
+			hx-target="this"
+			hx-swap="outerHTML"
+			hx-trigger="load"
+		></div>
+	}
+}

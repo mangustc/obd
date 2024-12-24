@@ -1,0 +1,65 @@
+package authview
+
+import "github.com/mangustc/obd/view"
+import "github.com/mangustc/obd/schema"
+
+const (
+	pageTitle        = "Вход"
+	userTN           = "User"
+	loginPOSTURL     = "/api/auth/login"
+	userinputPOSTURL = "/api/auth/userinput"
+	getauthPOSTURL   = "/api/auth"
+)
+
+var (
+	taUserID       = schema.NewTA(userTN+"ID", "Сотрудник", schema.OptionInput)
+	taUserPassword = schema.NewTA(userTN+"Password", "Пароль", schema.StringInput)
+)
+
+templ UserInput(userInputOptions []*schema.InputOption) {
+	@view.Input(schema.NewInput("", taUserID.TAName, taUserID.TAInputType, nil, nil, userInputOptions, ""))
+}
+
+templ Auth() {
+	<div>
+		<h3>Вход</h3>
+		<div style="display: flex; flex-direction: column;" id="auth-form">
+			<label>Выберите сотрудника:</label>
+			<span
+				hx-post={ userinputPOSTURL }
+				hx-target="this"
+				hx-swap="outerHTML"
+				hx-trigger="load"
+			>Загрузка...</span>
+			<label>Пароль:</label>
+			<input
+				type="password"
+				name={ taUserPassword.TAName }
+				placeholder="Введите свой пароль"
+				required
+				value=""
+			/>
+		</div>
+		<div>
+			<button
+				hx-post={ loginPOSTURL }
+				hx-include="#auth-form"
+				hx-swap="outerHTML"
+				hx-target="#navigation"
+			>
+				Войти
+			</button>
+		</div>
+	</div>
+}
+
+templ AuthPage() {
+	@view.Layout(pageTitle) {
+		<div
+			hx-post={ getauthPOSTURL }
+			hx-target="this"
+			hx-swap="outerHTML"
+			hx-trigger="load"
+		></div>
+	}
+}
